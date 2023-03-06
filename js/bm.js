@@ -4,12 +4,27 @@ var canvas = null
 // The canvas context.
 var c = null
 
+// KEYS
+
+const keys = {
+  up: {
+    pressed: false
+  },
+  down: {
+    pressed: false
+  },
+  left: {
+    pressed: false
+  },
+  right: {
+    pressed: false
+  }
+}
+
 let mouseDown = false
 
 var blockWidth = 64
 var blockHeight = 64
-
-// TODO what about 720p and friends?
 
 // 1024x768
 var colorMap = {
@@ -18,6 +33,7 @@ var colorMap = {
   g: '#25a244', // grass
   s: '#ffe6a7' // sand
 }
+// TODO what about 720p and friends?
 
 let elevation = 1
 let maxElevation = 2
@@ -82,33 +98,83 @@ var openWater = [
   'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
 ];
 
-var map = [
+class Game {
 
-  // 4 x 4
-  bigIsland,
-  mediumIsland,
-  smallIsland,
-  openWater
+  constructor() {
 
-  // TODO THIS RENDERS INCORRECTLY, MOVE TO THE UNIVERSE MODEL BELOW
-  // 16 x 16
-//  smallIsland, openWater,    mediumIsland, openWater,
-//  openWater,   bigIsland,    bigIsland,    openWater,
-//  openWater,   mediumIsland, smallIsland,  openWater,
-//  openWater,   smallIsland,  openWater,    openWater
+    this._universe = null
+    this._x = 0
+    this._y = 0
 
-];
+  }
 
-var universe = [
+  refresh() {
+    drawUniverse()
+  }
+
+  setUniverse(universe) { this._universe = universe }
+  getUniverse() { return this._universe }
+
+  getRowCount() { return this.getUniverse().length }
+  getColCount() { return this.getUniverse()[0].length }
+
+  setCoords(x, y) {
+    this.seX(x)
+    this.seY(y)
+  }
+  getCoords() {
+    return {
+      x: this.getX(),
+      y: this.getY()
+    }
+  }
+
+  setX(x) { this._x = x }
+  getX() { return this._x }
+
+  setY(y) { this._y = y }
+  getY() { return this._y }
+
+  canSlideUp() { return !!this.getY() }
+  canSlideDown() { return this.getY() < this.getRowCount() - 1 }
+  canSlideLeft() { return !!this.getX() }
+  canSlideRight() { return this.getX() < this.getColCount() - 1 }
+
+  slideUp() {
+    this.setY(this.getY() - 1)
+    this.refresh()
+  }
+  slideDown() {
+    this.setY(this.getY() + 1)
+    this.refresh()
+  }
+  slideLeft() {
+    this.setX(this.getX() - 1)
+    this.refresh()
+  }
+  slideRight() {
+    this.setX(this.getX() + 1)
+    this.refresh()
+  }
+
+  getCurrentChunk() {
+    return this.getUniverse()[this.getY()][this.getX()]
+  }
+
+}
+
+const game = new Game();
+
+game.setUniverse([
 
   [ smallIsland, openWater,    mediumIsland, openWater ],
   [ openWater,   bigIsland,    bigIsland,    openWater ],
   [ openWater,   mediumIsland, smallIsland,  openWater ],
   [ openWater,   smallIsland,  openWater,    openWater ]
 
-];
+]);
 
-window.addEventListener('load', function() {
+addEventListener('load', function() {
 
   // Get canvas element.
   canvas = document.getElementById("biome-bloom")
@@ -146,7 +212,7 @@ window.addEventListener('load', function() {
 
       if (elevation < maxElevation) {
         elevation++
-        drawMap();
+//        drawMap();
       }
 
       console.log('----- zoomed out ----------');
@@ -160,7 +226,7 @@ window.addEventListener('load', function() {
 
       if (elevation !== 1) {
         elevation--
-        drawMap();
+//        drawMap();
       }
 
       console.log('----- zoomed in ----------');
@@ -188,11 +254,154 @@ window.addEventListener('load', function() {
 //    console.log('mousemove');
   });
 
-  drawMap()
+  drawUniverse()
+
+//  drawMap()
 
 //  drawGrid()
 
 });
+
+// KEY DOWN
+
+addEventListener('keydown', ({ keyCode } ) => {
+
+//    console.log(keyCode);
+
+//  if (game.userInputIsDisabled()) return
+
+  switch (keyCode) {
+
+    // UP
+    case 87: // (W)
+    case 38: // (up arrow)
+
+      if (!keys.up.pressed && game.canSlideUp()) {
+        game.slideUp()
+      }
+
+      keys.up.pressed = true
+
+      break
+
+    // DOWN
+    case 83: // (S)
+    case 40: // (down arrow)
+
+      if (!keys.down.pressed && game.canSlideDown()) {
+        game.slideDown()
+      }
+
+      keys.down.pressed = true
+
+      break
+
+    // LEFT
+    case 65: // (A)
+    case 37: // (left arrow)
+
+      if (!keys.left.pressed && game.canSlideLeft()) {
+        game.slideLeft()
+      }
+
+      keys.left.pressed = true
+
+      break
+
+    // RIGHT
+    case 68: // (D)
+    case 39: // (right arrow)
+
+      if (!keys.right.pressed && game.canSlideRight()) {
+        game.slideRight()
+      }
+
+      keys.right.pressed = true
+
+      break
+
+  }
+
+});
+
+// KEY UP
+
+addEventListener('keyup', ({ keyCode }) => {
+
+//  if (game.userInputIsDisabled()) return
+
+  switch (keyCode) {
+
+    // UP
+    case 87: // (W)
+    case 38: // (up arrow)
+
+      keys.up.pressed = false
+
+      break
+
+    // DOWN
+    case 83: // (S)
+    case 40: // (down arrow)
+
+      keys.down.pressed = false
+
+      break
+
+    // LEFT
+    case 65: // (A)
+    case 37: // (left arrow)
+
+      keys.left.pressed = false
+
+      break
+
+    // RIGHT
+    case 68: // (D)
+    case 39: // (right arrow)
+
+      keys.right.pressed = false
+
+      break
+
+  }
+
+});
+
+function clearUniverse() {
+  c.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawUniverse() {
+
+  clearUniverse();
+
+//  for (let row = 0; row < game.getRowCount(); row++) {
+//    for (let col = 0; col < game.getColCount(); col++) {
+//      console.log('chunk', row, col)
+//    }
+//  }
+
+  let x = 0
+  let y = 0
+
+  if (elevation === 1) {
+
+    var chunk = game.getCurrentChunk();
+    for (var i = 0; i < chunk.length; i++) {
+      var block = chunk[i]
+      c.fillStyle = colorMap[block];
+      c.fillRect(x, y, blockWidth, blockHeight);
+      x += blockWidth
+      if (x >= canvas.width) {
+        x = 0
+        y += blockHeight
+      }
+    }
+
+  }
+
+}
 
 function clearMap() {
   c.clearRect(0, 0, canvas.width, canvas.height);

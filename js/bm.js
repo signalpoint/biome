@@ -9,23 +9,8 @@ let mouseDown = false
 var blockWidth = 64
 var blockHeight = 64
 
-// 720p
-//var map = [
-//  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','l','w',
-//  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-//];
+// TODO what about 720p and friends?
 
-// Can we make bigger chunks? i.e. zoom out to level 2, see 4 chunks, instead of 1
 // 1024x768
 var colorMap = {
   o: '#22577a', // ocean
@@ -37,71 +22,89 @@ var colorMap = {
 let elevation = 1
 let maxElevation = 2
 
+var bigIsland = [
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+];
+
+var mediumIsland = [
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+];
+
+var smallIsland = [
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
+  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+  'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+];
+
+var openWater = [
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+];
+
 var map = [
 
-  // Big Island
-  [
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-  ],
+  // 4 x 4
+  bigIsland,
+  mediumIsland,
+  smallIsland,
+  openWater
 
-  // Medium Island
-  [
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-  ],
+  // TODO THIS RENDERS INCORRECTLY, MOVE TO THE UNIVERSE MODEL BELOW
+  // 16 x 16
+//  smallIsland, openWater,    mediumIsland, openWater,
+//  openWater,   bigIsland,    bigIsland,    openWater,
+//  openWater,   mediumIsland, smallIsland,  openWater,
+//  openWater,   smallIsland,  openWater,    openWater
 
-  // Small Island
-  [
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
-    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-    'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-  ],
+];
 
-  // Ocean
-  [
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-  ]
+var universe = [
+
+  [ smallIsland, openWater,    mediumIsland, openWater ],
+  [ openWater,   bigIsland,    bigIsland,    openWater ],
+  [ openWater,   mediumIsland, smallIsland,  openWater ],
+  [ openWater,   smallIsland,  openWater,    openWater ]
 
 ];
 
@@ -131,26 +134,36 @@ window.addEventListener('load', function() {
     console.log("x: " + x + " y: " + y)
   })
 
+  // MOUSE WHEEL
   canvas.addEventListener('wheel', function(e) {
+
 //    console.log(e);
+
+    // ZOOM OUT
     if (e.deltaY > 0) {
 
-//      console.log('zoom out');
+      console.log('----- zooming out ----------');
 
       if (elevation < maxElevation) {
         elevation++
         drawMap();
       }
 
+      console.log('----- zoomed out ----------');
+
     }
+
+    // ZOOM IN
     else {
 
-//      console.log('zoom in');
+      console.log('----- zooming in ----------');
 
       if (elevation !== 1) {
         elevation--
         drawMap();
       }
+
+      console.log('----- zoomed in ----------');
 
     }
     return false;
@@ -189,7 +202,7 @@ function drawMap() {
 
   clearMap();
 
-  console.log('elevation', elevation);
+  console.log('ELEVATION', elevation);
 
   let x = 0
   let y = 0
@@ -211,70 +224,98 @@ function drawMap() {
   }
   else {
 
-    let z = Math.pow(2, elevation)
+//    let z = Math.pow(2, elevation)
+    let z = 2;
+    for (var i = 1; i < elevation; i++) {
+      z = z ** 2;
+    }
+    let sqrt = Math.sqrt(z)
+
     console.log('z', z);
+    console.log('sqrt', sqrt);
 
     let modX = 0
     let modY = 0
+    let row = 0
+    let col = 0
 
     for (var pane = 0; pane < z; pane++) {
 
       x = modX
       y = modY
 
-      let mod = pane % elevation
+//      let mod = pane % elevation
+      let mod = pane % sqrt
 
-      if (mod) { // odd... (when elevation is 2)
-
-        modX = canvas.width / elevation
-        x = modX
+      if (mod === 0) { // first col
 
       }
-      else { // even... (when elevation is 2)
+      else {
 
-        if (pane) {
+        modX = canvas.width / sqrt * mod
+        x = modX
 
-          modY = canvas.height / elevation
-          y = modY
+        if (mod === sqrt - 1) { // last col
 
         }
 
       }
 
+//      if (mod) { // odd... (when elevation is 2)
+//
+//        modX = canvas.width / elevation
+//        x = modX
+//
+//      }
+//      else { // even... (when elevation is 2)
+//
+//        if (pane) {
+//
+//          modY = canvas.height / elevation
+//          y = modY
+//
+//        }
+//
+//      }
+
       console.log('------------------------');
       console.log('pane', pane);
-      console.log('x, y');
+//      console.log('x, y');
       console.log(x, y);
       console.log('mod', mod);
       console.log('modX', modX);
       console.log('modY', modY);
 
       var chunk = map[pane];
-
       for (var i = 0; i < chunk.length; i++) {
 
         var block = chunk[i];
 
         // Draw the block on the canvas.
         c.fillStyle = colorMap[block];
-        c.fillRect(x, y, blockWidth / elevation, blockHeight / elevation);
+//        c.fillRect(x, y, blockWidth / elevation, blockHeight / elevation);
+        c.fillRect(x, y, blockWidth / sqrt, blockHeight / sqrt);
 
         // Move over to get ready to draw the next block.
-        x += (blockWidth / elevation)
+//        x += (blockWidth / elevation)
+        x += (blockWidth / sqrt)
 
         if (mod) { // odd... (when elevation is 2)
 
           if (x >= canvas.width) {
             x = modX
-            y += (blockHeight / elevation)
+//            y += (blockHeight / elevation)
+            y += (blockHeight / sqrt)
           }
 
         }
         else { // even... (when elevation is 2)
 
-          if (x >= (canvas.width / elevation)) {
+//          if (x >= (canvas.width / elevation)) {
+          if (x >= (canvas.width / sqrt)) {
             x = 0
-            y += (blockHeight / elevation)
+//            y += (blockHeight / elevation)
+            y += (blockHeight / sqrt)
           }
 
         }
@@ -283,16 +324,52 @@ function drawMap() {
 
       console.log('finished pane', pane);
 
-      if (mod === 1) {
+      if (mod === 0) { // first col
 
-        console.log('last pane in row');
-
-        modX = 0
+        modX = canvas.width / sqrt
         x = modX
+
+        col++
+
+      }
+      else {
+
+        modX = canvas.width / sqrt * mod
+        x = modX
+
+        col++
+
+        if (mod === sqrt - 1) { // last col
+
+          console.log('/////////////////////////////// ROW');
+
+          row++
+          col = 0
+
+          modX = 0
+          x = modX
+
+          modY = canvas.height / sqrt
+          if (row) { modY *= row; }
+          y = modY
+
+        }
 
       }
 
+
+//      if (mod === 1) {
+//
+//        console.log('last pane in row');
+//
+//        modX = 0
+//        x = modX
+//
+//      }
+
     }
+
+    col++
 
   }
 }

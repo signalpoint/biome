@@ -38,67 +38,86 @@ var colorMap = {
 // TODO what about 720p and friends?
 
 let elevation = 1
-let maxElevation = 2
+let maxElevation = 3
 
-var bigIsland = [
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-];
+let pieces = {
 
-var mediumIsland = [
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-];
+  bigIsland: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','s','s','s','s','s','s','s','s','s','s','s','s','s','s','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
 
-var smallIsland = [
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
-  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-  'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
-  'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-];
+  mediumIsland: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','s','s','s','s','s','s','s','s','s','s','s','s','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
 
-var openWater = [
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-  'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
-];
+  smallIsland: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
+    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+    'w','w','w','s','g','g','g','g','g','g','g','g','s','w','w','w',
+    'w','w','w','s','s','s','s','s','s','s','s','s','s','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
+
+  smallIslands: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','s','s','s','s','w','w','w','w','w','w','w','w','w','w','w',
+    'w','s','g','g','s','w','s','s','s','s','s','s','w','w','w','w',
+    'w','s','s','s','s','w','s','g','g','g','g','s','w','w','w','w',
+    'w','w','w','w','w','w','s','g','g','g','g','s','w','w','w','w',
+    'w','w','w','w','w','w','s','s','s','s','s','s','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
+
+  openWater: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ]
+
+}
 
 class Game {
 
@@ -173,10 +192,10 @@ const game = new Game();
 
 game.setUniverse([
 
-  [ smallIsland, openWater, mediumIsland, openWater ],
-  [ mediumIsland, bigIsland, bigIsland, openWater ],
-  [ openWater, mediumIsland, smallIsland, openWater ],
-  [ openWater, smallIsland, openWater, openWater ]
+  [ pieces.openWater, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ],
+  [ pieces.mediumIsland, pieces.bigIsland, pieces.bigIsland, pieces.mediumIsland ],
+  [ pieces.openWater, pieces.mediumIsland, pieces.mediumIsland, pieces.openWater ],
+  [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.openWater ]
 
 ]);
 
@@ -432,12 +451,12 @@ function drawUniverse() {
 
       for (var col = pos.y; col < pos.y + sqrt; col++) {
 
-        breakX = canvas.width / sqrt / (deltaX + 1)
+        breakX = canvas.width / sqrt * (deltaX + 1)
 
         x = modX
         y = modY
 
-        console.log('DRAW', row, col, '|', x, y, '|', breakX, '|', deltaX);
+        console.log('DRAW', row, col, '|', x, y);
 
         chunk = game.getChunk(col, row);
 
@@ -459,12 +478,12 @@ function drawUniverse() {
 
         }
 
-        console.log('finished chunk');
+//        console.log('finished chunk');
 
         if (deltaX === 0) { // the first game column...
 
           modX = breakX
-          console.log('first game column', 'move x', modX);
+//          console.log('first game column', 'move x', modX);
 
         }
         else {
@@ -472,14 +491,14 @@ function drawUniverse() {
           if (deltaX === sqrt - 1) { // the last game column...
 
             modX = 0
-            modY += canvas.height / sqrt / (deltaRow + 1)
+            modY = canvas.height / sqrt * (deltaRow + 1)
 
-            console.log('last game column', 'move y', modY);
+//            console.log('last game column', 'move y', modY);
 
           }
           else { // an "inside" column (non-perimeter)...
 
-
+            modX = breakX
 
           }
 
@@ -488,6 +507,8 @@ function drawUniverse() {
         deltaX++
 
       } // col
+
+//      console.log('======================================== ROW')
 
       deltaRow++
 

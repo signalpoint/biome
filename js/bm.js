@@ -23,10 +23,12 @@ const keys = {
 
 let mouseDown = false
 
-var blockWidth = 64
-var blockHeight = 64
-
 // 1024x768
+const blockWidth = 64
+const blockHeight = 64
+const blocksPerChunkRow = 16
+const blocksPerChunkCol = 12
+
 var colorMap = {
   o: '#22577a', // ocean
   w: '#90e0ef', // water
@@ -158,7 +160,11 @@ class Game {
   }
 
   getCurrentChunk() {
-    return this.getUniverse()[this.getY()][this.getX()]
+    return this.getChunk(this.getX(), this.getY());
+  }
+
+  getChunk(x, y) {
+    return this.getUniverse()[y][x]
   }
 
 }
@@ -167,10 +173,10 @@ const game = new Game();
 
 game.setUniverse([
 
-  [ smallIsland, openWater,    mediumIsland, openWater ],
-  [ openWater,   bigIsland,    bigIsland,    openWater ],
-  [ openWater,   mediumIsland, smallIsland,  openWater ],
-  [ openWater,   smallIsland,  openWater,    openWater ]
+  [ smallIsland, openWater, mediumIsland, openWater ],
+  [ mediumIsland, bigIsland, bigIsland, openWater ],
+  [ openWater, mediumIsland, smallIsland, openWater ],
+  [ openWater, smallIsland, openWater, openWater ]
 
 ]);
 
@@ -179,11 +185,7 @@ addEventListener('load', function() {
   // Get canvas element.
   canvas = document.getElementById("biome-bloom")
 
-  // 720p
-//  canvas.width = 1280
-//  canvas.height = 720
-
-  // 1024*768
+  // 1024x768
   canvas.width = 1024
   canvas.height = 768
 
@@ -212,7 +214,7 @@ addEventListener('load', function() {
 
       if (elevation < maxElevation) {
         elevation++
-//        drawMap();
+        drawUniverse();
       }
 
       console.log('----- zoomed out ----------');
@@ -226,7 +228,7 @@ addEventListener('load', function() {
 
       if (elevation !== 1) {
         elevation--
-//        drawMap();
+        drawUniverse();
       }
 
       console.log('----- zoomed in ----------');
@@ -398,6 +400,98 @@ function drawUniverse() {
         y += blockHeight
       }
     }
+
+  }
+  else {
+
+    let z = 2;
+    for (var i = 1; i < elevation; i++) {
+      z = z ** 2;
+    }
+    let sqrt = Math.sqrt(z)
+
+    console.log('z', z);
+    console.log('sqrt', sqrt);
+
+    let pos = game.getCoords()
+    let colCount = game.getColCount()
+    let mod = colCount % sqrt
+    let modX = 0
+    let modY = 0
+    let deltaRow = 0
+    let deltaCol = 0
+    let breakX = null
+    let deltaX = 0 // counts block columns across a chunk's rows
+    let deltaWidth = blockWidth / sqrt;
+    let deltaHeight = blockHeight / sqrt;
+    let chunk = null
+
+    for (var row = pos.x; row < pos.x + sqrt; row++) {
+
+      deltaX = 0
+
+      for (var col = pos.y; col < pos.y + sqrt; col++) {
+
+        breakX = canvas.width / sqrt / (deltaX + 1)
+
+        x = modX
+        y = modY
+
+        console.log('DRAW', row, col, '|', x, y, '|', breakX, '|', deltaX);
+
+        chunk = game.getChunk(col, row);
+
+        for (var i = 0; i < chunk.length; i++) {
+
+          // Draw the block on the canvas.
+          c.fillStyle = colorMap[chunk[i]];
+          c.fillRect(x, y, deltaWidth, deltaHeight);
+
+          // Move over to get ready to draw the next block.
+          x += deltaWidth
+
+          if (i && i % blocksPerChunkRow == blocksPerChunkRow - 1) { // reached end of chunk row
+
+            x = modX
+            y += deltaHeight
+
+          }
+
+        }
+
+        console.log('finished chunk');
+
+        if (deltaX === 0) { // the first game column...
+
+          modX = breakX
+          console.log('first game column', 'move x', modX);
+
+        }
+        else {
+
+          if (deltaX === sqrt - 1) { // the last game column...
+
+            modX = 0
+            modY += canvas.height / sqrt / (deltaRow + 1)
+
+            console.log('last game column', 'move y', modY);
+
+          }
+          else { // an "inside" column (non-perimeter)...
+
+
+
+          }
+
+        }
+
+        deltaX++
+
+      } // col
+
+      deltaRow++
+
+    } // row
 
   }
 

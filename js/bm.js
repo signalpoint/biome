@@ -124,8 +124,13 @@ class Game {
   constructor() {
 
     this._universe = null
+    this._elevation = 1
     this._x = 0
     this._y = 0
+    this._mouseX = 0
+    this._mouseY = 0
+    this._mouseLeftClickX = 0
+    this._mouseLeftClickY = 0
 
   }
 
@@ -136,25 +141,70 @@ class Game {
   setUniverse(universe) { this._universe = universe }
   getUniverse() { return this._universe }
 
+  setElevation(elevation) { this._elevation = elevation }
+  getElevation() { return this._elevation }
+
+  increaseElevation() { this._elevation++ }
+  decreaseElevation() { this._elevation-- }
+
   getRowCount() { return this.getUniverse().length }
   getColCount() { return this.getUniverse()[0].length }
 
+  // coordinates
+
   setCoords(x, y) {
-    this.seX(x)
-    this.seY(y)
+    this._x = x
+    this._y = y
   }
   getCoords() {
     return {
-      x: this.getX(),
-      y: this.getY()
+      x: this._x,
+      y: this._y
     }
   }
 
   setX(x) { this._x = x }
   getX() { return this._x }
-
   setY(y) { this._y = y }
   getY() { return this._y }
+
+  // mouse coordinates
+
+  setMouseCoords(x, y) {
+    this._mouseX = x
+    this._mouseY = y
+  }
+  getMouseCoords() {
+    return {
+      x: this._mouseX,
+      y: this._mouseY
+    }
+  }
+
+  setMouseX(x) { this._mouseX = x }
+  getMouseX() { return this._mouseX }
+  setMouseY(y) { this._mouseY = y }
+  getMouseY() { return this._mouseY }
+
+  // mouse left click coordinates
+
+  setMouseLeftClickCoords(x, y) {
+    this._mouseLeftClickX = x
+    this._mouseLeftClickY = y
+  }
+  getMouseLeftClickCoords() {
+    return {
+      x: this._mouseLeftClickX,
+      y: this._mouseLeftClickY
+    }
+  }
+
+  setMouseLeftClickX(x) { this._mouseLeftClickX = x }
+  getMouseLeftClickX() { return this._mouseLeftClickX }
+  setMouseLeftClickY(y) { this._mouseLeftClickY = y }
+  getMouseLeftClickY() { return this._mouseLeftClickY }
+
+  // sliding
 
   canSlideUp() { return !!this.getY() }
   canSlideDown() { return this.getY() < this.getRowCount() - 1 }
@@ -178,6 +228,8 @@ class Game {
     this.refresh()
   }
 
+  // chunks
+
   getCurrentChunk() {
     return this.getChunk(this.getX(), this.getY());
   }
@@ -192,10 +244,10 @@ const game = new Game();
 
 game.setUniverse([
 
-  [ pieces.openWater, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ],
+  [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ],
   [ pieces.mediumIsland, pieces.bigIsland, pieces.bigIsland, pieces.mediumIsland ],
   [ pieces.openWater, pieces.mediumIsland, pieces.mediumIsland, pieces.openWater ],
-  [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.openWater ]
+  [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ]
 
 ]);
 
@@ -211,17 +263,38 @@ addEventListener('load', function() {
   // Get canvas context.
   c = canvas.getContext("2d")
 
-  // Canvas click listener.
+  // MOUSE
+
+  // down (click)
+
   canvas.addEventListener('mousedown', function(e) {
+
 //    console.log('mousedown');
     mouseDown = true;
-    const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    console.log("x: " + x + " y: " + y)
+
+//    const rect = canvas.getBoundingClientRect()
+//    const x = e.clientX - rect.left
+//    const y = e.clientY - rect.top
+//console.log("x: " + x + " y: " + y)
+
+    let coords = getCanvasMouseCoords(e)
+    game.setMouseLeftClickCoords(coords.x, coords.y)
+
+    console.log(coords.x + ", " + coords.y)
+
+    updateSideBarMouseLeftClickCoords()
+
   })
 
-  // MOUSE WHEEL
+  // up (release)
+
+  canvas.addEventListener("mouseup", function(evt) {
+//    console.log('mouseup');
+    mouseDown = false;
+  });
+
+  // wheel
+
   canvas.addEventListener('wheel', function(e) {
 
 //    console.log(e);
@@ -229,50 +302,54 @@ addEventListener('load', function() {
     // ZOOM OUT
     if (e.deltaY > 0) {
 
-      console.log('----- zooming out ----------');
+//      console.log('----- zooming out ----------');
 
-      if (elevation < maxElevation) {
-        elevation++
+      if (game.getElevation() < maxElevation) {
+        game.increaseElevation()
         drawUniverse();
       }
 
-      console.log('----- zoomed out ----------');
+//      console.log('----- zoomed out ----------');
 
     }
 
     // ZOOM IN
     else {
 
-      console.log('----- zooming in ----------');
+//      console.log('----- zooming in ----------');
 
-      if (elevation !== 1) {
-        elevation--
+      if (game.getElevation() !== 1) {
+        game.decreaseElevation()
         drawUniverse();
       }
 
-      console.log('----- zoomed in ----------');
+//      console.log('----- zoomed in ----------');
 
     }
     return false;
   }, false);
 
-  canvas.addEventListener("mouseup", function(evt) {
-//    console.log('mouseup');
-    mouseDown = false;
-  });
+  // over
 
   canvas.addEventListener("mouseover", function(evt) {
 //    console.log('mouseover');
-    mouseDown = false;
   });
+
+  // out
 
   canvas.addEventListener("mouseout", function(evt) {
 //    console.log('mouseout');
-    mouseDown = false;
   });
 
+  // move
+
   canvas.addEventListener("mousemove", function(evt) {
-//    console.log('mousemove');
+
+    var rect = canvas.getBoundingClientRect();
+    game.setMouseCoords(evt.clientX - rect.left, evt.clientY - rect.top)
+
+    updateSideBarMouseCoords()
+
   });
 
   drawUniverse()
@@ -389,6 +466,16 @@ addEventListener('keyup', ({ keyCode }) => {
 
 });
 
+function getCanvasMouseCoords(evt) {
+  const rect = canvas.getBoundingClientRect()
+  const x = evt.clientX - rect.left
+  const y = evt.clientY - rect.top
+  return {
+    x,
+    y
+  }
+}
+
 function clearUniverse() {
   c.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -396,6 +483,7 @@ function clearUniverse() {
 function drawUniverse() {
 
   clearUniverse();
+  updateSideBar()
 
 //  for (let row = 0; row < game.getRowCount(); row++) {
 //    for (let col = 0; col < game.getColCount(); col++) {
@@ -406,7 +494,7 @@ function drawUniverse() {
   let x = 0
   let y = 0
 
-  if (elevation === 1) {
+  if (game.getElevation() === 1) {
 
     var chunk = game.getCurrentChunk();
     for (var i = 0; i < chunk.length; i++) {
@@ -424,7 +512,7 @@ function drawUniverse() {
   else {
 
     let z = 2;
-    for (var i = 1; i < elevation; i++) {
+    for (var i = 1; i < game.getElevation(); i++) {
       z = z ** 2;
     }
     let sqrt = Math.sqrt(z)
@@ -516,6 +604,29 @@ function drawUniverse() {
 
   }
 
+}
+
+function updateSideBar() {
+  updateSideBarElevation()
+  updateSideBarMouseCoords()
+  updateSideBarMouseLeftClickCoords()
+}
+
+// elevation
+function updateSideBarElevation() {
+  document.querySelector('span[data-id="elevation"]').innerHTML = game.getElevation()
+}
+
+// mouse coords
+function updateSideBarMouseCoords() {
+  let coords = game.getMouseCoords()
+  document.querySelector('span[data-id="mouse"]').innerHTML = [coords.x, coords.y].join(', ')
+}
+
+// mouse left click coords
+function updateSideBarMouseLeftClickCoords() {
+  let coords = game.getMouseLeftClickCoords()
+  document.querySelector('span[data-id="mouse-left-click"]').innerHTML = [coords.x, coords.y].join(', ')
 }
 
 function clearMap() {

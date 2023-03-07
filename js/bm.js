@@ -28,6 +28,7 @@ const blockWidth = 64
 const blockHeight = 64
 const blocksPerChunkRow = 16
 const blocksPerChunkCol = 12
+const blocksPerChunk = blocksPerChunkRow * blocksPerChunkCol
 
 var colorMap = {
   o: '#22577a', // ocean
@@ -135,13 +136,26 @@ class Block {
     this._slice = slice
     this._key = key
 
+    this._hover = false
+
   }
+
+  getDelta() { return this._delta }
+  getRow() { return this._row }
+  getCol() { return this._col }
+  getSlice() { return this._slice }
+  getKey() { return this._key }
+
+  getHover() { return this._hover }
+  setHover(hover) { this._hover = hover }
 
 }
 
 class Game {
 
   constructor() {
+
+    this._animationFrame = null
 
     this._universe = null
     this._blocks = [];
@@ -152,6 +166,8 @@ class Game {
     this._mouseY = 0
     this._mouseLeftClickX = 0
     this._mouseLeftClickY = 0
+
+    this._hoverBlockDelta = null
 
   }
 
@@ -178,6 +194,17 @@ class Game {
       }
     }
   }
+  init() {
+    let self = this
+    self._animationFrame = requestAnimationFrame(drawUniverse)
+    setTimeout(function() {
+      console.log('cancel animation')
+      cancelAnimationFrame(self._animationFrame)
+      self._animationFrame = null
+    }, 15000)
+  }
+
+  getBlock(delta) { return this._blocks[delta] }
 
   blockKey(row, col, chunk, block) {
     return '' + row + col + chunk + block
@@ -320,11 +347,6 @@ class Game {
     return this.getCurrentChunk()[chunkIndex]
   }
 
-  highlightBlock(x, y) {
-    let blockDelta = this.getBlockDelta(x, y)
-    console.log(this._blocks[blockDelta])
-  }
-
   getBlockDelta(x, y) {
     let coords = game.getBlockCoordsWithinChunk(x, y)
     return coords.y * blocksPerChunkRow + coords.x
@@ -336,6 +358,21 @@ class Game {
 
   getBlockHeightAtCurrentElevation() {
     return blockHeight / this.getSqrt()
+  }
+
+  getHoverBlockDelta() { return this._hoverBlockDelta }
+  setHoverBlockDelta(delta) { this._hoverBlockDelta = delta }
+
+  addHoverToBlock(x, y) {
+    let blockDelta = this.getBlockDelta(x, y)
+    let hoverBlockDelta = this.getHoverBlockDelta()
+    if (blockDelta != hoverBlockDelta) {
+      if (hoverBlockDelta) {
+        this._blocks[hoverBlockDelta].setHover(false)
+      }
+      this.setHoverBlockDelta(blockDelta)
+    }
+    this._blocks[blockDelta].setHover(true)
   }
 
 }
@@ -350,8 +387,6 @@ game.setUniverse([
   [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ]
 
 ]);
-
-game.initUniverse()
 
 addEventListener('load', function() {
 
@@ -448,14 +483,18 @@ addEventListener('load', function() {
     let coords = getCanvasMouseCoords(e)
 
     game.setMouseCoords(coords.x, coords.y)
-    game.highlightBlock(coords.x, coords.y)
+    game.addHoverToBlock(coords.x, coords.y)
     updateSideBarMouseCoords()
     updateSideBarBlockCoords(coords.x, coords.y)
-//    getBlockCoordsWithinChunk
+    updateSideBarBlockDelta(coords.x, coords.y)
 
   });
 
-  drawUniverse()
+  game.initUniverse()
+
+  game.init()
+
+//  drawUniverse()
 
 //  drawMap()
 
@@ -585,20 +624,22 @@ function clearUniverse() {
 
 function drawUniverse() {
 
-  clearUniverse();
-  updateSideBar()
+  clearUniverse()
+//  updateSideBar()
 
   let elevation = game.getElevation()
   let sqrt = game.getSqrt()
   let x = 0
   let y = 0
+  let deltaStart = game.getX() * game.getY()
+  let deltaEnd = deltaStart + blocksPerChunk;
 
   if (elevation === 1) {
 
-    var chunk = game.getCurrentChunk();
-    for (var i = 0; i < chunk.length; i++) {
-      var block = chunk[i]
-      c.fillStyle = colorMap[block];
+    let block = null
+    for (let delta = deltaStart; delta < deltaEnd; delta++) {
+      block = game.getBlock(delta)
+      c.fillStyle = block.getHover() ? '#ccc' : colorMap[block.getKey()];
       c.fillRect(x, y, blockWidth, blockHeight);
       x += blockWidth
       if (x >= canvas.width) {
@@ -608,101 +649,122 @@ function drawUniverse() {
     }
 
   }
-  else {
 
-//    let z = 2;
-//    for (var i = 1; i < elevation; i++) {
-//      z = z ** 2;
+
+  if (game._animationFrame) { requestAnimationFrame(drawUniverse) }
+
+  return
+
+//  clearUniverse()
+//  updateSideBar()
+//
+//  let elevation = game.getElevation()
+//  let sqrt = game.getSqrt()
+//  let x = 0
+//  let y = 0
+//
+//  if (elevation === 1) {
+//
+//    var chunk = game.getCurrentChunk();
+//    for (var i = 0; i < chunk.length; i++) {
+//      var block = chunk[i]
+//      c.fillStyle = colorMap[block];
+//      c.fillRect(x, y, blockWidth, blockHeight);
+//      x += blockWidth
+//      if (x >= canvas.width) {
+//        x = 0
+//        y += blockHeight
+//      }
 //    }
-//    let sqrt = Math.sqrt(z)
-
-
-//    console.log('z', z);
-    console.log('sqrt', sqrt);
-
-    let pos = game.getCoords()
-    let colCount = game.getColCount()
-    let mod = colCount % sqrt
-    let modX = 0
-    let modY = 0
-    let deltaRow = 0
-    let deltaCol = 0
-    let breakX = null
-    let deltaX = 0 // counts block columns across a chunk's rows
-    let deltaWidth = game.getBlockWidthAtCurrentElevation()
-    let deltaHeight = game.getBlockHeightAtCurrentElevation()
-    let chunk = null
-
-    for (var row = pos.x; row < pos.x + sqrt; row++) {
-
-      deltaX = 0
-
-      for (var col = pos.y; col < pos.y + sqrt; col++) {
-
-        breakX = canvas.width / sqrt * (deltaX + 1)
-
-        x = modX
-        y = modY
-
-        console.log('DRAW', row, col, '|', x, y);
-
-        chunk = game.getChunk(col, row);
-
-        for (var i = 0; i < chunk.length; i++) {
-
-          // Draw the block on the canvas.
-          c.fillStyle = colorMap[chunk[i]];
-          c.fillRect(x, y, deltaWidth, deltaHeight);
-
-          // Move over to get ready to draw the next block.
-          x += deltaWidth
-
-          if (i && i % blocksPerChunkRow == blocksPerChunkRow - 1) { // reached end of chunk row
-
-            x = modX
-            y += deltaHeight
-
-          }
-
-        }
-
-//        console.log('finished chunk');
-
-        if (deltaX === 0) { // the first game column...
-
-          modX = breakX
-//          console.log('first game column', 'move x', modX);
-
-        }
-        else {
-
-          if (deltaX === sqrt - 1) { // the last game column...
-
-            modX = 0
-            modY = canvas.height / sqrt * (deltaRow + 1)
-
-//            console.log('last game column', 'move y', modY);
-
-          }
-          else { // an "inside" column (non-perimeter)...
-
-            modX = breakX
-
-          }
-
-        }
-
-        deltaX++
-
-      } // col
-
-//      console.log('======================================== ROW')
-
-      deltaRow++
-
-    } // row
-
-  }
+//
+//  }
+//  else {
+//
+//    console.log('sqrt', sqrt);
+//
+//    let pos = game.getCoords()
+//    let colCount = game.getColCount()
+//    let mod = colCount % sqrt
+//    let modX = 0
+//    let modY = 0
+//    let deltaRow = 0
+//    let deltaCol = 0
+//    let breakX = null
+//    let deltaX = 0 // counts block columns across a chunk's rows
+//    let deltaWidth = game.getBlockWidthAtCurrentElevation()
+//    let deltaHeight = game.getBlockHeightAtCurrentElevation()
+//    let chunk = null
+//
+//    for (var row = pos.x; row < pos.x + sqrt; row++) {
+//
+//      deltaX = 0
+//
+//      for (var col = pos.y; col < pos.y + sqrt; col++) {
+//
+//        breakX = canvas.width / sqrt * (deltaX + 1)
+//
+//        x = modX
+//        y = modY
+//
+//        console.log('DRAW', row, col, '|', x, y);
+//
+//        chunk = game.getChunk(col, row);
+//
+//        for (var i = 0; i < chunk.length; i++) {
+//
+//          // Draw the block on the canvas.
+//          c.fillStyle = colorMap[chunk[i]];
+//          c.fillRect(x, y, deltaWidth, deltaHeight);
+//
+//          // Move over to get ready to draw the next block.
+//          x += deltaWidth
+//
+//          if (i && i % blocksPerChunkRow == blocksPerChunkRow - 1) { // reached end of chunk row
+//
+//            x = modX
+//            y += deltaHeight
+//
+//          }
+//
+//        }
+//
+////        console.log('finished chunk');
+//
+//        if (deltaX === 0) { // the first game column...
+//
+//          modX = breakX
+////          console.log('first game column', 'move x', modX);
+//
+//        }
+//        else {
+//
+//          if (deltaX === sqrt - 1) { // the last game column...
+//
+//            modX = 0
+//            modY = canvas.height / sqrt * (deltaRow + 1)
+//
+////            console.log('last game column', 'move y', modY);
+//
+//          }
+//          else { // an "inside" column (non-perimeter)...
+//
+//            modX = breakX
+//
+//          }
+//
+//        }
+//
+//        deltaX++
+//
+//      } // col
+//
+////      console.log('======================================== ROW')
+//
+//      deltaRow++
+//
+//    } // row
+//
+//  }
 
 }
 
@@ -740,6 +802,10 @@ function updateSideBarMouseLeftClickCoords() {
 function updateSideBarBlockCoords(x, y) {
   let coords = game.getBlockCoordsWithinChunk(x, y)
   document.querySelector('span[data-id="block-coordinates"]').innerHTML = [coords.x, coords.y].join(', ')
+}
+
+function updateSideBarBlockDelta(x, y) {
+  document.querySelector('span[data-id="block-delta"]').innerHTML = game.getBlockDelta(x, y)
 }
 
 function clearMap() {

@@ -150,7 +150,7 @@ class Game {
   getRowCount() { return this.getUniverse().length }
   getColCount() { return this.getUniverse()[0].length }
 
-  // coordinates
+  // pane coordinates
 
   setCoords(x, y) {
     this._x = x
@@ -608,6 +608,7 @@ function drawUniverse() {
 
 function updateSideBar() {
   updateSideBarElevation()
+  updateSideBarPaneCoords()
   updateSideBarMouseCoords()
   updateSideBarMouseLeftClickCoords()
 }
@@ -615,6 +616,12 @@ function updateSideBar() {
 // elevation
 function updateSideBarElevation() {
   document.querySelector('span[data-id="elevation"]').innerHTML = game.getElevation()
+}
+
+// pane coords
+function updateSideBarPaneCoords() {
+  let coords = game.getCoords()
+  document.querySelector('span[data-id="pane"]').innerHTML = [coords.x, coords.y].join(', ')
 }
 
 // mouse coords

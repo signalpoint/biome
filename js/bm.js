@@ -321,8 +321,13 @@ class Game {
   }
 
   highlightBlock(x, y) {
-    let block = this.getBlockFromCoords(x, y)
-    console.log(block)
+    let blockDelta = this.getBlockDelta(x, y)
+    console.log(this._blocks[blockDelta])
+  }
+
+  getBlockDelta(x, y) {
+    let coords = game.getBlockCoordsWithinChunk(x, y)
+    return coords.y * blocksPerChunkRow + coords.x
   }
 
   getBlockWidthAtCurrentElevation() {

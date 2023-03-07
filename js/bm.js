@@ -125,8 +125,8 @@ class Game {
 
     this._universe = null
     this._elevation = 1
-    this._x = 0
-    this._y = 0
+    this._x = 0 // the pane x coordinate
+    this._y = 0 // the pane y coordinate
     this._mouseX = 0
     this._mouseY = 0
     this._mouseLeftClickX = 0
@@ -146,6 +146,8 @@ class Game {
 
   increaseElevation() { this._elevation++ }
   decreaseElevation() { this._elevation-- }
+
+  // panes
 
   getRowCount() { return this.getUniverse().length }
   getColCount() { return this.getUniverse()[0].length }
@@ -236,6 +238,57 @@ class Game {
 
   getChunk(x, y) {
     return this.getUniverse()[y][x]
+  }
+
+  // blocks
+
+  getSqrt() {
+    if (this.getElevation() === 1) { return 1 }
+    let z = 2;
+    for (var i = 1; i < this.getElevation(); i++) {
+      z = z ** 2;
+    }
+    return Math.sqrt(z)
+  }
+
+  getRowWithinChunk(y) {
+    // the "row" within the linear chunk array
+    return Math.floor(y / game.getBlockHeightAtCurrentElevation())
+  }
+  getColWithinChunk(x) {
+    // the "col" within the linear chunk array
+    return Math.floor(x / game.getBlockWidthAtCurrentElevation())
+  }
+  getIndexWithinChunk() {}
+
+  getBlockCoordsWithinChunk(x, y) {
+    return {
+      x: this.getColWithinChunk(x),
+      y: this.getRowWithinChunk(y)
+    }
+  }
+
+  getBlockFromCoords(x, y) {
+    let rowWithinChunk = this.getRowWithinChunk(y)
+    let colWithinChunk = this.getColWithinChunk(x)
+    let chunkIndex = rowWithinChunk < 1 ?
+      colWithinChunk :
+      rowWithinChunk * blocksPerChunkRow + colWithinChunk
+//    console.log(colWithinChunk, rowWithinChunk, ':', chunkIndex, this.getCurrentChunk()[chunkIndex])
+    return this.getCurrentChunk()[chunkIndex]
+  }
+
+  highlightBlock(x, y) {
+    let block = this.getBlockFromCoords(x, y)
+    console.log(block)
+  }
+
+  getBlockWidthAtCurrentElevation() {
+    return blockWidth / this.getSqrt()
+  }
+
+  getBlockHeightAtCurrentElevation() {
+    return blockHeight / this.getSqrt()
   }
 
 }
@@ -343,12 +396,18 @@ addEventListener('load', function() {
 
   // move
 
-  canvas.addEventListener("mousemove", function(evt) {
+  canvas.addEventListener("mousemove", function(e) {
 
-    var rect = canvas.getBoundingClientRect();
-    game.setMouseCoords(evt.clientX - rect.left, evt.clientY - rect.top)
+//    var rect = canvas.getBoundingClientRect();
+//    game.setMouseCoords(evt.clientX - rect.left, evt.clientY - rect.top)
 
+    let coords = getCanvasMouseCoords(e)
+
+    game.setMouseCoords(coords.x, coords.y)
+    game.highlightBlock(coords.x, coords.y)
     updateSideBarMouseCoords()
+    updateSideBarBlockCoords(coords.x, coords.y)
+//    getBlockCoordsWithinChunk
 
   });
 
@@ -485,16 +544,12 @@ function drawUniverse() {
   clearUniverse();
   updateSideBar()
 
-//  for (let row = 0; row < game.getRowCount(); row++) {
-//    for (let col = 0; col < game.getColCount(); col++) {
-//      console.log('chunk', row, col)
-//    }
-//  }
-
+  let elevation = game.getElevation()
+  let sqrt = game.getSqrt()
   let x = 0
   let y = 0
 
-  if (game.getElevation() === 1) {
+  if (elevation === 1) {
 
     var chunk = game.getCurrentChunk();
     for (var i = 0; i < chunk.length; i++) {
@@ -511,13 +566,14 @@ function drawUniverse() {
   }
   else {
 
-    let z = 2;
-    for (var i = 1; i < game.getElevation(); i++) {
-      z = z ** 2;
-    }
-    let sqrt = Math.sqrt(z)
+//    let z = 2;
+//    for (var i = 1; i < elevation; i++) {
+//      z = z ** 2;
+//    }
+//    let sqrt = Math.sqrt(z)
 
-    console.log('z', z);
+
+//    console.log('z', z);
     console.log('sqrt', sqrt);
 
     let pos = game.getCoords()
@@ -529,8 +585,8 @@ function drawUniverse() {
     let deltaCol = 0
     let breakX = null
     let deltaX = 0 // counts block columns across a chunk's rows
-    let deltaWidth = blockWidth / sqrt;
-    let deltaHeight = blockHeight / sqrt;
+    let deltaWidth = game.getBlockWidthAtCurrentElevation()
+    let deltaHeight = game.getBlockHeightAtCurrentElevation()
     let chunk = null
 
     for (var row = pos.x; row < pos.x + sqrt; row++) {
@@ -610,7 +666,8 @@ function updateSideBar() {
   updateSideBarElevation()
   updateSideBarPaneCoords()
   updateSideBarMouseCoords()
-  updateSideBarMouseLeftClickCoords()
+//  updateSideBarMouseLeftClickCoords()
+//  updateSideBarBlockCoords()
 }
 
 // elevation
@@ -634,6 +691,11 @@ function updateSideBarMouseCoords() {
 function updateSideBarMouseLeftClickCoords() {
   let coords = game.getMouseLeftClickCoords()
   document.querySelector('span[data-id="mouse-left-click"]').innerHTML = [coords.x, coords.y].join(', ')
+}
+
+function updateSideBarBlockCoords(x, y) {
+  let coords = game.getBlockCoordsWithinChunk(x, y)
+  document.querySelector('span[data-id="block-coordinates"]').innerHTML = [coords.x, coords.y].join(', ')
 }
 
 function clearMap() {

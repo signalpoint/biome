@@ -119,11 +119,32 @@ let pieces = {
 
 }
 
+class Block {
+
+  constructor({
+    delta,
+    row,
+    col,
+    slice,
+    key
+  }) {
+
+    this._delta = delta
+    this._row = row
+    this._col = col
+    this._slice = slice
+    this._key = key
+
+  }
+
+}
+
 class Game {
 
   constructor() {
 
     this._universe = null
+    this._blocks = [];
     this._elevation = 1
     this._x = 0 // the pane x coordinate
     this._y = 0 // the pane y coordinate
@@ -140,6 +161,27 @@ class Game {
 
   setUniverse(universe) { this._universe = universe }
   getUniverse() { return this._universe }
+  initUniverse() {
+    let row, col, chunk, slice, delta = 0
+    for (row = 0; row < this._universe.length; row++) {
+      for (col = 0; col < this._universe[row].length; col++) {
+        for (slice = 0; slice < this._universe[row][col].length; slice++) {
+          this._blocks[delta] = new Block({
+            delta,
+            row,
+            col,
+            slice,
+            key: this._universe[row][col][slice]
+          })
+          delta++
+        }
+      }
+    }
+  }
+
+  blockKey(row, col, chunk, block) {
+    return '' + row + col + chunk + block
+  }
 
   setElevation(elevation) { this._elevation = elevation }
   getElevation() { return this._elevation }
@@ -304,6 +346,8 @@ game.setUniverse([
 
 ]);
 
+game.initUniverse()
+
 addEventListener('load', function() {
 
   // Get canvas element.
@@ -324,11 +368,6 @@ addEventListener('load', function() {
 
 //    console.log('mousedown');
     mouseDown = true;
-
-//    const rect = canvas.getBoundingClientRect()
-//    const x = e.clientX - rect.left
-//    const y = e.clientY - rect.top
-//console.log("x: " + x + " y: " + y)
 
     let coords = getCanvasMouseCoords(e)
     game.setMouseLeftClickCoords(coords.x, coords.y)

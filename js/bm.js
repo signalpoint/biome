@@ -888,9 +888,10 @@ addEventListener('keyup', ({ keyCode }) => {
 
 // CANVAS MOUSE - event listeners
 
+// mouse down
+
 function canvasMouseDown(e) {
 
-//    console.log('mousedown');
   mouseDown = true;
 
   let coords = getCanvasMouseCoords(e)
@@ -902,10 +903,13 @@ function canvasMouseDown(e) {
 
 }
 
+// mouse up
+
 function canvasMouseUp(e) {
-//    console.log('mouseup');
   mouseDown = false;
 }
+
+// mouse wheel
 
 function canvasWheel(e) {
 
@@ -913,15 +917,30 @@ function canvasWheel(e) {
 
   // ZOOM OUT
   if (e.deltaY > 0) {
+
     if (game.getElevation() < maxElevation) {
+
+      // Increase the elevation.
       game.increaseElevation()
+
+      // Scale in the player's position.
+      player.setX(player.getX() / 2)
+      player.setY(player.getY() / 2)
+
     }
   }
 
   // ZOOM IN
   else {
+
     if (game.getElevation() !== 1) {
+
+      // Decrease the elevation.
       game.decreaseElevation()
+
+      // Scale out the player's position.
+      player.setX(player.getX() * 2)
+      player.setY(player.getY() * 2)
     }
   }
 
@@ -929,9 +948,15 @@ function canvasWheel(e) {
 
 }
 
+// mouse over
+
 function canvasMouseOver(e) { }
 
+// mouse out
+
 function canvasMouseOut(e) { }
+
+// mouse move
 
 function canvasMouseMouse(e) {
 

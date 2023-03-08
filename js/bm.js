@@ -123,89 +123,6 @@ let pieces = {
 
 }
 
-class Player {
-
-  constructor({
-    name,
-    x,
-    y
-  }) {
-
-    this._name = name
-
-    this._x = x
-    this._y = y
-
-    this._width = 24
-    this._height = 48
-
-    this._velocityX = 0
-    this._velocityY = 0
-
-    this._maxVelocityX = 10
-    this._maxVelocityY = 10
-
-  }
-
-  getName() { return this._name }
-  setName(name) { this._name = name }
-
-  getX() { return this._x }
-  setX(x) { this._x = x }
-  getY() { return this._y }
-  setY(y) { this._y = y }
-
-  getWidth() { return this._width }
-  setWidth(width) { this._width = width }
-  getHeight() { return this._height }
-  setHeight(height) { this._height = height }
-
-  getVelocity() {
-    return {
-      x: this._velocityX,
-      y: this._velocityY
-    }
-  }
-
-  getVelocityX() { return this._velocityX }
-  setVelocityX(x) { this._velocityX = x }
-  getVelocityY() { return this._velocityY }
-  setVelocityY(y) { this._velocityY = y }
-
-  getMaxVelocityX() { return this._maxVelocityX }
-  setMaxVelocityX(x) { this._maxVelocityX = x }
-  getMaxVelocityY() { return this._maxVelocityY }
-  setMaxVelocityY(y) { this._maxVelocityY = y }
-
-  increaseVelocityX(x) { this.setVelocityX(this.getVelocityX() + x) }
-  decreaseVelocityX(x) { this.setVelocityX(this.getVelocityX() - x) }
-  increaseVelocityY(y) { this.setVelocityY(this.getVelocityY() + y) }
-  decreaseVelocityY(y) { this.setVelocityY(this.getVelocityY() - y) }
-
-  update() {
-
-//    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
-
-    if (this.getVelocityX() !== 0) {
-      this.setX(this.getX() + this.getVelocityX())
-    }
-
-    if (this.getVelocityY() !== 0) {
-      this.setY(this.getY() + this.getVelocityY())
-    }
-
-  }
-
-  draw() {
-    c.fillStyle = '#000'
-    c.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight())
-  }
-
-}
-
-let player = null
-let players = []
-
 class Block {
 
   constructor({
@@ -522,6 +439,89 @@ class Game {
 
 }
 
+class Player {
+
+  constructor({
+    name,
+    x,
+    y
+  }) {
+
+    this._name = name
+
+    this._x = x
+    this._y = y
+
+    this._width = 24
+    this._height = 48
+
+    this._velocityX = 0
+    this._velocityY = 0
+
+    this._maxVelocityX = 10
+    this._maxVelocityY = 10
+
+  }
+
+  getName() { return this._name }
+  setName(name) { this._name = name }
+
+  getX() { return this._x }
+  setX(x) { this._x = x }
+  getY() { return this._y }
+  setY(y) { this._y = y }
+
+  getWidth() { return this._width }
+  setWidth(width) { this._width = width }
+  getHeight() { return this._height }
+  setHeight(height) { this._height = height }
+
+  getVelocity() {
+    return {
+      x: this._velocityX,
+      y: this._velocityY
+    }
+  }
+
+  getVelocityX() { return this._velocityX }
+  setVelocityX(x) { this._velocityX = x }
+  getVelocityY() { return this._velocityY }
+  setVelocityY(y) { this._velocityY = y }
+
+  getMaxVelocityX() { return this._maxVelocityX }
+  setMaxVelocityX(x) { this._maxVelocityX = x }
+  getMaxVelocityY() { return this._maxVelocityY }
+  setMaxVelocityY(y) { this._maxVelocityY = y }
+
+  increaseVelocityX(x) { this.setVelocityX(this.getVelocityX() + x) }
+  decreaseVelocityX(x) { this.setVelocityX(this.getVelocityX() - x) }
+  increaseVelocityY(y) { this.setVelocityY(this.getVelocityY() + y) }
+  decreaseVelocityY(y) { this.setVelocityY(this.getVelocityY() - y) }
+
+  update() {
+
+//    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
+
+    if (this.getVelocityX() !== 0) {
+      this.setX(this.getX() + this.getVelocityX())
+    }
+
+    if (this.getVelocityY() !== 0) {
+      this.setY(this.getY() + this.getVelocityY())
+    }
+
+  }
+
+  draw() {
+    c.fillStyle = '#000'
+    c.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight())
+  }
+
+}
+
+let player = null
+let players = []
+
 const game = new Game();
 
 game.setUniverse([
@@ -642,122 +642,6 @@ addEventListener('load', function() {
 
 });
 
-// KEY DOWN
-
-addEventListener('keydown', ({ keyCode } ) => {
-
-//    console.log(keyCode);
-
-//  if (game.userInputIsDisabled()) return
-
-  switch (keyCode) {
-
-    // UP
-    case 87: // (W)
-    case 38: // (up arrow)
-
-//      if (!keys.up.pressed && game.canSlideUp()) {
-//        game.slideUp()
-//      }
-
-      keys.up.pressed = true
-
-      break
-
-    // DOWN
-    case 83: // (S)
-    case 40: // (down arrow)
-
-//      if (!keys.down.pressed && game.canSlideDown()) {
-//        game.slideDown()
-//      }
-
-      keys.down.pressed = true
-
-      break
-
-    // LEFT
-    case 65: // (A)
-    case 37: // (left arrow)
-
-//      if (!keys.left.pressed && game.canSlideLeft()) {
-//        game.slideLeft()
-//      }
-
-      keys.left.pressed = true
-
-      break
-
-    // RIGHT
-    case 68: // (D)
-    case 39: // (right arrow)
-
-//      if (!keys.right.pressed && game.canSlideRight()) {
-//        game.slideRight()
-//      }
-
-      keys.right.pressed = true
-
-      break
-
-  }
-
-});
-
-// KEY UP
-
-addEventListener('keyup', ({ keyCode }) => {
-
-//  if (game.userInputIsDisabled()) return
-
-  switch (keyCode) {
-
-    // UP
-    case 87: // (W)
-    case 38: // (up arrow)
-
-      keys.up.pressed = false
-
-      break
-
-    // DOWN
-    case 83: // (S)
-    case 40: // (down arrow)
-
-      keys.down.pressed = false
-
-      break
-
-    // LEFT
-    case 65: // (A)
-    case 37: // (left arrow)
-
-      keys.left.pressed = false
-
-      break
-
-    // RIGHT
-    case 68: // (D)
-    case 39: // (right arrow)
-
-      keys.right.pressed = false
-
-      break
-
-  }
-
-});
-
-function getCanvasMouseCoords(evt) {
-  const rect = canvas.getBoundingClientRect()
-  const x = evt.clientX - rect.left
-  const y = evt.clientY - rect.top
-  return {
-    x,
-    y
-  }
-}
-
 game.update = function() {
 
   // key press velocity changes for player
@@ -798,9 +682,13 @@ game.update = function() {
 
 };
 
+// CLEAR
+
 function clearUniverse() {
   c.clearRect(0, 0, canvas.width, canvas.height);
 }
+
+// DRAW
 
 function drawUniverse() {
 
@@ -968,6 +856,122 @@ function drawUniverse() {
 
   if (game._animationFrame) { requestAnimationFrame(drawUniverse) }
 
+}
+
+// KEY DOWN
+
+addEventListener('keydown', ({ keyCode } ) => {
+
+//    console.log(keyCode);
+
+//  if (game.userInputIsDisabled()) return
+
+  switch (keyCode) {
+
+    // UP
+    case 87: // (W)
+    case 38: // (up arrow)
+
+//      if (!keys.up.pressed && game.canSlideUp()) {
+//        game.slideUp()
+//      }
+
+      keys.up.pressed = true
+
+      break
+
+    // DOWN
+    case 83: // (S)
+    case 40: // (down arrow)
+
+//      if (!keys.down.pressed && game.canSlideDown()) {
+//        game.slideDown()
+//      }
+
+      keys.down.pressed = true
+
+      break
+
+    // LEFT
+    case 65: // (A)
+    case 37: // (left arrow)
+
+//      if (!keys.left.pressed && game.canSlideLeft()) {
+//        game.slideLeft()
+//      }
+
+      keys.left.pressed = true
+
+      break
+
+    // RIGHT
+    case 68: // (D)
+    case 39: // (right arrow)
+
+//      if (!keys.right.pressed && game.canSlideRight()) {
+//        game.slideRight()
+//      }
+
+      keys.right.pressed = true
+
+      break
+
+  }
+
+});
+
+// KEY UP
+
+addEventListener('keyup', ({ keyCode }) => {
+
+//  if (game.userInputIsDisabled()) return
+
+  switch (keyCode) {
+
+    // UP
+    case 87: // (W)
+    case 38: // (up arrow)
+
+      keys.up.pressed = false
+
+      break
+
+    // DOWN
+    case 83: // (S)
+    case 40: // (down arrow)
+
+      keys.down.pressed = false
+
+      break
+
+    // LEFT
+    case 65: // (A)
+    case 37: // (left arrow)
+
+      keys.left.pressed = false
+
+      break
+
+    // RIGHT
+    case 68: // (D)
+    case 39: // (right arrow)
+
+      keys.right.pressed = false
+
+      break
+
+  }
+
+});
+
+function getCanvasMouseCoords(evt) {
+  const rect = canvas.getBoundingClientRect()
+  const x = evt.clientX - rect.left
+  const y = evt.clientY - rect.top
+  return {
+    x,
+    y
+  }
 }
 
 function updateSideBar() {

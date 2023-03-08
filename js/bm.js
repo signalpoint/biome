@@ -495,12 +495,12 @@ class Player {
 //    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
 
     if (this.getVelocityX() !== 0) {
-      console.log('x', this.getX(), 'vX', this.getVelocityX())
+//      console.log('x', this.getX(), 'vX', this.getVelocityX())
       this.setX(this.getX() + this.getVelocityX())
     }
 
     if (this.getVelocityY() !== 0) {
-      console.log('y', this.getY(), 'vY', this.getVelocityY())
+//      console.log('y', this.getY(), 'vY', this.getVelocityY())
       this.setY(this.getY() + this.getVelocityY())
     }
 
@@ -532,6 +532,8 @@ game.setUniverse([
 
 ]);
 
+// LOAD
+
 addEventListener('load', function() {
 
   // Get canvas element.
@@ -544,90 +546,21 @@ addEventListener('load', function() {
   // Get canvas context.
   c = canvas.getContext("2d")
 
-  // MOUSE
-
-  // down (click)
-
-  canvas.addEventListener('mousedown', function(e) {
-
-//    console.log('mousedown');
-    mouseDown = true;
-
-    let coords = getCanvasMouseCoords(e)
-    game.setMouseLeftClickCoords(coords.x, coords.y)
-
-    console.log(coords.x + ", " + coords.y)
-
-    updateSideBarMouseLeftClickCoords()
-
-  })
-
-  // up (release)
-
-  canvas.addEventListener("mouseup", function(evt) {
-//    console.log('mouseup');
-    mouseDown = false;
-  });
-
-  // wheel
-
-  canvas.addEventListener('wheel', function(e) {
-
-//    console.log(e);
-
-    // ZOOM OUT
-    if (e.deltaY > 0) {
-      if (game.getElevation() < maxElevation) {
-        game.increaseElevation()
-      }
-    }
-
-    // ZOOM IN
-    else {
-      if (game.getElevation() !== 1) {
-        game.decreaseElevation()
-      }
-    }
-
-    return false;
-
-  }, false);
-
-  // over
-
-  canvas.addEventListener("mouseover", function(evt) {
-//    console.log('mouseover');
-  });
-
-  // out
-
-  canvas.addEventListener("mouseout", function(evt) {
-//    console.log('mouseout');
-  });
-
-  // move
-
-  canvas.addEventListener("mousemove", function(e) {
-
-//    var rect = canvas.getBoundingClientRect();
-//    game.setMouseCoords(evt.clientX - rect.left, evt.clientY - rect.top)
-
-    let coords = getCanvasMouseCoords(e)
-
-    game.setMouseCoords(coords.x, coords.y)
-    game.addHoverToBlock(coords.x, coords.y)
-    updateSideBarMouseCoords()
-    updateSideBarBlockPosition(coords.x, coords.y)
-    updateSideBarBlockDelta(coords.x, coords.y)
-    updateSideBarBlockCoords(coords.x, coords.y)
-
-  });
+  // CANVAS MOUSE - event listeners
+  canvas.addEventListener('mousedown', canvasMouseDown)
+  canvas.addEventListener("mouseup", canvasMouseUp);
+  canvas.addEventListener('wheel', canvasWheel, false);
+  canvas.addEventListener("mouseover", canvasMouseOver);
+  canvas.addEventListener("mouseout", canvasMouseOut);
+  canvas.addEventListener("mousemove", canvasMouseMouse);
 
   game.initUniverse()
 
   game.init()
 
 });
+
+// UPDATE
 
 game.update = function() {
 
@@ -952,6 +885,73 @@ addEventListener('keyup', ({ keyCode }) => {
   }
 
 });
+
+// CANVAS MOUSE - event listeners
+
+function canvasMouseDown(e) {
+
+//    console.log('mousedown');
+  mouseDown = true;
+
+  let coords = getCanvasMouseCoords(e)
+  game.setMouseLeftClickCoords(coords.x, coords.y)
+
+  console.log(coords.x + ", " + coords.y)
+
+  updateSideBarMouseLeftClickCoords()
+
+}
+
+function canvasMouseUp(e) {
+//    console.log('mouseup');
+  mouseDown = false;
+}
+
+function canvasWheel(e) {
+
+//    console.log(e);
+
+  // ZOOM OUT
+  if (e.deltaY > 0) {
+    if (game.getElevation() < maxElevation) {
+      game.increaseElevation()
+    }
+  }
+
+  // ZOOM IN
+  else {
+    if (game.getElevation() !== 1) {
+      game.decreaseElevation()
+    }
+  }
+
+  return false;
+
+}
+
+function canvasMouseOver(e) { }
+
+function canvasMouseOut(e) { }
+
+function canvasMouseMouse(e) {
+
+//    var rect = canvas.getBoundingClientRect();
+//    game.setMouseCoords(evt.clientX - rect.left, evt.clientY - rect.top)
+
+  let coords = getCanvasMouseCoords(e)
+
+  game.setMouseCoords(coords.x, coords.y)
+  game.addHoverToBlock(coords.x, coords.y)
+  updateSideBarMouseCoords()
+  updateSideBarBlockPosition(coords.x, coords.y)
+  updateSideBarBlockDelta(coords.x, coords.y)
+  updateSideBarBlockCoords(coords.x, coords.y)
+
+}
+
+/**
+ * HELPERS
+ */
 
 function getCanvasMouseCoords(evt) {
   const rect = canvas.getBoundingClientRect()

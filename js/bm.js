@@ -1,3 +1,5 @@
+const animate = false
+
 // The canvas element.
 var canvas = null
 
@@ -149,6 +151,11 @@ class Block {
   getHover() { return this._hover }
   setHover(hover) { this._hover = hover }
 
+  draw(x, y, width, height) {
+    c.fillStyle = this.getHover() ? '#ccc' : colorMap[this.getKey()]
+    c.fillRect(x, y, width, height)
+  }
+
 }
 
 class Game {
@@ -177,10 +184,25 @@ class Game {
 
   setUniverse(universe) { this._universe = universe }
   getUniverse() { return this._universe }
+  getUniverseColCount() { return game.getUniverse()[0].length }
+  getUniverseRowCount() { return game.getUniverse().length  }
   initUniverse() {
-    let row, col, chunk, slice, delta = 0
+
+    let row = 0
+    let col = 0
+    let chunk = 0
+    let slice = 0
+    let delta = 0
+
+    // debug
+    let deltaStart = 0
+    let deltaEnd = 0
+
     for (row = 0; row < this._universe.length; row++) {
       for (col = 0; col < this._universe[row].length; col++) {
+
+        deltaStart = delta // debug
+
         for (slice = 0; slice < this._universe[row][col].length; slice++) {
           this._blocks[delta] = new Block({
             delta,
@@ -191,17 +213,36 @@ class Game {
           })
           delta++
         }
+
+        // debug
+        deltaEnd = delta
+        console.log('(' + col + ',' + row + ')', deltaStart, deltaEnd - 1)
+
       }
+      console.log('----')
     }
+
   }
   init() {
+
     let self = this
-    self._animationFrame = requestAnimationFrame(drawUniverse)
-    setTimeout(function() {
-      console.log('cancel animation')
-      cancelAnimationFrame(self._animationFrame)
-      self._animationFrame = null
-    }, 15000)
+
+    if (animate) {
+
+      self._animationFrame = requestAnimationFrame(drawUniverse)
+      setTimeout(function() {
+        console.log('cancel animation')
+        cancelAnimationFrame(self._animationFrame)
+        self._animationFrame = null
+      }, 15000)
+
+    }
+    else {
+
+      drawUniverse()
+
+    }
+
   }
 
   getBlock(delta) { return this._blocks[delta] }
@@ -311,13 +352,15 @@ class Game {
 
   // blocks
 
-  getSqrt() {
-    if (this.getElevation() === 1) { return 1 }
+  getZ() {
     let z = 2;
     for (var i = 1; i < this.getElevation(); i++) {
       z = z ** 2;
     }
-    return Math.sqrt(z)
+    return z
+  }
+  getSqrt() {
+    return this.getElevation() === 1 ? 1 : Math.sqrt(this.getZ())
   }
 
   getRowWithinChunk(y) {
@@ -628,25 +671,148 @@ function drawUniverse() {
 //  updateSideBar()
 
   let elevation = game.getElevation()
-  let sqrt = game.getSqrt()
   let x = 0
   let y = 0
-  let deltaStart = game.getX() * game.getY()
-  let deltaEnd = deltaStart + blocksPerChunk;
+  let deltaStart = null
+  let deltaEnd = null
 
   if (elevation === 1) {
 
-    let block = null
+    // 1 chunk to render...
+
+    deltaStart = game.getX() * game.getY()
+    deltaEnd = deltaStart + blocksPerChunk;
+
+//    console.log(deltaStart, deltaEnd)
+
     for (let delta = deltaStart; delta < deltaEnd; delta++) {
-      block = game.getBlock(delta)
-      c.fillStyle = block.getHover() ? '#ccc' : colorMap[block.getKey()];
-      c.fillRect(x, y, blockWidth, blockHeight);
+      game.getBlock(delta).draw(x, y, blockWidth, blockHeight)
       x += blockWidth
       if (x >= canvas.width) {
         x = 0
         y += blockHeight
       }
     }
+
+  }
+  else {
+
+    // multiple chunks to render...
+
+    let z = game.getZ()
+    let sqrt = game.getSqrt()
+    let pos = game.getCoords()
+
+    let delta = null
+    let modX = 0
+    let modY = 0
+    let deltaX = 0
+    let deltaY = 0
+    let deltaRow = 0
+    let deltaCol = 0
+    let deltaWidth = game.getBlockWidthAtCurrentElevation()
+    let deltaHeight = game.getBlockHeightAtCurrentElevation()
+    let breakX = 0
+    let breakY = 0
+
+    for (var row = pos.x; row < pos.x + sqrt; row++) {
+
+      deltaCol = 0
+
+      for (var col = pos.y; col < pos.y + sqrt; col++) {
+
+        // a pane/chunk...
+
+        // determine delta range for blocks...
+        if (deltaRow == 0) {
+          deltaStart = col * blocksPerChunk
+        }
+        else {
+          deltaStart = row * blocksPerChunk * game.getUniverseColCount()
+          if (deltaCol == 0) {
+          }
+          else {
+            deltaStart += col * blocksPerChunk
+          }
+        }
+        deltaEnd = deltaStart + blocksPerChunk - 1
+
+          console.log('-------------- CHUNK (' + deltaCol + ',' + deltaRow + '):', modX, modY, '|', deltaStart, deltaEnd)
+
+        deltaX = 0
+
+        // render each block in the chunk...
+        for (let delta = deltaStart; delta <= deltaEnd; delta++) {
+
+          x = modX
+          y = modY
+
+          game.getBlock(delta).draw(x, y, deltaWidth, deltaHeight)
+
+          modX += deltaWidth
+
+          if (deltaX && (deltaX + 1) % blocksPerChunkRow == 0) { // last block in chunk's row...
+            modX = deltaWidth * blocksPerChunkRow * deltaCol
+            modY += deltaHeight
+          }
+
+          if (delta == deltaEnd) { // last block in chunk...
+            modY = deltaHeight * blocksPerChunkCol * deltaRow // reset modY for the game row
+          }
+
+          deltaX++
+
+        }
+        // done rendering each block in the chunk
+
+        // move to the next pane...
+
+        breakX = deltaWidth * blocksPerChunkRow
+
+        modX = breakX
+
+        if (deltaRow === 0) { // the first game row
+          modY = 0
+        }
+        else {
+
+          if (deltaRow === sqrt - 1) { // the last game row...
+
+          }
+          else { // an "inside" row...
+
+          }
+
+        }
+
+        if (deltaCol === 0) { // the first game column...
+
+        }
+        else {
+
+          if (deltaCol === sqrt - 1) { // the last game column...
+
+            modX = 0
+            modY = deltaHeight * blocksPerChunkCol * (deltaRow + 1)
+
+          }
+          else { // an "inside" column...
+
+            modX = breakX * (deltaCol + 1)
+
+          }
+
+        }
+
+        deltaCol++
+
+      }
+
+      deltaRow++
+
+    }
+
+    console.log('--=--=--=--=--=--=--')
 
   }
 

@@ -1,4 +1,5 @@
-const animate = false
+const animate = true
+if (!animate) { console.log('game animation disabled') }
 
 // The canvas element.
 var canvas = null
@@ -131,10 +132,18 @@ class Player {
   }) {
 
     this._name = name
+
     this._x = x
     this._y = y
+
     this._width = 24
     this._height = 48
+
+    this._velocityX = 0
+    this._velocityY = 0
+
+    this._maxVelocityX = 10
+    this._maxVelocityY = 10
 
   }
 
@@ -150,6 +159,42 @@ class Player {
   setWidth(width) { this._width = width }
   getHeight() { return this._height }
   setHeight(height) { this._height = height }
+
+  getVelocity() {
+    return {
+      x: this._velocityX,
+      y: this._velocityY
+    }
+  }
+
+  getVelocityX() { return this._velocityX }
+  setVelocityX(x) { this._velocityX = x }
+  getVelocityY() { return this._velocityY }
+  setVelocityY(y) { this._velocityY = y }
+
+  getMaxVelocityX() { return this._maxVelocityX }
+  setMaxVelocityX(x) { this._maxVelocityX = x }
+  getMaxVelocityY() { return this._maxVelocityY }
+  setMaxVelocityY(y) { this._maxVelocityY = y }
+
+  increaseVelocityX(x) { this.setVelocityX(this.getVelocityX() + x) }
+  decreaseVelocityX(x) { this.setVelocityX(this.getVelocityX() - x) }
+  increaseVelocityY(y) { this.setVelocityY(this.getVelocityY() + y) }
+  decreaseVelocityY(y) { this.setVelocityY(this.getVelocityY() - y) }
+
+  update() {
+
+//    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
+
+    if (this.getVelocityX() !== 0) {
+      this.setX(this.getX() + this.getVelocityX())
+    }
+
+    if (this.getVelocityY() !== 0) {
+      this.setY(this.getY() + this.getVelocityY())
+    }
+
+  }
 
   draw() {
     c.fillStyle = '#000'
@@ -289,6 +334,16 @@ class Game {
       drawUniverse()
 
     }
+
+  }
+
+  // abstract - game must implement
+  update() {
+
+    // PLAYER
+//    for (let p = 0; p < players.length; p++) {
+//      players[p].update()
+//    }
 
   }
 
@@ -528,7 +583,7 @@ addEventListener('load', function() {
 
       if (game.getElevation() < maxElevation) {
         game.increaseElevation()
-        drawUniverse();
+        drawUniverse(); // possibly not needed when animation is true
       }
 
 //      console.log('----- zoomed out ----------');
@@ -542,7 +597,7 @@ addEventListener('load', function() {
 
       if (game.getElevation() !== 1) {
         game.decreaseElevation()
-        drawUniverse();
+        drawUniverse(); // possibly not needed when animation is true
       }
 
 //      console.log('----- zoomed in ----------');
@@ -601,9 +656,9 @@ addEventListener('keydown', ({ keyCode } ) => {
     case 87: // (W)
     case 38: // (up arrow)
 
-      if (!keys.up.pressed && game.canSlideUp()) {
-        game.slideUp()
-      }
+//      if (!keys.up.pressed && game.canSlideUp()) {
+//        game.slideUp()
+//      }
 
       keys.up.pressed = true
 
@@ -613,9 +668,9 @@ addEventListener('keydown', ({ keyCode } ) => {
     case 83: // (S)
     case 40: // (down arrow)
 
-      if (!keys.down.pressed && game.canSlideDown()) {
-        game.slideDown()
-      }
+//      if (!keys.down.pressed && game.canSlideDown()) {
+//        game.slideDown()
+//      }
 
       keys.down.pressed = true
 
@@ -625,9 +680,9 @@ addEventListener('keydown', ({ keyCode } ) => {
     case 65: // (A)
     case 37: // (left arrow)
 
-      if (!keys.left.pressed && game.canSlideLeft()) {
-        game.slideLeft()
-      }
+//      if (!keys.left.pressed && game.canSlideLeft()) {
+//        game.slideLeft()
+//      }
 
       keys.left.pressed = true
 
@@ -637,9 +692,9 @@ addEventListener('keydown', ({ keyCode } ) => {
     case 68: // (D)
     case 39: // (right arrow)
 
-      if (!keys.right.pressed && game.canSlideRight()) {
-        game.slideRight()
-      }
+//      if (!keys.right.pressed && game.canSlideRight()) {
+//        game.slideRight()
+//      }
 
       keys.right.pressed = true
 
@@ -703,11 +758,53 @@ function getCanvasMouseCoords(evt) {
   }
 }
 
+game.update = function() {
+
+  // key press velocity changes for player
+
+  if (keys.up.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY()) {
+    player.decreaseVelocityY(1)
+  }
+  else if (player.getVelocityY() < 0) {
+    player.increaseVelocityY(1)
+  }
+
+  if (keys.down.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY()) {
+    player.increaseVelocityY(1)
+  }
+  else if (player.getVelocityY() > 0) {
+    player.decreaseVelocityY(1)
+  }
+
+  if (keys.left.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX()) {
+    player.decreaseVelocityX(1)
+  }
+  else if (player.getVelocityX() < 0) {
+    player.increaseVelocityX(1)
+  }
+
+  if (keys.right.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX()) {
+    player.increaseVelocityX(1)
+  }
+  else if (player.getVelocityX() > 0) {
+    player.decreaseVelocityX(1)
+  }
+
+  // player updates
+
+  for (let p = 0; p < players.length; p++) {
+    players[p].update()
+  }
+
+};
+
 function clearUniverse() {
   c.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function drawUniverse() {
+
+  game.update()
 
   clearUniverse()
 

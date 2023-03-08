@@ -179,10 +179,6 @@ class Game {
 
   }
 
-  refresh() {
-    drawUniverse()
-  }
-
   setUniverse(universe) { this._universe = universe }
   getUniverse() { return this._universe }
   getUniverseColCount() { return game.getUniverse()[0].length }
@@ -243,7 +239,7 @@ class Game {
         console.log('cancel animation')
         cancelAnimationFrame(self._animationFrame)
         self._animationFrame = null
-      }, 15000)
+      }, 25000)
 
     }
     else {
@@ -344,19 +340,15 @@ class Game {
 
   slideUp() {
     this.setY(this.getY() - 1)
-    this.refresh()
   }
   slideDown() {
     this.setY(this.getY() + 1)
-    this.refresh()
   }
   slideLeft() {
     this.setX(this.getX() - 1)
-    this.refresh()
   }
   slideRight() {
     this.setX(this.getX() + 1)
-    this.refresh()
   }
 
   // chunks
@@ -503,10 +495,12 @@ class Player {
 //    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
 
     if (this.getVelocityX() !== 0) {
+      console.log('x', this.getX(), 'vX', this.getVelocityX())
       this.setX(this.getX() + this.getVelocityX())
     }
 
     if (this.getVelocityY() !== 0) {
+      console.log('y', this.getY(), 'vY', this.getVelocityY())
       this.setY(this.getY() + this.getVelocityY())
     }
 
@@ -514,7 +508,12 @@ class Player {
 
   draw() {
     c.fillStyle = '#000'
-    c.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight())
+    c.fillRect(
+      this.getX(),
+      this.getY(),
+      this.getWidth() / game.getSqrt(),
+      this.getHeight() / game.getSqrt()
+    )
   }
 
 }
@@ -578,32 +577,20 @@ addEventListener('load', function() {
 
     // ZOOM OUT
     if (e.deltaY > 0) {
-
-//      console.log('----- zooming out ----------');
-
       if (game.getElevation() < maxElevation) {
         game.increaseElevation()
-        drawUniverse(); // possibly not needed when animation is true
       }
-
-//      console.log('----- zoomed out ----------');
-
     }
 
     // ZOOM IN
     else {
-
-//      console.log('----- zooming in ----------');
-
       if (game.getElevation() !== 1) {
         game.decreaseElevation()
-        drawUniverse(); // possibly not needed when animation is true
       }
-
-//      console.log('----- zoomed in ----------');
-
     }
+
     return false;
+
   }, false);
 
   // over
@@ -644,34 +631,36 @@ addEventListener('load', function() {
 
 game.update = function() {
 
+  let sqrt = game.getSqrt()
+
   // key press velocity changes for player
 
-  if (keys.up.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY()) {
-    player.decreaseVelocityY(1)
+  if (keys.up.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY() / sqrt) {
+    player.decreaseVelocityY(1 / sqrt)
   }
   else if (player.getVelocityY() < 0) {
-    player.increaseVelocityY(1)
+    player.increaseVelocityY(1 / sqrt)
   }
 
-  if (keys.down.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY()) {
-    player.increaseVelocityY(1)
+  if (keys.down.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY() / sqrt) {
+    player.increaseVelocityY(1 / sqrt)
   }
   else if (player.getVelocityY() > 0) {
-    player.decreaseVelocityY(1)
+    player.decreaseVelocityY(1 / sqrt)
   }
 
-  if (keys.left.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX()) {
-    player.decreaseVelocityX(1)
+  if (keys.left.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX() / sqrt) {
+    player.decreaseVelocityX(1 / sqrt)
   }
   else if (player.getVelocityX() < 0) {
-    player.increaseVelocityX(1)
+    player.increaseVelocityX(1 / sqrt)
   }
 
-  if (keys.right.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX()) {
-    player.increaseVelocityX(1)
+  if (keys.right.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX() / sqrt) {
+    player.increaseVelocityX(1 / sqrt)
   }
   else if (player.getVelocityX() > 0) {
-    player.decreaseVelocityX(1)
+    player.decreaseVelocityX(1 / sqrt)
   }
 
   // player updates
@@ -765,7 +754,7 @@ function drawUniverse() {
         }
         deltaEnd = deltaStart + blocksPerChunk - 1
 
-          console.log('-------------- CHUNK (' + deltaCol + ',' + deltaRow + '):', modX, modY, '|', deltaStart, deltaEnd)
+//          console.log('-------------- CHUNK (' + deltaCol + ',' + deltaRow + '):', modX, modY, '|', deltaStart, deltaEnd)
 
         deltaX = 0
 
@@ -840,7 +829,7 @@ function drawUniverse() {
 
     }
 
-    console.log('--=--=--=--=--=--=--')
+//    console.log('--=--=--=--=--=--=--')
 
   }
 

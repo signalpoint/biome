@@ -122,6 +122,45 @@ let pieces = {
 
 }
 
+class Player {
+
+  constructor({
+    name,
+    x,
+    y
+  }) {
+
+    this._name = name
+    this._x = x
+    this._y = y
+    this._width = 24
+    this._height = 48
+
+  }
+
+  getName() { return this._name }
+  setName(name) { this._name = name }
+
+  getX() { return this._x }
+  setX(x) { this._x = x }
+  getY() { return this._y }
+  setY(y) { this._y = y }
+
+  getWidth() { return this._width }
+  setWidth(width) { this._width = width }
+  getHeight() { return this._height }
+  setHeight(height) { this._height = height }
+
+  draw() {
+    c.fillStyle = '#000'
+    c.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight())
+  }
+
+}
+
+let player = null
+let players = []
+
 class Block {
 
   constructor({
@@ -226,6 +265,14 @@ class Game {
   init() {
 
     let self = this
+
+    player = new Player({
+      name: 'Tyler',
+      x: 456,
+      y: 198
+    })
+
+    players.push(player)
 
     if (animate) {
 
@@ -663,7 +710,8 @@ function clearUniverse() {
 function drawUniverse() {
 
   clearUniverse()
-//  updateSideBar()
+
+  // CHUNKS / BLOCKS
 
   let elevation = game.getElevation()
   let x = 0
@@ -811,6 +859,13 @@ function drawUniverse() {
 
   }
 
+  // PLAYER
+  for (let p = 0; p < players.length; p++) {
+    players[p].draw()
+  }
+
+  // GRID
+
   drawGrid()
 
 
@@ -859,8 +914,6 @@ function updateSideBarBlockDelta(x, y) {
 function updateSideBarBlockCoords(x, y) {
   let coords = game.getBlockCoordsWithinChunk(x, y)
   document.querySelector('span[data-id="block-coordinates"]').innerHTML = [
-//    coords.x * game.getRowCount() * game.getBlockWidthAtCurrentElevation(),
-//    coords.y * game.getColCount() * game.getBlockWidthAtCurrentElevation()
     coords.x * game.getBlockWidthAtCurrentElevation(),
     coords.y * game.getBlockWidthAtCurrentElevation()
   ].join(', ')

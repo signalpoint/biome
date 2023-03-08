@@ -528,20 +528,15 @@ addEventListener('load', function() {
     game.setMouseCoords(coords.x, coords.y)
     game.addHoverToBlock(coords.x, coords.y)
     updateSideBarMouseCoords()
-    updateSideBarBlockCoords(coords.x, coords.y)
+    updateSideBarBlockPosition(coords.x, coords.y)
     updateSideBarBlockDelta(coords.x, coords.y)
+    updateSideBarBlockCoords(coords.x, coords.y)
 
   });
 
   game.initUniverse()
 
   game.init()
-
-//  drawUniverse()
-
-//  drawMap()
-
-//  drawGrid()
 
 });
 
@@ -816,121 +811,10 @@ function drawUniverse() {
 
   }
 
+  drawGrid()
+
 
   if (game._animationFrame) { requestAnimationFrame(drawUniverse) }
-
-  return
-
-//  clearUniverse()
-//  updateSideBar()
-//
-//  let elevation = game.getElevation()
-//  let sqrt = game.getSqrt()
-//  let x = 0
-//  let y = 0
-//
-//  if (elevation === 1) {
-//
-//    var chunk = game.getCurrentChunk();
-//    for (var i = 0; i < chunk.length; i++) {
-//      var block = chunk[i]
-//      c.fillStyle = colorMap[block];
-//      c.fillRect(x, y, blockWidth, blockHeight);
-//      x += blockWidth
-//      if (x >= canvas.width) {
-//        x = 0
-//        y += blockHeight
-//      }
-//    }
-//
-//  }
-//  else {
-//
-//    console.log('sqrt', sqrt);
-//
-//    let pos = game.getCoords()
-//    let colCount = game.getColCount()
-//    let mod = colCount % sqrt
-//    let modX = 0
-//    let modY = 0
-//    let deltaRow = 0
-//    let deltaCol = 0
-//    let breakX = null
-//    let deltaX = 0 // counts block columns across a chunk's rows
-//    let deltaWidth = game.getBlockWidthAtCurrentElevation()
-//    let deltaHeight = game.getBlockHeightAtCurrentElevation()
-//    let chunk = null
-//
-//    for (var row = pos.x; row < pos.x + sqrt; row++) {
-//
-//      deltaX = 0
-//
-//      for (var col = pos.y; col < pos.y + sqrt; col++) {
-//
-//        breakX = canvas.width / sqrt * (deltaX + 1)
-//
-//        x = modX
-//        y = modY
-//
-//        console.log('DRAW', row, col, '|', x, y);
-//
-//        chunk = game.getChunk(col, row);
-//
-//        for (var i = 0; i < chunk.length; i++) {
-//
-//          // Draw the block on the canvas.
-//          c.fillStyle = colorMap[chunk[i]];
-//          c.fillRect(x, y, deltaWidth, deltaHeight);
-//
-//          // Move over to get ready to draw the next block.
-//          x += deltaWidth
-//
-//          if (i && i % blocksPerChunkRow == blocksPerChunkRow - 1) { // reached end of chunk row
-//
-//            x = modX
-//            y += deltaHeight
-//
-//          }
-//
-//        }
-//
-////        console.log('finished chunk');
-//
-//        if (deltaX === 0) { // the first game column...
-//
-//          modX = breakX
-////          console.log('first game column', 'move x', modX);
-//
-//        }
-//        else {
-//
-//          if (deltaX === sqrt - 1) { // the last game column...
-//
-//            modX = 0
-//            modY = canvas.height / sqrt * (deltaRow + 1)
-//
-////            console.log('last game column', 'move y', modY);
-//
-//          }
-//          else { // an "inside" column (non-perimeter)...
-//
-//            modX = breakX
-//
-//          }
-//
-//        }
-//
-//        deltaX++
-//
-//      } // col
-//
-////      console.log('======================================== ROW')
-//
-//      deltaRow++
-//
-//    } // row
-//
-//  }
 
 }
 
@@ -938,8 +822,6 @@ function updateSideBar() {
   updateSideBarElevation()
   updateSideBarPaneCoords()
   updateSideBarMouseCoords()
-//  updateSideBarMouseLeftClickCoords()
-//  updateSideBarBlockCoords()
 }
 
 // elevation
@@ -965,13 +847,23 @@ function updateSideBarMouseLeftClickCoords() {
   document.querySelector('span[data-id="mouse-left-click"]').innerHTML = [coords.x, coords.y].join(', ')
 }
 
-function updateSideBarBlockCoords(x, y) {
+function updateSideBarBlockPosition(x, y) {
   let coords = game.getBlockCoordsWithinChunk(x, y)
-  document.querySelector('span[data-id="block-coordinates"]').innerHTML = [coords.x, coords.y].join(', ')
+  document.querySelector('span[data-id="block-position"]').innerHTML = [coords.x, coords.y].join(', ')
 }
 
 function updateSideBarBlockDelta(x, y) {
   document.querySelector('span[data-id="block-delta"]').innerHTML = game.getBlockDelta(x, y)
+}
+
+function updateSideBarBlockCoords(x, y) {
+  let coords = game.getBlockCoordsWithinChunk(x, y)
+  document.querySelector('span[data-id="block-coordinates"]').innerHTML = [
+//    coords.x * game.getRowCount() * game.getBlockWidthAtCurrentElevation(),
+//    coords.y * game.getColCount() * game.getBlockWidthAtCurrentElevation()
+    coords.x * game.getBlockWidthAtCurrentElevation(),
+    coords.y * game.getBlockWidthAtCurrentElevation()
+  ].join(', ')
 }
 
 function clearMap() {
@@ -1157,7 +1049,9 @@ function drawMap() {
 var gridWidth = 64;
 var gridHeight = 64;
 
-function drawGrid(){
+function drawGrid() {
+  gridWidth = game.getBlockWidthAtCurrentElevation()
+  gridHeight = game.getBlockHeightAtCurrentElevation()
   var y = 0;
   for (var y = 0; y < canvas.height; y+= gridHeight) {
     for (var x = 0; x <= canvas.width; x += gridWidth) {

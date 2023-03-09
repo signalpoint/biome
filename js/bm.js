@@ -85,6 +85,66 @@ let pieces = {
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
   ],
 
+  smallIslandTopLeft: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','s','s','s','s','w','w',
+    'w','w','w','s','s','s','s','s','s','s','s','g','g','s','s','s',
+    'w','w','s','s','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','w','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','w','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','w','s','g','g','g','g','g','g','g','g','g','g','g','g','g'
+  ],
+
+  smallIslandTopRight: [
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','s','s','s','s','s','s','w','w','w','w',
+    's','s','s','w','w','w','s','g','g','g','g','s','s','s','s','w',
+    'g','g','s','s','s','s','s','g','g','g','g','g','g','g','s','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','s','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','s','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','w','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','s','w','w'
+  ],
+
+  smallIslandBottomRight: [
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','w','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','w','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','s','w','w',
+    'g','g','g','g','g','g','g','g','g','g','g','g','s','s','w','w',
+    's','s','g','g','g','g','g','g','g','g','g','s','s','w','w','w',
+    'w','s','s','g','g','g','s','s','s','s','s','s','w','w','w','w',
+    'w','w','s','s','s','s','s','w','w','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
+
+  smallIslandBottomLeft: [
+    'w','w','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','w','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','s','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'w','s','g','g','g','g','g','g','g','g','g','g','g','g','g','s',
+    'w','s','s','g','g','g','g','g','g','s','s','s','s','g','s','s',
+    'w','w','s','s','g','g','g','g','s','s','w','w','s','s','s','w',
+    'w','w','w','s','s','s','s','s','s','w','w','w','w','w','w','w',
+    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
+
   smallIslands: [
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
     'w','s','s','s','s','s','w','w','w','w','w','w','w','w','w','w',
@@ -113,6 +173,36 @@ let pieces = {
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'
+  ],
+
+  desert: [
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s',
+    's','s','s','s','s','s','s','s','s','s','s','s','s','s','s','s'
+  ],
+
+  grassField: [
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g',
+    'g','g','g','g','g','g','g','g','g','g','g','g','g','g','g','g'
   ]
 
 }
@@ -495,8 +585,8 @@ class Player {
     this._velocityX = 0
     this._velocityY = 0
 
-    this._maxVelocityX = 10
-    this._maxVelocityY = 10
+    this._maxVelocityX = 5
+    this._maxVelocityY = 5
 
   }
 
@@ -570,9 +660,9 @@ const game = new Game();
 
 game.setUniverse([
 
-  [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ],
-  [ pieces.mediumIsland, pieces.bigIsland, pieces.bigIsland, pieces.mediumIsland ],
-  [ pieces.openWater, pieces.mediumIsland, pieces.mediumIsland, pieces.openWater ],
+  [ pieces.smallIslandTopLeft, pieces.smallIslandTopRight, pieces.smallIsland, pieces.smallIslands ],
+  [ pieces.smallIslandBottomLeft, pieces.smallIslandBottomRight, pieces.desert, pieces.mediumIsland ],
+  [ pieces.openWater, pieces.desert, pieces.grassField, pieces.openWater ],
   [ pieces.smallIslands, pieces.smallIsland, pieces.smallIsland, pieces.smallIslands ]
 
 ]);
@@ -1085,11 +1175,14 @@ var gridHeight = 64;
 function drawGrid() {
   gridWidth = game.getBlockWidthAtCurrentElevation()
   gridHeight = game.getBlockHeightAtCurrentElevation()
-  var y = 0;
   for (var y = 0; y < canvas.height; y+= gridHeight) {
     for (var x = 0; x <= canvas.width; x += gridWidth) {
       c.beginPath();
       c.rect(x, y, gridWidth, gridHeight);
+      c.strokeStyle =
+        (x % (canvas.width / game.getSqrt()) === 0) ||
+        (y % (canvas.height / game.getSqrt()) === 0) ?
+      '#666' : '#000'
       c.stroke();
     }
   }

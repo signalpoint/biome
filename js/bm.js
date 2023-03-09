@@ -33,12 +33,6 @@ const blocksPerChunkRow = 16
 const blocksPerChunkCol = 12
 const blocksPerChunk = blocksPerChunkRow * blocksPerChunkCol
 
-var colorMap = {
-  o: '#22577a', // ocean
-  w: '#90e0ef', // water
-  g: '#25a244', // grass
-  s: '#ffe6a7' // sand
-}
 // TODO what about 720p and friends?
 
 let elevation = 1
@@ -93,12 +87,12 @@ let pieces = {
 
   smallIslands: [
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
-    'w','s','s','s','s','w','w','w','w','w','w','w','w','w','w','w',
-    'w','s','g','g','s','w','s','s','s','s','s','s','w','w','w','w',
-    'w','s','s','s','s','w','s','g','g','g','g','s','w','w','w','w',
-    'w','w','w','w','w','w','s','g','g','g','g','s','w','w','w','w',
-    'w','w','w','w','w','w','s','s','s','s','s','s','w','w','w','w',
-    'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
+    'w','s','s','s','s','s','w','w','w','w','w','w','w','w','w','w',
+    'w','s','g','g','g','s','w','s','s','s','s','s','s','s','w','w',
+    'w','s','g','g','g','s','w','s','g','g','g','g','g','s','w','w',
+    'w','s','s','s','s','s','w','s','g','g','g','g','g','s','w','w',
+    'w','w','w','w','w','w','w','s','g','g','g','g','g','s','w','w',
+    'w','w','w','w','w','w','w','s','s','s','s','s','s','s','w','w',
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
     'w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w',
@@ -123,6 +117,22 @@ let pieces = {
 
 }
 
+let colorMap = {
+  o: '#22577a', // ocean
+  w: '#90e0ef', // water
+  g: '#25a244', // grass
+  s: '#ffe6a7' // sand
+}
+
+let waterColors = [
+//  '#caf0f8',
+  '#ade8f4',
+  '#90e0ef'
+];
+function getRandomWaterColor() {
+  return waterColors[Math.floor(Math.random() * waterColors.length)]
+}
+
 class Block {
 
   constructor({
@@ -130,7 +140,8 @@ class Block {
     row,
     col,
     slice,
-    key
+    key,
+    fillStyle = '#000'
   }) {
 
     this._delta = delta
@@ -138,6 +149,7 @@ class Block {
     this._col = col
     this._slice = slice
     this._key = key
+    this._fillStyle = fillStyle
 
     this._hover = false
 
@@ -152,9 +164,34 @@ class Block {
   getHover() { return this._hover }
   setHover(hover) { this._hover = hover }
 
+  setFillStyle(fillStyle) { this._fillStyle = fillStyle }
+  getFillStyle() { return this._fillStyle }
+
   draw(x, y, width, height) {
-    c.fillStyle = this.getHover() ? '#ccc' : colorMap[this.getKey()]
+
+    switch (this.getKey()) {
+
+      // water
+      case 'w':
+        c.fillStyle = game.getTime() % (game.getFps() * 4) === 0 ?
+          getRandomWaterColor() :
+          this.getFillStyle()
+        this.setFillStyle(c.fillStyle)
+        break;
+
+      default:
+        c.fillStyle = this.getFillStyle()
+//        c.fillStyle = colorMap[this.getKey()]
+        break;
+
+    }
+
+    if (this.getHover()) {
+      c.fillStyle = '#ccc'
+    }
+
     c.fillRect(x, y, width, height)
+
   }
 
 }
@@ -166,6 +203,8 @@ class Game {
     this._animationFrame = null
 
     this._universe = null
+    this._time = 0
+    this._fps = 32
     this._blocks = [];
     this._elevation = 1
     this._x = 0 // the pane x coordinate
@@ -185,11 +224,15 @@ class Game {
   getUniverseRowCount() { return game.getUniverse().length  }
   initUniverse() {
 
+
+    let delta = 0
     let row = 0
     let col = 0
-    let chunk = 0
     let slice = 0
-    let delta = 0
+    let key = null
+    let fillStyle = null
+
+    let block = null
 
     // debug
     let deltaStart = 0
@@ -201,12 +244,14 @@ class Game {
         deltaStart = delta // debug
 
         for (slice = 0; slice < this._universe[row][col].length; slice++) {
+          key = this._universe[row][col][slice]
           this._blocks[delta] = new Block({
             delta,
             row,
             col,
             slice,
-            key: this._universe[row][col][slice]
+            key,
+            fillStyle: key == 'w' ? getRandomWaterColor() : colorMap[key]
           })
           delta++
         }
@@ -226,8 +271,8 @@ class Game {
 
     player = new Player({
       name: 'Tyler',
-      x: 456,
-      y: 198
+      x: 576 + 8,
+      y: 256 + 4
     })
 
     players.push(player)
@@ -251,14 +296,14 @@ class Game {
   }
 
   // abstract - game must implement
-  update() {
+  update() { }
 
-    // PLAYER
-//    for (let p = 0; p < players.length; p++) {
-//      players[p].update()
-//    }
+  setTime(time) { this._time = time }
+  getTime() { return this._time }
+  increaseTime() { this._time++ }
 
-  }
+  setFps(fps) { this._fps = fps }
+  getFps() { return this._fps }
 
   getBlock(delta) { return this._blocks[delta] }
 
@@ -602,6 +647,8 @@ game.update = function() {
     players[p].update()
   }
 
+  game.increaseTime()
+
 };
 
 // CLEAR
@@ -679,15 +726,14 @@ function drawUniverse() {
         }
         else {
           deltaStart = row * blocksPerChunk * game.getUniverseColCount()
-          if (deltaCol == 0) {
-          }
+          if (deltaCol == 0) { }
           else {
             deltaStart += col * blocksPerChunk
           }
         }
         deltaEnd = deltaStart + blocksPerChunk - 1
 
-//          console.log('-------------- CHUNK (' + deltaCol + ',' + deltaRow + '):', modX, modY, '|', deltaStart, deltaEnd)
+//        console.log('-------------- CHUNK (' + deltaCol + ',' + deltaRow + '):', modX, modY, '|', deltaStart, deltaEnd)
 
         deltaX = 0
 
@@ -773,8 +819,7 @@ function drawUniverse() {
 
   // GRID
 
-  drawGrid()
-
+//  drawGrid()
 
   if (game._animationFrame) { requestAnimationFrame(drawUniverse) }
 

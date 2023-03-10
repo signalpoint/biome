@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biome Designer</title>
+    <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bm.css">
+  </head>
+  <body class="bg-dark">
+
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Biome Designer</a>
+      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!--<input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">-->
+      <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+          <a class="nav-link px-3" href="#">&nbsp;</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div class="row">
+
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light">
+          <div class="position-sticky pt-3 sidebar-sticky">
+
+            <!-- Screen Size -->
+            <div class="mb-3">
+              <label for="screenResolution" class="form-label">Screen resolution</label>
+              <select id="screenResolution" class="form-select" aria-label="Screen Size">
+                <option value="720p">720p</option>
+                <option value="1080p">1080p</option>
+                <option value="1024x768">1024x768</option>
+              </select>
+            </div>
+
+            <!-- Block Size -->
+            <div class="mb-3">
+              <label for="blockSize" class="form-label">Block size</label>
+              <input type="number" class="form-control" id="blockSize" value="64">
+            </div>
+
+            <div class="row mb-3">
+
+              <!-- Map Width -->
+              <div class="col-6">
+                <label for="mapWidth" class="form-label">Map width</label>
+                <input type="number" class="form-control" id="mapWidth" value="2560">
+              </div>
+
+              <!-- Map Height -->
+              <div class="col-6">
+                <label for="mapHeight" class="form-label">Map height</label>
+                <input type="number" class="form-control" id="mapHeight" value="1440">
+              </div>
+
+            </div>
+
+            <!-- Show Grid -->
+            <div class="mb-3">
+              <input class="form-check-input" type="checkbox" value="" id="showGrid" checked>
+              <label class="form-check-label" for="showGrid">
+                Show grid
+              </label>
+            </div>
+
+          </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10">
+          <canvas id="biome"></canvas>
+        </main>
+
+      </div>
+
+    </div>
+
+    <footer class="navbar navbar-dark fixed-bottom bg-dark flex-md-nowrap p-0 shadow text-light">
+      <span id="canvasMouseCoords" class="badge"></span>
+    </footer>
+
+    <script type="text/javascript" src="vendor/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/designer.js"></script>
+
+  </body>
+</html>

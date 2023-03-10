@@ -1,8 +1,28 @@
+// CANVAS & CONTEXT
+
 let canvas = null
 let c = null
 
-let d = null // The instance of Designer
+// DEFAULT CONFIGURATION
 
+// mouse coordinate offsets
+// - adjust the canvas' reported mouse coordinates
+//   (e.g. canvas inside a bs5 row+col reports inaccurate mouse x, y)
+let canvasMouseOffsetX = 0 // (int) offset the mouse x coordinate on the canvas
+let canvasMouseOffsetY = 0 // (int) offset the mouse y coordinate on the canvas
+
+// CUSTOM CONFIGURATION
+
+// mouse coordinate offsets
+canvasMouseOffsetX = -2
+canvasMouseOffsetY = -2
+
+// END: CONFIGURATION
+
+// Designer
+let d = null
+
+// supported screen resolutions
 let screenResolutionSelect = document.querySelector('#screenResolution')
 let screenResolutionMap = {
   '720p': {
@@ -44,6 +64,7 @@ class Designer {
     this._mouseDownY = null
     this._mouseUpX = null
     this._mouseUpY = null
+    this._mouseBlockDelta = null
 
     this.blocks = []
 
@@ -137,6 +158,9 @@ class Designer {
     }
   }
 
+  setMouseBlockDelta(delta) { this._mouseBlockDelta = delta }
+  getMouseBlockDelta() { return this._mouseBlockDelta }
+
   // INIT
 
   init() {
@@ -153,6 +177,12 @@ class Designer {
 
   }
 
+  update() {
+
+    // TODO remember!!! all update() calls should happen before the next draw() calls!
+
+  }
+
   // DRAW
 
   draw() {
@@ -163,18 +193,28 @@ class Designer {
     let startX = 0 // this will change as viewport changes
     let startY = 0 // this will change as viewport changes
     let blockDelta = null
+    let block = null
 
     for (var y = startY; y < this.blocksPerScreenCol(); y++) {
 
       for (var x = startX; x < this.blocksPerScreenRow(); x++) {
 
         blockDelta = this.getBlockDeltaFromPos(x, y)
+        block = this.blocks[blockDelta]
 
-        if (this.blocks[blockDelta]) {
+        // If the block exists...
+        if (block) {
+
+          block.draw(x, y)
+
+        }
+
+        // block mouse hover effect
+        if (this.getMouseBlockDelta() == blockDelta) {
           c.beginPath()
-          c.rect(x * this.getBlockSize(), y * this.getBlockSize(), this.getBlockSize(), this.getBlockSize())
-          c.strokeStyle = '#fff'
-          c.stroke()
+          c.strokeStyle = 'rgba(0,0,0,1)';
+          c.rect(x * this.getBlockSize(), y * this.getBlockSize(), this.getBlockSize(), this.getBlockSize());
+          c.stroke();
         }
 
       }
@@ -183,11 +223,11 @@ class Designer {
 
     // grid
     if (this.showGrid()) {
+      c.strokeStyle = 'rgba(0,0,0,0.1)';
       for (var y = 0; y < canvas.height; y+= this.getBlockSize()) {
         for (var x = 0; x < canvas.width; x += this.getBlockSize()) {
           c.beginPath()
           c.rect(x, y, this.getBlockSize(), this.getBlockSize())
-          c.strokeStyle = '#000'
           c.stroke()
         }
       }
@@ -203,6 +243,13 @@ class Designer {
     // show mouse x,y coords
     let coords = getCanvasMouseCoords(e)
     canvasMouseCoordsBadge.innerHTML = coords.x + ',' + coords.y
+
+    // track which block delta the mouse is over
+    let blockDelta = d.getBlockDelta(coords.x, coords.y)
+    if (blockDelta != d.getMouseBlockDelta()) {
+      d.setMouseBlockDelta(blockDelta)
+      d.draw()
+    }
 
   }
 
@@ -222,13 +269,18 @@ class Designer {
 
     console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${coords.x},${coords.y}`)
 
+    // If the block already exists...
     if (this.blocks[delta]) {
 
     }
     else {
-      this.blocks[delta] = 'w'
-    }
 
+      // The block does not exist...
+
+      this.blocks[delta] = new Water(delta)
+      console.log(this.blocks[delta])
+
+    }
 
   }
 
@@ -349,8 +401,8 @@ addEventListener('load', function() {
 
 function getCanvasMouseCoords(evt) {
   const rect = canvas.getBoundingClientRect()
-  const x = Math.floor(evt.clientX - rect.left)
-  const y = evt.clientY - rect.top
+  const x = Math.floor(evt.clientX - rect.left) + canvasMouseOffsetX
+  const y = evt.clientY - rect.top + canvasMouseOffsetY
   return {
     x,
     y

@@ -11,6 +11,16 @@ let c = null
 let canvasMouseOffsetX = 0 // (int) offset the mouse x coordinate on the canvas
 let canvasMouseOffsetY = 0 // (int) offset the mouse y coordinate on the canvas
 
+// block types
+let blockTypes = [
+  'Sand',
+  'Water'
+]
+let blockTypesDict = {
+  'Sand': Sand,
+  'Water': Water
+}
+
 // CUSTOM CONFIGURATION
 
 // mouse coordinate offsets
@@ -45,6 +55,7 @@ let screenResolutionMap = {
 
 let designerModeBtnsContainer = document.querySelector('#designerModeBtns')
 let designerModeBtns = designerModeBtnsContainer.querySelectorAll('button')
+let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
 
 let blockSizeInput = document.querySelector('#blockSize')
 let showGridInput = document.querySelector('#showGrid')
@@ -61,10 +72,21 @@ addEventListener('load', function() {
   canvas = document.getElementById("biome")
   c = canvas.getContext("2d")
 
+  // DESIGNER
+
   d = new Designer()
 
   // set mode
   d.setMode('select')
+
+  // paint mode block type
+  for (var i = 0; i < blockTypes.length; i++) {
+    var option = document.createElement('option');
+    option.value = blockTypes[i];
+    option.innerHTML = blockTypes[i];
+    paintModeBlockTypeSelect.appendChild(option);
+  }
+  d.setPaintModeBlockType(paintModeBlockTypeSelect.options[0].value)
 
   // set screen resolution
   let resolution = screenResolutionMap[screenResolutionSelect.value]
@@ -80,7 +102,7 @@ addEventListener('load', function() {
   d.setMapWidth(parseInt(mapWidthInput.value))
   d.setMapHeight(parseInt(mapWidthInput.value))
 
-  // event listeners...
+  // EVENT LISTENERS
 
   // designer mode buttons
   for (var i = 0; i < designerModeBtns.length; i++) {
@@ -107,6 +129,11 @@ addEventListener('load', function() {
 
     })
   }
+
+  // paint mode: block type
+  paintModeBlockTypeSelect.addEventListener('change', function() {
+    d.setPaintModeBlockType(this.value)
+  })
 
   // screen resolution
   screenResolutionSelect.addEventListener('change', function() {

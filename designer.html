@@ -10,7 +10,8 @@
 
     <script type="text/javascript" src="js/Designer.js"></script>
     <script type="text/javascript" src="js/Block.js"></script>
-    <script type="text/javascript" src="js/Water.js"></script>
+    <script type="text/javascript" src="js/blocks/Sand.js"></script>
+    <script type="text/javascript" src="js/blocks/Water.js"></script>
 
     <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bm.css">
@@ -40,17 +41,23 @@
           <div class="position-sticky pt-3 sidebar-sticky">
 
             <div class="pb-3 border-bottom mb-3">
+
               <h2>Mode</h2>
-              <div id="designerModeBtns" class="btn-group" role="group" aria-label="Designer mode">
+              <div id="designerModeBtns" class="btn-group mb-3" role="group" aria-label="Designer mode">
                 <button type="button" class="btn btn-light active" data-mode="select">Select</button>
                 <button type="button" class="btn btn-light" data-mode="paint">Paint</button>
               </div>
+
+              <!-- MODE: SELECT -->
               <div class="designerModePane active" data-mode="select">
                 ...
               </div>
+
+              <!-- MODE: PAINT -->
               <div class="designerModePane d-none" data-mode="paint">
-                ......
+                <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Paint toolbox"></select>
               </div>
+
             </div>
 
             <!-- Screen Size -->

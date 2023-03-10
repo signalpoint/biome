@@ -4,6 +4,8 @@ class Designer {
 
     this._mode = null
 
+    this._paintModeBlockType = null
+
     this._screenWidth = null
     this._screenHeight = null
 
@@ -27,6 +29,9 @@ class Designer {
 
   setMode(m) { this._mode = m }
   getMode() { return this._mode }
+
+  setPaintModeBlockType(t) { this._paintModeBlockType = t }
+  getPaintModeBlockType() { return this._paintModeBlockType }
 
   // screen
 
@@ -230,6 +235,8 @@ class Designer {
 
     switch (d.getMode()) {
 
+      // SELECT
+
       case 'select':
 
         if (existingBlock) {
@@ -245,6 +252,8 @@ class Designer {
 
         break;
 
+      // PAINT
+
       case 'paint':
 
         // If the block already exists...
@@ -255,8 +264,10 @@ class Designer {
 
           // The block does not exist...
 
-          this.blocks[delta] = new Water(delta)
-          console.log(this.blocks[delta])
+          let blockType = d.getPaintModeBlockType()
+
+          // create the new block using the current type
+          this.blocks[delta] = new blockTypesDict[blockType](delta)
 
         }
 

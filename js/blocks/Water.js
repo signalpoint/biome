@@ -14,7 +14,7 @@ class Water extends Block {
 
     c.beginPath()
     c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#0000ff'
+    c.fillStyle = '#90e0ef'
     c.fill()
 
   }

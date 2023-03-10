@@ -271,7 +271,6 @@ class Block {
 
       default:
         c.fillStyle = this.getFillStyle()
-//        c.fillStyle = colorMap[this.getKey()]
         break;
 
     }
@@ -352,35 +351,6 @@ class Game {
 
       }
       console.log('----')
-    }
-
-  }
-  init() {
-
-    let self = this
-
-    player = new Player({
-      name: 'Tyler',
-      x: 576 + 8,
-      y: 256 + 4
-    })
-
-    players.push(player)
-
-    if (animate) {
-
-      self._animationFrame = requestAnimationFrame(drawUniverse)
-      setTimeout(function() {
-        console.log('cancel animation')
-        cancelAnimationFrame(self._animationFrame)
-        self._animationFrame = null
-      }, 25000)
-
-    }
-    else {
-
-      drawUniverse()
-
     }
 
   }
@@ -527,18 +497,34 @@ class Game {
   }
 
   getBlockFromCoords(x, y) {
-    let rowWithinChunk = this.getRowWithinChunk(y)
-    let colWithinChunk = this.getColWithinChunk(x)
-    let chunkIndex = rowWithinChunk < 1 ?
-      colWithinChunk :
-      rowWithinChunk * blocksPerChunkRow + colWithinChunk
+
+//    let rowWithinChunk = this.getRowWithinChunk(y)
+//    let colWithinChunk = this.getColWithinChunk(x)
+//    let chunkIndex = rowWithinChunk < 1 ?
+//      colWithinChunk :
+//      rowWithinChunk * blocksPerChunkRow + colWithinChunk
 //    console.log(colWithinChunk, rowWithinChunk, ':', chunkIndex, this.getCurrentChunk()[chunkIndex])
-    return this.getCurrentChunk()[chunkIndex]
+//    return this.getCurrentChunk()[chunkIndex]
+
+    return this.getBlock(this.getBlockDelta(x, y))
+
   }
 
   getBlockDelta(x, y) {
     let coords = game.getBlockCoordsWithinChunk(x, y)
     return coords.y * blocksPerChunkRow + coords.x
+  }
+
+  getBlockNeighbors(delta) {
+    let neighbors = []
+    // top left
+    // top
+    // top right
+    // right
+    // bottom right
+    // bottom
+    // bottom left
+    // left
   }
 
   getBlockWidthAtCurrentElevation() {
@@ -566,6 +552,72 @@ class Game {
 
 }
 
+class Sprite {
+
+  constructor({
+    pos,
+    vel,
+    width,
+    height
+  }) {
+
+    this.x = pos.x
+    this.y = pos.y
+
+    this.vx = vel.x
+    this.vy = vel.y
+
+    this.width = width
+    this.height = height
+
+  }
+
+  // abstracts
+  update() {}
+  draw() {}
+
+}
+
+class Stick extends Sprite {
+
+  constructor({
+    pos,
+    vel,
+    width,
+    height
+  }) {
+
+    super({
+      pos,
+      vel,
+      width,
+      height
+    });
+
+  }
+
+  update() {}
+
+  draw() {
+
+//    c.fillStyle = '#b08968'
+//    c.fillRect(
+//      this.x,
+//      this.y,
+//      this.width / game.getSqrt(),
+//      this.height / game.getSqrt()
+//    )
+
+    c.fillStyle = '#b08968';
+    c.strokeStyle = 'black';
+    c.rect(this.x, this.y, this.width / game.getSqrt(), this.height / game.getSqrt());
+    c.fill();
+    c.stroke();
+
+  }
+
+}
+
 class Player {
 
   constructor({
@@ -587,6 +639,15 @@ class Player {
 
     this._maxVelocityX = 5
     this._maxVelocityY = 5
+
+    this.state = {
+      moving: {
+        up: false,
+        down: false,
+        left: false,
+        right: false
+      }
+    }
 
   }
 
@@ -629,15 +690,40 @@ class Player {
 
 //    console.log('player velocity: ' + this.getVelocityX() + ', ' + this.getVelocityY())
 
-    if (this.getVelocityX() !== 0) {
-//      console.log('x', this.getX(), 'vX', this.getVelocityX())
-      this.setX(this.getX() + this.getVelocityX())
+    // block collision detection
+    // todo
+//    console.log(this.getX(), this.getY())
+//game.getBlockFromCoords(this.getX(), this.getY())
+
+    let key = game.getBlockFromCoords(this.getX(), this.getY()).getKey()
+
+    // water edge detection
+    if (key == 'w') {
+      if (this.state.moving.up && this.getVelocityY() < 0) {
+        console.log('ran up into water')
+        this.setY(this.getY() - this.getVelocityY())
+        this.setVelocityY(0)
+      }
+      if (this.state.moving.down && this.getVelocityY() > 0) {
+        console.log('ran down into water')
+        this.setY(this.getY() - this.getVelocityY())
+        this.setVelocityY(0)
+      }
+      if (this.state.moving.left && this.getVelocityX() < 0) {
+        console.log('ran left into water')
+        this.setX(this.getX() - this.getVelocityX())
+        this.setVelocityX(0)
+      }
+      if (this.state.moving.right && this.getVelocityX() > 0) {
+        console.log('ran right into water')
+        this.setX(this.getX() - this.getVelocityX())
+        this.setVelocityX(0)
+      }
     }
 
-    if (this.getVelocityY() !== 0) {
-//      console.log('y', this.getY(), 'vY', this.getVelocityY())
-      this.setY(this.getY() + this.getVelocityY())
-    }
+    // if player has velocity in either direction, change their position accordingly
+    if (this.getVelocityX() !== 0) { this.setX(this.getX() + this.getVelocityX()) }
+    if (this.getVelocityY() !== 0) { this.setY(this.getY() + this.getVelocityY()) }
 
   }
 
@@ -655,6 +741,7 @@ class Player {
 
 let player = null
 let players = []
+let sticks = []
 
 const game = new Game();
 
@@ -691,7 +778,50 @@ addEventListener('load', function() {
 
   game.initUniverse()
 
-  game.init()
+  // player
+
+  player = new Player({
+    name: 'Tyler',
+    x: 576 + 8,
+    y: 256 + 4
+  })
+
+  players.push(player)
+
+  // sticks
+
+//  sticks.push(new Stick({
+//    pos: {
+//      x: 896,
+//      y: 640
+//    },
+//    vel: {
+//      x: 0,
+//      y: 0
+//    },
+//    width: 8,
+//    height: 24
+//  }))
+
+  // sticks
+
+  if (animate) {
+
+    game._animationFrame = requestAnimationFrame(drawUniverse)
+    setTimeout(function() {
+      console.log('cancel animation')
+      cancelAnimationFrame(game._animationFrame)
+      game._animationFrame = null
+    }, 25000)
+
+  }
+  else {
+
+    drawUniverse()
+
+  }
+
+
 
 });
 
@@ -701,34 +831,60 @@ game.update = function() {
 
   let sqrt = game.getSqrt()
 
-  // key press velocity changes for player
+  // key press velocity changes for player and player movement states
 
+  // up
   if (keys.up.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY() / sqrt) {
+    player.state.moving.up = true
     player.decreaseVelocityY(1 / sqrt)
   }
   else if (player.getVelocityY() < 0) {
     player.increaseVelocityY(1 / sqrt)
+    if (!player.getVelocityY()) {
+      player.state.moving.up = false
+    }
   }
 
+  // down
   if (keys.down.pressed && Math.abs(player.getVelocityY()) < player.getMaxVelocityY() / sqrt) {
+    player.state.moving.down = true
     player.increaseVelocityY(1 / sqrt)
   }
   else if (player.getVelocityY() > 0) {
     player.decreaseVelocityY(1 / sqrt)
+    if (!player.getVelocityY()) {
+      player.state.moving.down = false
+    }
   }
 
+  // left
   if (keys.left.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX() / sqrt) {
+    player.state.moving.left = true
     player.decreaseVelocityX(1 / sqrt)
   }
   else if (player.getVelocityX() < 0) {
     player.increaseVelocityX(1 / sqrt)
+    if (!player.getVelocityX()) {
+      player.state.moving.left = false
+    }
   }
 
+  // right
   if (keys.right.pressed && Math.abs(player.getVelocityX()) < player.getMaxVelocityX() / sqrt) {
+    player.state.moving.right = true
     player.increaseVelocityX(1 / sqrt)
   }
   else if (player.getVelocityX() > 0) {
     player.decreaseVelocityX(1 / sqrt)
+    if (!player.getVelocityX()) {
+      player.state.moving.right = false
+    }
+  }
+
+  // stick updates
+
+  for (let s = 0; s < sticks.length; s++) {
+    sticks[s].update()
   }
 
   // player updates
@@ -902,6 +1058,11 @@ function drawUniverse() {
 
   }
 
+  // STICKS
+  for (let s = 0; s < sticks.length; s++) {
+    sticks[s].draw()
+  }
+
   // PLAYER
   for (let p = 0; p < players.length; p++) {
     players[p].draw()
@@ -909,7 +1070,7 @@ function drawUniverse() {
 
   // GRID
 
-//  drawGrid()
+  drawGrid()
 
   if (game._animationFrame) { requestAnimationFrame(drawUniverse) }
 

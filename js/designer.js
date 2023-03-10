@@ -39,6 +39,13 @@ let screenResolutionMap = {
   }
 }
 
+// DOM ELEMENTS
+
+// designer mode
+
+let designerModeBtnsContainer = document.querySelector('#designerModeBtns')
+let designerModeBtns = designerModeBtnsContainer.querySelectorAll('button')
+
 let blockSizeInput = document.querySelector('#blockSize')
 let showGridInput = document.querySelector('#showGrid')
 
@@ -50,6 +57,8 @@ let canvasMouseCoordsBadge = document.querySelector('#canvasMouseCoords')
 class Designer {
 
   constructor() {
+
+    this._mode = null
 
     this._screenWidth = null
     this._screenHeight = null
@@ -69,6 +78,11 @@ class Designer {
     this.blocks = []
 
   }
+
+  // mode
+
+  setMode(m) { this._mode = m }
+  getMode() { return this._mode }
 
   // screen
 
@@ -223,7 +237,7 @@ class Designer {
 
     // grid
     if (this.showGrid()) {
-      c.strokeStyle = 'rgba(0,0,0,0.1)';
+      c.strokeStyle = 'rgba(0,0,0,0.2)';
       for (var y = 0; y < canvas.height; y+= this.getBlockSize()) {
         for (var x = 0; x < canvas.width; x += this.getBlockSize()) {
           c.beginPath()
@@ -262,23 +276,47 @@ class Designer {
     // Set aside the mouse coordinates.
     this.setMouseDownCoords(coords)
 
-    // Get block delta
+    // Get block delta and coordinates
     let delta = this.getBlockDelta(coords.x, coords.y)
-
     let blockCoords = this.getBlockCoords(coords.x, coords.y);
-
     console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${coords.x},${coords.y}`)
 
-    // If the block already exists...
-    if (this.blocks[delta]) {
+    let existingBlock = !!this.blocks[delta]
+    let block = existingBlock ? this.blocks[delta] : null
 
-    }
-    else {
+    switch (d.getMode()) {
 
-      // The block does not exist...
+      case 'select':
 
-      this.blocks[delta] = new Water(delta)
-      console.log(this.blocks[delta])
+        if (existingBlock) {
+
+          console.log(block)
+
+        }
+        else {
+
+          console.log('-')
+
+        }
+
+        break;
+
+      case 'paint':
+
+        // If the block already exists...
+        if (existingBlock) {
+
+        }
+        else {
+
+          // The block does not exist...
+
+          this.blocks[delta] = new Water(delta)
+          console.log(this.blocks[delta])
+
+        }
+
+        break;
 
     }
 
@@ -323,6 +361,9 @@ addEventListener('load', function() {
 
   d = new Designer()
 
+  // set mode
+  d.setMode('select')
+
   // set screen resolution
   let resolution = screenResolutionMap[screenResolutionSelect.value]
   d.setScreenResolution(resolution.w, resolution.h)
@@ -339,6 +380,32 @@ addEventListener('load', function() {
 
   // event listeners...
 
+  // designer mode buttons
+  for (var i = 0; i < designerModeBtns.length; i++) {
+    designerModeBtns[i].addEventListener('click', function() {
+
+      let mode = this.getAttribute('data-mode')
+
+      // swap active class on buttons
+      designerModeBtnsContainer.querySelector('button.active').classList.remove('active')
+      this.classList.add('active')
+
+      // swap the panes...
+
+      let activePane = document.querySelector('.designerModePane.active')
+      activePane.classList.remove('active')
+      activePane.classList.add('d-none')
+
+      let chosenPane = document.querySelector('.designerModePane[data-mode="' + mode + '"]')
+      chosenPane.classList.add('active')
+      chosenPane.classList.remove('d-none')
+
+      // udpate the mode
+      d.setMode(mode)
+
+    })
+  }
+
   // screen resolution
   screenResolutionSelect.addEventListener('change', function() {
     let resolution = screenResolutionMap[this.value]
@@ -351,20 +418,20 @@ addEventListener('load', function() {
     d.draw()
   })
 
-  // show grid
-  showGridInput.addEventListener('change', function() {
-    d.setGrid(this.checked)
-    d.draw()
-  })
-
   // map width
   mapWidthInput.addEventListener('change', function() {
     d.setMapWidth(parseInt(this.value))
   })
 
-  // map height
+  // map height number
   mapHeightInput.addEventListener('change', function() {
     d.setMapHeight(parseInt(this.value))
+  })
+
+  // show grid
+  showGridInput.addEventListener('change', function() {
+    d.setGrid(this.checked)
+    d.draw()
   })
 
   // canvas mousemove

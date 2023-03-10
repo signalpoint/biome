@@ -38,6 +38,20 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light">
           <div class="position-sticky pt-3 sidebar-sticky">
 
+            <div class="pb-3 border-bottom mb-3">
+              <h2>Mode</h2>
+              <div id="designerModeBtns" class="btn-group" role="group" aria-label="Designer mode">
+                <button type="button" class="btn btn-light active" data-mode="select">Select</button>
+                <button type="button" class="btn btn-light" data-mode="paint">Paint</button>
+              </div>
+              <div class="designerModePane active" data-mode="select">
+                ...
+              </div>
+              <div class="designerModePane d-none" data-mode="paint">
+                ......
+              </div>
+            </div>
+
             <!-- Screen Size -->
             <div class="mb-3">
               <label for="screenResolution" class="form-label">Screen resolution</label>

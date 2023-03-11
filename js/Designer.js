@@ -25,6 +25,25 @@ class Designer {
 
   }
 
+  // maps
+
+  loadMaps() {
+    let maps = dStorage.load('CanvasMaps')
+    if (!maps) { maps = [] }
+    return maps
+  }
+
+  saveMaps(maps) {
+    dStorage.save('CanvasMaps', maps)
+  }
+
+  saveMap(name, data) {
+    dStorage.save(name, data)
+  }
+  loadMap(name) {
+    return dStorage.load(name)
+  }
+
   // mode
 
   setMode(m) { this._mode = m }

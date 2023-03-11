@@ -9,8 +9,12 @@
     <title>Biome Designer</title>
 
     <script type="text/javascript" src="js/Designer.js"></script>
+    <script type="text/javascript" src="js/DesignerMenu.js"></script>
+
     <script type="text/javascript" src="js/Block.js"></script>
+    <script type="text/javascript" src="js/blocks/Grass.js"></script>
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
+    <script type="text/javascript" src="js/blocks/Stone.js"></script>
     <script type="text/javascript" src="js/blocks/Water.js"></script>
 
     <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
@@ -20,18 +24,64 @@
 
   <body class="bg-dark">
 
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+<!--    <header class="">
       <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Biome Designer</a>
       <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <!--<input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">-->
       <div class="navbar-nav">
         <div class="nav-item text-nowrap">
           <a class="nav-link px-3" href="#">&nbsp;</a>
         </div>
       </div>
-    </header>
+    </header>-->
+
+    <nav id="d-menu" class="navbar navbar-expand-lg navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+
+      <div class="container-fluid">
+
+        <a class="navbar-brand text-white" href="#">CanvasCraft</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <!-- FILE -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                File
+              </a>
+              <ul class="dropdown-menu">
+
+                <!-- File / New -->
+                <li><a class="dropdown-item d-menu-op" href="#" data-op="file:new">New</a></li>
+
+                <!-- File / Open -->
+                <li><a class="dropdown-item d-menu-op" href="#" data-op="file:open">Open</a></li>
+
+                <!-- File / Save -->
+                <li><a class="dropdown-item d-menu-op" href="#" data-op="file:save">Save</a></li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- File / Import -->
+                <li><a class="dropdown-item d-menu-op" href="#" data-op="file:import">Import</a></li>
+
+                <!-- File / Export -->
+                <li><a class="dropdown-item d-menu-op" href="#" data-op="file:export">Export</a></li>
+
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+
+    </nav>
 
     <div class="container-fluid">
 
@@ -55,7 +105,15 @@
 
               <!-- MODE: PAINT -->
               <div class="designerModePane d-none" data-mode="paint">
-                <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Paint toolbox"></select>
+                <div class="">
+                  <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
+                  <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+                </div>
+<!--                <div class="card" style="width: 64px;">
+                  <div class="card-body">
+                    <h5 class="card-title">Water</h5>
+                  </div>
+                </div>-->
               </div>
 
             </div>
@@ -103,7 +161,7 @@
           </div>
         </nav>
 
-        <main class="col-md-9 ms-sm-auto col-lg-10">
+        <main class="col-md-9 ms-sm-auto col-lg-10 pt-3">
           <canvas id="biome"></canvas>
         </main>
 
@@ -115,7 +173,26 @@
       <span id="canvasMouseCoords" class="badge"></span>
     </footer>
 
-    <script type="text/javascript" src="vendor/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+<!-- Modal: File / Save -->
+<div class="modal fade" id="fileSaveModal" tabindex="-1" aria-labelledby="fileSaveModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title fs-5" id="fileSaveModalLabel">Save</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script type="text/javascript" src="vendor/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/designer.js"></script>
 
   </body>

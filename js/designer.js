@@ -11,16 +11,6 @@ let c = null
 let canvasMouseOffsetX = 0 // (int) offset the mouse x coordinate on the canvas
 let canvasMouseOffsetY = 0 // (int) offset the mouse y coordinate on the canvas
 
-// block types
-let blockTypes = [
-  'Sand',
-  'Water'
-]
-let blockTypesDict = {
-  'Sand': Sand,
-  'Water': Water
-}
-
 // CUSTOM CONFIGURATION
 
 // mouse coordinate offsets
@@ -29,8 +19,24 @@ canvasMouseOffsetY = -2
 
 // END: CONFIGURATION
 
+// Block Types
+
+let blockTypesDict = {
+  'Grass': Grass,
+  'Sand': Sand,
+  'Stone': Stone,
+  'Water': Water
+}
+let blockTypes = []
+for (var type in blockTypesDict) {
+  if (!blockTypesDict.hasOwnProperty(type)) { continue; }
+  blockTypes.push(type)
+}
+
 // Designer
+
 let d = null
+let dMenu = null
 
 // supported screen resolutions
 let screenResolutionSelect = document.querySelector('#screenResolution')
@@ -50,6 +56,10 @@ let screenResolutionMap = {
 }
 
 // DOM ELEMENTS
+
+// designer menu
+
+let designerMenuBtns = document.querySelectorAll('#d-menu .d-menu-op')
 
 // designer mode
 
@@ -75,6 +85,7 @@ addEventListener('load', function() {
   // DESIGNER
 
   d = new Designer()
+  dMenu = new DesignerMenu()
 
   // set mode
   d.setMode('select')
@@ -103,6 +114,18 @@ addEventListener('load', function() {
   d.setMapHeight(parseInt(mapWidthInput.value))
 
   // EVENT LISTENERS
+
+
+  // designer menu buttons
+  for (var i = 0; i < designerMenuBtns.length; i++) {
+    designerMenuBtns[i].addEventListener('click', function(e) {
+
+      let op = this.getAttribute('data-op')
+      dMenu.onclick(e, op)
+      return false
+
+    })
+  }
 
   // designer mode buttons
   for (var i = 0; i < designerModeBtns.length; i++) {

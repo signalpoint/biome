@@ -1,8 +1,14 @@
 class Grass extends Block {
 
-  constructor(delta) {
+  constructor({
+    delta,
+    type
+  }) {
 
-    super(delta)
+    super({
+      delta,
+      type
+    })
 
   }
 

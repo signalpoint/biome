@@ -238,64 +238,11 @@ class Designer {
   // mouse down
   canvasMouseDownListener(e) {
 
-    // Get the mouse coordinates.
+    // Get the mouse coordinates and set them aside.
     let coords = getCanvasMouseCoords(e)
-
-    // Set aside the mouse coordinates.
     this.setMouseDownCoords(coords)
 
-    // Get block delta and coordinates
-    let delta = this.getBlockDelta(coords.x, coords.y)
-    let blockCoords = this.getBlockCoords(coords.x, coords.y);
-    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${coords.x},${coords.y}`)
-
-    let existingBlock = !!this.blocks[delta]
-    let block = existingBlock ? this.blocks[delta] : null
-
-    switch (d.getMode()) {
-
-      // SELECT
-
-      case 'select':
-
-        if (existingBlock) {
-
-          console.log(block)
-
-        }
-        else {
-
-          console.log('-')
-
-        }
-
-        break;
-
-      // PAINT
-
-      case 'paint':
-
-        // If the block already exists...
-        if (existingBlock) {
-
-        }
-        else {
-
-          // The block does not exist...
-
-          let blockType = d.getPaintModeBlockType()
-
-          // create the new block using the current type
-          this.blocks[delta] = new blockTypesDict[blockType]({
-            delta,
-            type: blockType
-          })
-
-        }
-
-        break;
-
-    }
+    dMode.canvasMouseDownListener(e)
 
   }
 

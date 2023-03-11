@@ -37,6 +37,7 @@ for (var type in blockTypesDict) {
 
 let d = null
 let dMenu = null
+let dMode = null
 let dStorage = null
 
 // supported screen resolutions
@@ -89,6 +90,7 @@ addEventListener('load', function() {
 
   d = new Designer()
   dMenu = new DesignerMenu()
+  dMode = new DesignerMode()
   dStorage = new DesignerStorage()
 
   // set mode
@@ -136,26 +138,7 @@ addEventListener('load', function() {
   // designer mode buttons
   for (var i = 0; i < designerModeBtns.length; i++) {
     designerModeBtns[i].addEventListener('click', function() {
-
-      let mode = this.getAttribute('data-mode')
-
-      // swap active class on buttons
-      designerModeBtnsContainer.querySelector('button.active').classList.remove('active')
-      this.classList.add('active')
-
-      // swap the panes...
-
-      let activePane = document.querySelector('.designerModePane.active')
-      activePane.classList.remove('active')
-      activePane.classList.add('d-none')
-
-      let chosenPane = document.querySelector('.designerModePane[data-mode="' + mode + '"]')
-      chosenPane.classList.add('active')
-      chosenPane.classList.remove('d-none')
-
-      // udpate the mode
-      d.setMode(mode)
-
+      dMode.btnOnclickListener(this)
     })
   }
 

@@ -37,6 +37,7 @@ for (var type in blockTypesDict) {
 
 let d = null
 let dMenu = null
+let dStorage = null
 
 // supported screen resolutions
 let screenResolutionSelect = document.querySelector('#screenResolution')
@@ -72,6 +73,8 @@ let showGridInput = document.querySelector('#showGrid')
 
 let mapWidthInput = document.querySelector('#mapWidth')
 let mapHeightInput = document.querySelector('#mapHeight')
+let blocksPerRowInput = document.querySelector('#blocksPerRow')
+let blocksPerColInput = document.querySelector('#blocksPerCol')
 
 let canvasMouseCoordsBadge = document.querySelector('#canvasMouseCoords')
 
@@ -86,11 +89,12 @@ addEventListener('load', function() {
 
   d = new Designer()
   dMenu = new DesignerMenu()
+  dStorage = new DesignerStorage()
 
   // set mode
   d.setMode('select')
 
-  // paint mode block type
+  // paint mode: block type
   for (var i = 0; i < blockTypes.length; i++) {
     var option = document.createElement('option');
     option.value = blockTypes[i];
@@ -113,8 +117,10 @@ addEventListener('load', function() {
   d.setMapWidth(parseInt(mapWidthInput.value))
   d.setMapHeight(parseInt(mapWidthInput.value))
 
-  // EVENT LISTENERS
+  blocksPerRowInput.value = d.blocksPerRow()
+  blocksPerColInput.value = d.blocksPerCol()
 
+  // EVENT LISTENERS
 
   // designer menu buttons
   for (var i = 0; i < designerMenuBtns.length; i++) {

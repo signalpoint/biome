@@ -1,3 +1,6 @@
+let fileOpenModal = null
+let fileSaveModal = null
+
 class DesignerMenu {
 
   constructor() {
@@ -8,13 +11,94 @@ class DesignerMenu {
 
     switch (op) {
 
+      case 'file:open':
+
+        this.openModal('fileOpenModal')
+
+        break;
+
       case 'file:save':
-        console.log('SAVE!')
-        const myModalAlternative = new bootstrap.Modal('#fileSaveModal')
-        myModalAlternative.show()
+
+        let name = 'BakedLake'
+
+        // Save map name to storage.
+        let maps = d.loadMaps()
+        if (!maps.includes(name)) {
+          maps.push(name)
+          d.saveMaps(maps)
+        }
+
+        // Save map to storage
+        d.saveMap(name, dStorage.exportMapJson())
+
         break;
 
     }
+
+  }
+
+  openModal(id) {
+
+    let body = ''
+
+    switch (id) {
+
+      // FILE / OPEN
+      case 'fileOpenModal':
+
+        let maps = d.loadMaps()
+        if (maps.length) {
+          let items = []
+          for (var i = 0; i < maps.length; i++) {
+            items.push(
+            '<li class="list-group-item">' +
+              '<a class="btn btn-link">' + maps[i] + '</a>' +
+            '</li>'
+            )
+          }
+          body = '<ul id="fileOpenListGroup" class="list-group">' + items.join('') + '</ul>'
+        }
+        else {
+          body = '<div class="alert alert-info">No maps created, yet!</div>'
+        }
+
+        break;
+
+    }
+
+
+    document.querySelector('#' + id + ' .modal-body').innerHTML = body
+    window[id] = new bootstrap.Modal('#' + id)
+    window[id].show()
+
+    // after modal opens..
+
+    setTimeout(function() {
+
+      switch (id) {
+
+        // FILE / OPEN
+        case 'fileOpenModal':
+
+          // item click listeners
+          let links = document.querySelectorAll('#fileOpenListGroup li a')
+          for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener('click', function() {
+
+              // import the map
+              let mapName = this.innerHTML
+              let map = d.loadMap(mapName)
+              dStorage.importMapJson(map)
+              window[id].hide()
+
+            })
+          }
+
+          break;
+
+      }
+
+    })
 
   }
 

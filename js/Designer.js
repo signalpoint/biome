@@ -267,7 +267,10 @@ class Designer {
           let blockType = d.getPaintModeBlockType()
 
           // create the new block using the current type
-          this.blocks[delta] = new blockTypesDict[blockType](delta)
+          this.blocks[delta] = new blockTypesDict[blockType]({
+            delta,
+            type: blockType
+          })
 
         }
 

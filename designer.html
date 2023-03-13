@@ -10,6 +10,7 @@
 
     <script type="text/javascript" src="js/Designer.js"></script>
     <script type="text/javascript" src="js/DesignerMenu.js"></script>
+    <script type="text/javascript" src="js/DesignerPlayback.js"></script>
     <script type="text/javascript" src="js/DesignerMode.js"></script>
     <script type="text/javascript" src="js/DesignerStorage.js"></script>
 
@@ -18,6 +19,8 @@
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
     <script type="text/javascript" src="js/blocks/Stone.js"></script>
     <script type="text/javascript" src="js/blocks/Water.js"></script>
+
+    <script type="text/javascript" src="js/Player.js"></script>
 
     <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bm.css">
@@ -91,6 +94,16 @@
 
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light">
           <div class="position-sticky pt-3 sidebar-sticky">
+
+            <!-- PLAYBACK -->
+
+            <div class="mb-3">
+              <h4 class="visually-hidden">Playback</h4>
+              <div id="playbackBtns" class="btn-group mb-3" role="group" aria-label="Playback">
+                <button type="button" class="btn btn-light active" data-playback="pause">Pause</button>
+                <button type="button" class="btn btn-light" data-playback="play">Play</button>
+              </div>
+            </div>
 
             <!-- MODE -->
 
@@ -184,7 +197,10 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 pt-3">
+
+          <!-- CANVAS -->
           <canvas id="biome"></canvas>
+
         </main>
 
       </div>

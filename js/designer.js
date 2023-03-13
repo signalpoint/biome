@@ -56,6 +56,7 @@ let d = null
 let dMenu = null
 let dPlayback = null
 let dMode = null
+let dPlayer = null
 let dStorage = null
 
 // supported screen resolutions
@@ -115,6 +116,7 @@ addEventListener('load', function() {
   dMenu = new DesignerMenu()
   dPlayback = new DesignerPlayback()
   dMode = new DesignerMode()
+  dPlayer = new DesignerPlayer()
   dStorage = new DesignerStorage()
 
   // set mode

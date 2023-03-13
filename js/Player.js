@@ -99,6 +99,8 @@ class Player {
     if (this.vX !== 0) { this.x += this.vX }
     if (this.vY !== 0) { this.y += this.vY }
 
+    dPlayer.refreshCoordinates()
+
   }
 
   draw() {

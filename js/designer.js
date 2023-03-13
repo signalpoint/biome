@@ -3,6 +3,23 @@
 let canvas = null
 let c = null
 
+// KEYS
+
+const keys = {
+  up: {
+    pressed: false
+  },
+  down: {
+    pressed: false
+  },
+  left: {
+    pressed: false
+  },
+  right: {
+    pressed: false
+  }
+}
+
 // DEFAULT CONFIGURATION
 
 // mouse coordinate offsets
@@ -37,6 +54,7 @@ for (var type in blockTypesDict) {
 
 let d = null
 let dMenu = null
+let dPlayback = null
 let dMode = null
 let dStorage = null
 
@@ -62,6 +80,11 @@ let screenResolutionMap = {
 // designer menu
 
 let designerMenuBtns = document.querySelectorAll('#d-menu .d-menu-op')
+
+// designer playback
+
+let playbackBtnsContainer = document.querySelector('#playbackBtns')
+let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
 
 // designer mode
 
@@ -90,6 +113,7 @@ addEventListener('load', function() {
 
   d = new Designer()
   dMenu = new DesignerMenu()
+  dPlayback = new DesignerPlayback()
   dMode = new DesignerMode()
   dStorage = new DesignerStorage()
 
@@ -108,6 +132,7 @@ addEventListener('load', function() {
   // set screen resolution
   let resolution = screenResolutionMap[screenResolutionSelect.value]
   d.setScreenResolution(resolution.w, resolution.h)
+//  d.setScreenResolution(innerWidth, innerHeight) // full screen
 
   // set block size
   d.setBlockSize(parseInt(blockSizeInput.value))
@@ -122,6 +147,16 @@ addEventListener('load', function() {
   blocksPerRowInput.value = d.blocksPerRow()
   blocksPerColInput.value = d.blocksPerCol()
 
+  // PLAYER
+
+  player = new Player({
+    name: 'Tyler',
+    x: 576 + 8,
+    y: 256 + 4
+  })
+
+  players.push(player)
+
   // EVENT LISTENERS
 
   // designer menu buttons
@@ -132,6 +167,13 @@ addEventListener('load', function() {
       dMenu.onclick(e, op)
       return false
 
+    })
+  }
+
+  // designer playback buttons
+  for (var i = 0; i < playbackBtns.length; i++) {
+    playbackBtns[i].addEventListener('click', function() {
+      dPlayback.btnOnclickListener(this)
     })
   }
 
@@ -199,11 +241,115 @@ addEventListener('load', function() {
 //
 //  canvas.addEventListener("mouseout", canvasMouseOut);
 
+  // KEY DOWN
+
+  addEventListener('keydown', ({ keyCode } ) => {
+
+    if (d.isPaused()) { return }
+
+    switch (keyCode) {
+
+      // UP
+      case 87: // (W)
+      case 38: // (up arrow)
+
+        keys.up.pressed = true
+
+        break
+
+      // DOWN
+      case 83: // (S)
+      case 40: // (down arrow)
+
+        keys.down.pressed = true
+
+        break
+
+      // LEFT
+      case 65: // (A)
+      case 37: // (left arrow)
+
+        keys.left.pressed = true
+
+        break
+
+      // RIGHT
+      case 68: // (D)
+      case 39: // (right arrow)
+
+        keys.right.pressed = true
+
+        break
+
+    }
+
+  });
+
+  // KEY UP
+
+  addEventListener('keyup', ({ keyCode }) => {
+
+    if (d.isPaused()) { return }
+
+    switch (keyCode) {
+
+      // UP
+      case 87: // (W)
+      case 38: // (up arrow)
+
+        keys.up.pressed = false
+
+        break
+
+      // DOWN
+      case 83: // (S)
+      case 40: // (down arrow)
+
+        keys.down.pressed = false
+
+        break
+
+      // LEFT
+      case 65: // (A)
+      case 37: // (left arrow)
+
+        keys.left.pressed = false
+
+        break
+
+      // RIGHT
+      case 68: // (D)
+      case 39: // (right arrow)
+
+        keys.right.pressed = false
+
+        break
+
+    }
+
+  });
+
   d.init()
 
   d.draw()
 
 })
+
+// TODO use these instead of smushing the code in Designer.js
+// - keeps the class clean
+// - wouldn't need things in the animation loop to declare a function to call a function
+
+function update() {
+
+}
+
+function draw() {
+
+}
+
+function animate() {
+
+}
 
 // UTILITIES
 

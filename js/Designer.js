@@ -2,6 +2,10 @@ class Designer {
 
   constructor() {
 
+    this._animationFrame = null
+
+    this._playback = null
+
     this._mode = null
 
     this._paintModeBlockType = null
@@ -43,6 +47,14 @@ class Designer {
   loadMap(name) {
     return dStorage.load(name)
   }
+
+  // playback
+
+  setPlayback(p) { this._playback = p }
+  getPlayback() { return this._playback }
+
+  isPaused() { return this.getPlayback() == 'paused' }
+  isPlaying() { return this.getPlayback() == 'play' }
 
   // mode
 
@@ -159,9 +171,29 @@ class Designer {
 
   }
 
+  // ANIMATE
+
+  animate() {
+
+    // update, draw, animate (if playing)
+    this.update()
+    this.draw()
+    if (d.isPlaying()) {
+      requestAnimationFrame(function() {
+        d.animate()
+      });
+    }
+
+  }
+
+  // UPDATE
+
   update() {
 
-    // TODO remember!!! all update() calls should happen before the next draw() calls!
+    // player
+    for (let i = 0; i < players.length; i++) {
+      players[i].update()
+    }
 
   }
 
@@ -170,6 +202,8 @@ class Designer {
   draw() {
 
     c.clearRect(0, 0, canvas.width, canvas.height);
+
+    // TODO only draw the blocks that are visible on the canvas; instead of all the blocks!
 
     // blocks
     let startX = 0 // this will change as viewport changes
@@ -201,6 +235,11 @@ class Designer {
 
       }
 
+    }
+
+    // player
+    for (let i = 0; i < players.length; i++) {
+      players[i].draw()
     }
 
     // grid

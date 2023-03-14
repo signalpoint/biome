@@ -13,6 +13,7 @@
     <script type="text/javascript" src="js/DesignerPlayback.js"></script>
     <script type="text/javascript" src="js/DesignerMode.js"></script>
     <script type="text/javascript" src="js/DesignerPlayer.js"></script>
+    <script type="text/javascript" src="js/DesignerCamera.js"></script>
     <script type="text/javascript" src="js/DesignerStorage.js"></script>
 
     <script type="text/javascript" src="js/Block.js"></script>
@@ -140,7 +141,8 @@
               </select>
             </div>
 
-            <!-- Player -->
+            <!-- PLAYER -->
+
             <fieldset class="mb-3 p-3 border border-secondary">
 
               <legend>Player</legend>
@@ -152,7 +154,21 @@
 
             </fieldset>
 
-            <!-- Map -->
+            <!-- CAMERA -->
+
+            <fieldset class="mb-3 p-3 border border-secondary">
+
+              <legend>Camera</legend>
+
+              <!-- Camera Coordinates -->
+              <div class="row mb-3">
+                <span id="cameraCoordinates" class="badge badge-dark"></span>
+              </div>
+
+            </fieldset>
+
+            <!-- MAP -->
+
             <fieldset class="mb-3 p-3 border border-secondary">
 
               <legend>Map</legend>

@@ -12,7 +12,7 @@ class DesignerPlayback {
 
       case 'pause':
 
-        console.log('pausing animation...')
+//        console.log('pausing animation...')
 
         cancelAnimationFrame(d._animationFrame)
         d._animationFrame = null
@@ -23,8 +23,7 @@ class DesignerPlayback {
 
         // make sure we get rid of the other draw calls when animate is running!
 
-        console.log('starting animation...')
-        console.log('make sure we get rid of the other draw calls when animate is running!');
+//        console.log('starting animation...')
 
         d._animationFrame = requestAnimationFrame(animate)
 
@@ -37,7 +36,7 @@ class DesignerPlayback {
 
         }, 60000)
 
-        console.log('playing animation...')
+//        console.log('playing animation...')
 
         break;
 

@@ -57,6 +57,7 @@ let dMenu = null
 let dPlayback = null
 let dMode = null
 let dPlayer = null
+let dCamera = null
 let dStorage = null
 
 // supported screen resolutions
@@ -117,6 +118,7 @@ addEventListener('load', function() {
   dPlayback = new DesignerPlayback()
   dMode = new DesignerMode()
   dPlayer = new DesignerPlayer()
+  dCamera = new DesignerCamera()
   dStorage = new DesignerStorage()
 
   // set playback
@@ -372,6 +374,9 @@ function draw() {
       blockDelta = d.getBlockDeltaFromPos(x, y)
       block = d.blocks[blockDelta]
 
+      // debug
+//      console.log(`${x},${y} => ` + blockDelta)
+
       // If the block exists...
       if (block) {
 
@@ -388,6 +393,8 @@ function draw() {
       }
 
     }
+
+//    console.log('-------------------------')
 
   }
 

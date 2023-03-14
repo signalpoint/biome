@@ -59,7 +59,7 @@ class DesignerStorage {
 
     }
 
-    d.draw()
+    refresh()
 
   }
 

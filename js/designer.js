@@ -119,6 +119,9 @@ addEventListener('load', function() {
   dPlayer = new DesignerPlayer()
   dStorage = new DesignerStorage()
 
+  // set playback
+  d.setPlayback('pause')
+
   // set mode
   d.setMode('select')
 
@@ -200,7 +203,7 @@ addEventListener('load', function() {
   // block size
   blockSizeInput.addEventListener('change', function() {
     d.setBlockSize(parseInt(this.value))
-    d.draw()
+    refresh()
   })
 
   // map width
@@ -216,7 +219,7 @@ addEventListener('load', function() {
   // show grid
   showGridInput.addEventListener('change', function() {
     d.setGrid(this.checked)
-    d.draw()
+    refresh()
   })
 
   // canvas mousemove
@@ -333,7 +336,7 @@ addEventListener('load', function() {
 
   d.init()
 
-  d.draw()
+  draw()
 
 })
 
@@ -343,14 +346,85 @@ addEventListener('load', function() {
 
 function update() {
 
+  // player
+  for (let i = 0; i < players.length; i++) {
+    players[i].update()
+  }
+
 }
 
 function draw() {
+
+  c.clearRect(0, 0, canvas.width, canvas.height);
+
+  // TODO only draw the blocks that are visible on the canvas; instead of all the blocks!
+
+  // blocks
+  let startX = 0 // this will change as viewport changes
+  let startY = 0 // this will change as viewport changes
+  let blockDelta = null
+  let block = null
+
+  for (var y = startY; y < d.blocksPerScreenCol(); y++) {
+
+    for (var x = startX; x < d.blocksPerScreenRow(); x++) {
+
+      blockDelta = d.getBlockDeltaFromPos(x, y)
+      block = d.blocks[blockDelta]
+
+      // If the block exists...
+      if (block) {
+
+        block.draw(x, y)
+
+      }
+
+      // block mouse hover effect
+      if (d.getMouseBlockDelta() == blockDelta) {
+        c.beginPath()
+        c.strokeStyle = 'rgba(0,0,0,1)';
+        c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize());
+        c.stroke();
+      }
+
+    }
+
+  }
+
+  // player
+  for (let i = 0; i < players.length; i++) {
+    players[i].draw()
+  }
+
+  // grid
+  if (d.showGrid()) {
+    c.strokeStyle = 'rgba(0,0,0,0.2)';
+    for (var y = 0; y < canvas.height; y+= d.getBlockSize()) {
+      for (var x = 0; x < canvas.width; x += d.getBlockSize()) {
+        c.beginPath()
+        c.rect(x, y, d.getBlockSize(), d.getBlockSize())
+        c.stroke()
+      }
+    }
+  }
 
 }
 
 function animate() {
 
+  // update, draw, animate (if playing)
+  update()
+  draw()
+  if (d.isPlaying()) {
+    requestAnimationFrame(animate);
+  }
+
+}
+
+function refresh() {
+  if (d.isPaused()) {
+    draw();
+  }
 }
 
 // UTILITIES

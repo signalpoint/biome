@@ -26,9 +26,7 @@ class DesignerPlayback {
         console.log('starting animation...')
         console.log('make sure we get rid of the other draw calls when animate is running!');
 
-        d._animationFrame = requestAnimationFrame(function() {
-          d.animate()
-        })
+        d._animationFrame = requestAnimationFrame(animate)
 
         setTimeout(function() {
 

@@ -50,10 +50,10 @@ class Designer {
 
   // playback
 
-  setPlayback(p) { this._playback = p }
+  setPlayback(p) { this._playback = p } // pause, play
   getPlayback() { return this._playback }
 
-  isPaused() { return this.getPlayback() == 'paused' }
+  isPaused() { return this.getPlayback() == 'pause' }
   isPlaying() { return this.getPlayback() == 'play' }
 
   // mode
@@ -171,91 +171,6 @@ class Designer {
 
   }
 
-  // ANIMATE
-
-  animate() {
-
-    // update, draw, animate (if playing)
-    this.update()
-    this.draw()
-    if (d.isPlaying()) {
-      requestAnimationFrame(function() {
-        d.animate()
-      });
-    }
-
-  }
-
-  // UPDATE
-
-  update() {
-
-    // player
-    for (let i = 0; i < players.length; i++) {
-      players[i].update()
-    }
-
-  }
-
-  // DRAW
-
-  draw() {
-
-    c.clearRect(0, 0, canvas.width, canvas.height);
-
-    // TODO only draw the blocks that are visible on the canvas; instead of all the blocks!
-
-    // blocks
-    let startX = 0 // this will change as viewport changes
-    let startY = 0 // this will change as viewport changes
-    let blockDelta = null
-    let block = null
-
-    for (var y = startY; y < this.blocksPerScreenCol(); y++) {
-
-      for (var x = startX; x < this.blocksPerScreenRow(); x++) {
-
-        blockDelta = this.getBlockDeltaFromPos(x, y)
-        block = this.blocks[blockDelta]
-
-        // If the block exists...
-        if (block) {
-
-          block.draw(x, y)
-
-        }
-
-        // block mouse hover effect
-        if (this.getMouseBlockDelta() == blockDelta) {
-          c.beginPath()
-          c.strokeStyle = 'rgba(0,0,0,1)';
-          c.rect(x * this.getBlockSize(), y * this.getBlockSize(), this.getBlockSize(), this.getBlockSize());
-          c.stroke();
-        }
-
-      }
-
-    }
-
-    // player
-    for (let i = 0; i < players.length; i++) {
-      players[i].draw()
-    }
-
-    // grid
-    if (this.showGrid()) {
-      c.strokeStyle = 'rgba(0,0,0,0.2)';
-      for (var y = 0; y < canvas.height; y+= this.getBlockSize()) {
-        for (var x = 0; x < canvas.width; x += this.getBlockSize()) {
-          c.beginPath()
-          c.rect(x, y, this.getBlockSize(), this.getBlockSize())
-          c.stroke()
-        }
-      }
-    }
-
-  }
-
   // CANVAS MOUSE EVENT LISTENERS
 
   // move
@@ -269,7 +184,7 @@ class Designer {
     let blockDelta = d.getBlockDelta(coords.x, coords.y)
     if (blockDelta != d.getMouseBlockDelta()) {
       d.setMouseBlockDelta(blockDelta)
-      d.draw()
+      refresh()
     }
 
   }
@@ -290,7 +205,7 @@ class Designer {
 
     this.setMouseUpCoords(getCanvasMouseCoords(e))
 
-    this.draw()
+    refresh()
 
   }
 

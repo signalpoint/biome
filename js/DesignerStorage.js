@@ -30,6 +30,10 @@ class DesignerStorage {
 
   }
 
+  importMap(mapName) {
+    this.importMapJson(d.loadMap(mapName))
+  }
+
   importMapJson(map) {
 
     let name = map.name

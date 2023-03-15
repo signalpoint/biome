@@ -159,11 +159,23 @@ class Designer {
 
   init() {
 
-    for (let y = 0; y < this.getMapHeight(); y += this.getBlockSize()) {
+    // open the last map, if available...
 
-      for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
+    let lastMapOpened = dStorage.load('LastMapOpened')
+    if (lastMapOpened) {
+      dStorage.importMap(lastMapOpened)
+    }
+    else {
 
-        this.blocks.push(0)
+      // start with an empty map...
+
+      for (let y = 0; y < this.getMapHeight(); y += this.getBlockSize()) {
+
+        for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
+
+          this.blocks.push(0)
+
+        }
 
       }
 

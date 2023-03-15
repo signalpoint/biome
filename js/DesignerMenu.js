@@ -71,7 +71,7 @@ class DesignerMenu {
     window[id] = new bootstrap.Modal('#' + id)
     window[id].show()
 
-    // after modal opens..
+    // after modal opens...
 
     setTimeout(function() {
 
@@ -85,11 +85,16 @@ class DesignerMenu {
           for (var i = 0; i < links.length; i++) {
             links[i].addEventListener('click', function() {
 
-              // import the map
               let mapName = this.innerHTML
-              let map = d.loadMap(mapName)
-              dStorage.importMapJson(map)
+
+              // import map
+              dStorage.importMap(mapName)
+
+              // hide modal
               window[id].hide()
+
+              // remember as last map opened
+              dStorage.save('LastMapOpened', mapName)
 
             })
           }

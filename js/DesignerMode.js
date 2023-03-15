@@ -2,7 +2,12 @@ class DesignerMode {
 
   constructor() {
 
+    this._activePane = null
+
   }
+
+  setActivePane(el) { this._activePane = el }
+  getActivePane() { return this._activePane }
 
   btnOnclickListener(btn) {
 
@@ -25,6 +30,9 @@ class DesignerMode {
     // udpate the mode
     d.setMode(mode)
 
+    // set the active pane
+    this.setActivePane(chosenPane)
+
   }
 
   canvasMouseDownListener(evt) {
@@ -36,8 +44,10 @@ class DesignerMode {
     let blockCoords = d.getBlockCoords(coords.x, coords.y);
     console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${coords.x},${coords.y}`)
 
-    let existingBlock = !!d.blocks[delta]
+    let existingBlock = d.blocks[delta] !== 0
     let block = existingBlock ? d.blocks[delta] : null
+
+    let html = null
 
     switch (d.getMode()) {
 
@@ -47,14 +57,18 @@ class DesignerMode {
 
         if (existingBlock) {
 
-          console.log(block)
+//          console.log(block)
+
+          html = JSON.stringify(block)
 
         }
         else {
 
-          console.log('-')
+          html = '-'
 
         }
+
+        this.getActivePane().innerHTML = JSON.stringify(block)
 
         break;
 

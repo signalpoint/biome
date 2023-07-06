@@ -96,6 +96,14 @@ class DesignerMode {
 
         break;
 
+      // CAMERA
+
+      case 'camera':
+
+        console.log('camera!')
+
+        break;
+
     }
 
   }

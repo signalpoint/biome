@@ -430,12 +430,10 @@ function draw() {
   let startY = dCamera.y()
   let endX = startX + d.blocksPerScreenRow()
   let endY = startY + d.blocksPerScreenCol()
-  if (endX > d.blocksPerRow() - d.blocksPerScreenRow()) { // don't scroll too far
-    endX = d.blocksPerRow() - d.blocksPerScreenRow() - 1
-  }
-  if (endY > d.blocksPerCol() - d.blocksPerScreenCol()) { // don't scroll too far
-    endY = d.blocksPerCol() - d.blocksPerScreenCol() - 1
-  }
+  let maxX = d.blocksPerRow() - d.blocksPerScreenRow()
+  let maxY = d.blocksPerCol() - d.blocksPerScreenCol()
+  if (endX > maxX) { endX = maxX } // don't scroll too far
+  if (endY > maxY) { endY = maxY } // don't scroll too far
 
   let blockDelta = null
   let block = null

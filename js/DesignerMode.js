@@ -39,10 +39,13 @@ class DesignerMode {
 
     let coords = d.getMouseDownCoords()
 
+    let x = coords.x + dCamera.xOffset()
+    let y = coords.y + dCamera.yOffset()
+
     // Get block delta and coordinates
-    let delta = d.getBlockDelta(coords.x, coords.y)
-    let blockCoords = d.getBlockCoords(coords.x, coords.y);
-    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${coords.x},${coords.y}`)
+    let delta = d.getBlockDelta(x, y)
+    let blockCoords = d.getBlockCoords(x, y);
+    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
 
     let existingBlock = d.blocks[delta] !== 0
     let block = existingBlock ? d.blocks[delta] : null

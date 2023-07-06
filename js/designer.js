@@ -6,6 +6,8 @@ let c = null
 // KEYS
 
 const keys = {
+
+  // player
   up: {
     pressed: false
   },
@@ -17,7 +19,22 @@ const keys = {
   },
   right: {
     pressed: false
+  },
+
+  // camera
+  cameraUp: {
+    pressed: false
+  },
+  cameraDown: {
+    pressed: false
+  },
+  cameraLeft: {
+    pressed: false
+  },
+  cameraRight: {
+    pressed: false
   }
+
 }
 
 // DEFAULT CONFIGURATION
@@ -105,6 +122,11 @@ let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
 let cameraMoveLeftBtn = document.querySelector('#cameraMoveLeftBtn')
 let cameraMoveRightBtn = document.querySelector('#cameraMoveRightBtn')
+
+let playerMoveUpBtn = document.querySelector('#playerMoveUpBtn')
+let playerMoveDownBtn = document.querySelector('#playerMoveDownBtn')
+let playerMoveLeftBtn = document.querySelector('#playerMoveLeftBtn')
+let playerMoveRightBtn = document.querySelector('#playerMoveRightBtn')
 
 let blockSizeInput = document.querySelector('#blockSize')
 let showGridInput = document.querySelector('#showGrid')
@@ -217,6 +239,16 @@ addEventListener('load', function() {
   cameraMoveLeftBtn.addEventListener('click', function() { dCamera.move('left') })
   cameraMoveRightBtn.addEventListener('click', function() { dCamera.move('right') })
 
+  // player: movement
+  playerMoveUpBtn.addEventListener('mousedown', function() { keys.up.pressed = true })
+  playerMoveUpBtn.addEventListener('mouseup', function() { keys.up.pressed = false })
+  playerMoveDownBtn.addEventListener('mousedown', function() { keys.down.pressed = true })
+  playerMoveDownBtn.addEventListener('mouseup', function() { keys.down.pressed = false })
+  playerMoveLeftBtn.addEventListener('mousedown', function() { keys.left.pressed = true })
+  playerMoveLeftBtn.addEventListener('mouseup', function() { keys.left.pressed = false })
+  playerMoveRightBtn.addEventListener('mousedown', function() { keys.right.pressed = true })
+  playerMoveRightBtn.addEventListener('mouseup', function() { keys.right.pressed = false })
+
   // screen resolution
   screenResolutionSelect.addEventListener('change', function() {
     let resolution = screenResolutionMap[this.value]
@@ -273,41 +305,53 @@ addEventListener('load', function() {
 
   addEventListener('keydown', ({ keyCode } ) => {
 
+    switch (keyCode) {
+
+      // CAMERA
+
+      // up (W)
+      case 87:
+        keys.cameraUp.pressed = true
+        dCamera.move('up')
+        break
+
+      // down (S)
+      case 83:
+        keys.cameraDown.pressed = true
+        dCamera.move('down')
+        break
+
+      // left (A)
+      case 65:
+        keys.cameraLeft.pressed = true
+        dCamera.move('left')
+        break
+
+      // right (D)
+      case 68:
+        keys.cameraRight.pressed = true
+        dCamera.move('right')
+        break
+
+    }
+
     if (d.isPaused()) { return }
 
     switch (keyCode) {
 
-      // UP
-      case 87: // (W)
-      case 38: // (up arrow)
+      // PLAYER
 
-        keys.up.pressed = true
+      // up (arrow)
+      case 38: keys.up.pressed = true; break
 
-        break
+      // down (arrow)
+      case 40: keys.down.pressed = true; break
 
-      // DOWN
-      case 83: // (S)
-      case 40: // (down arrow)
+      // left (arrow)
+      case 37: keys.left.pressed = true; break
 
-        keys.down.pressed = true
-
-        break
-
-      // LEFT
-      case 65: // (A)
-      case 37: // (left arrow)
-
-        keys.left.pressed = true
-
-        break
-
-      // RIGHT
-      case 68: // (D)
-      case 39: // (right arrow)
-
-        keys.right.pressed = true
-
-        break
+      // right (arrow)
+      case 39: keys.right.pressed = true; break
 
     }
 
@@ -317,41 +361,41 @@ addEventListener('load', function() {
 
   addEventListener('keyup', ({ keyCode }) => {
 
+    switch (keyCode) {
+
+      // CAMERA
+
+      // up (W)
+      case 87: keys.cameraUp.pressed = false; break
+
+      // down (S)
+      case 83: keys.cameraDown.pressed = false; break
+
+      // left (A)
+      case 65: meraLeft.pressed = false; break
+
+      // right (D)
+      case 68: keys.cameraRight.pressed = false; break
+
+    }
+
     if (d.isPaused()) { return }
 
     switch (keyCode) {
 
-      // UP
-      case 87: // (W)
-      case 38: // (up arrow)
+      // PLAYER
 
-        keys.up.pressed = false
+      // up (arrow)
+      case 38: keys.up.pressed = false; break
 
-        break
+      // down (arrow)
+      case 40: keys.down.pressed = false; break
 
-      // DOWN
-      case 83: // (S)
-      case 40: // (down arrow)
+      // left (arrow)
+      case 37: keys.left.pressed = false; break
 
-        keys.down.pressed = false
-
-        break
-
-      // LEFT
-      case 65: // (A)
-      case 37: // (left arrow)
-
-        keys.left.pressed = false
-
-        break
-
-      // RIGHT
-      case 68: // (D)
-      case 39: // (right arrow)
-
-        keys.right.pressed = false
-
-        break
+      // right (arrow)
+      case 39: keys.right.pressed = false; break
 
     }
 

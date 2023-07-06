@@ -106,8 +106,8 @@ class Player {
   draw() {
     c.fillStyle = '#000'
     c.fillRect(
-      this.x,
-      this.y,
+      this.x - dCamera.xOffset(),
+      this.y - dCamera.yOffset(),
       this.width,
       this.height
     )

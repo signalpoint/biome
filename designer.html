@@ -112,7 +112,7 @@
 
             <!-- MODE -->
 
-            <div class="pb-3 border-bottom border-secondary mb-3">
+            <div class="">
 
               <h4 class="visually-hidden">Mode</h4>
 
@@ -127,26 +127,39 @@
 
                 <!-- Camera -->
                 <button type="button" class="btn btn-light" data-mode="camera" title="Camera"><i class="fas fa-camera"></i></button>
+
+                <!-- Map -->
+                <button type="button" class="btn btn-light" data-mode="map" title="Map"><i class="fas fa-map"></i></button>
+
+                <!-- Display -->
+                <button type="button" class="btn btn-light" data-mode="display" title="Display"><i class="fas fa-tv"></i></button>
+
               </div>
 
               <!-- Mode Panes -->
               <div id="designerModePanes">
 
-                <!-- SELECT -->
-                <div class="designerModePane active" data-mode="select">...</div>
+                <!-- Select -->
+                <div class="designerModePane active" data-mode="select"></div>
 
-                <!-- PAINT -->
+                <!-- Paint -->
                 <div class="designerModePane d-none" data-mode="paint">
-                  <div class="">
+
+                  <fieldset class="border border-secondary mb-3 p-3">
+
+                    <legend class="fs-5">Paint</legend>
+
                     <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
                     <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
-                  </div>
+
+                  </fieldset>
+
                 </div>
 
-                <!-- CAMERA -->
+                <!-- Camera -->
                 <div class="designerModePane d-none" data-mode="camera">
 
-                  <fieldset class="border p-3">
+                  <fieldset class="border border-secondary mb-3 p-3">
 
                     <legend class="fs-5">Camera</legend>
 
@@ -190,92 +203,99 @@
                       <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
                     </div>
 
+                    <!-- Camera Coordinates -->
+                    <div class="row mb-3">
+                      <span id="cameraCoordinates" class="badge badge-dark"></span>
+                    </div>
+
+                  </fieldset>
+
+                </div>
+
+                <!-- Map -->
+                <div class="designerModePane d-none" data-mode="map">
+
+                  <fieldset class="border border-secondary p-3">
+
+                    <legend class="fs-5">Map</legend>
+
+                    <!-- Block Size -->
+                    <div class="mb-3">
+                      <label for="blockSize" class="form-label">Block size (px)</label>
+                      <input type="number" class="form-control" id="blockSize" value="64">
+                    </div>
+
+                    <!-- Map Dimensions -->
+                    <div class="row mb-3">
+
+                      <!-- Width -->
+                      <div class="col-6">
+                        <label for="mapWidth" class="form-label">Width (px)</label>
+                        <input type="number" class="form-control" id="mapWidth" value="2560">
+                      </div>
+
+                      <!-- Height -->
+                      <div class="col-6">
+                        <label for="mapHeight" class="form-label">Height (px)</label>
+                        <input type="number" class="form-control" id="mapHeight" value="1440">
+                      </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <!-- Blocks per Row -->
+                      <div class="col-6">
+                        <label for="blocksPerRow" class="form-label">Blocks per Row</label>
+                        <input type="number" class="form-control" id="blocksPerRow">
+                      </div>
+
+                      <!-- Blocks per Col -->
+                      <div class="col-6">
+                        <label for="blocksPerCol" class="form-label">Blocks per Col</label>
+                        <input type="number" class="form-control" id="blocksPerCol">
+                      </div>
+
+                    </div>
+
+                  </fieldset>
+
+                </div>
+
+                <!-- Display -->
+                <div class="designerModePane d-none" data-mode="display">
+
+                  <fieldset class="border border-secondary mb-3 p-3">
+
+                    <legend class="fs-5">Display</legend>
+
+                    <!-- Screen resolution -->
+                    <div class="mb-3">
+                      <label for="screenResolution" class="form-label">Screen resolution</label>
+                      <select id="screenResolution" class="form-select" aria-label="Screen Size">
+                        <option value="720p">720p</option>
+                        <option value="1080p">1080p</option>
+                        <option value="1024x768">1024x768</option>
+                      </select>
+                    </div>
+
                   </fieldset>
 
                 </div>
 
               </div>
-            </div>
 
-            <!-- Screen resolution -->
-            <div class="mb-3">
-              <label for="screenResolution" class="form-label">Screen resolution</label>
-              <select id="screenResolution" class="form-select" aria-label="Screen Size">
-                <option value="720p">720p</option>
-                <option value="1080p">1080p</option>
-                <option value="1024x768">1024x768</option>
-              </select>
             </div>
 
             <!-- PLAYER -->
 
-            <fieldset class="mb-3 p-3 border border-secondary">
+            <fieldset class="border border-secondary mb-3 p-3">
 
               <legend>Player</legend>
 
               <!-- Player Coordinates -->
               <div class="row mb-3">
                 <span id="playerCoordinates" class="badge badge-dark"></span>
-              </div>
-
-            </fieldset>
-
-            <!-- CAMERA -->
-
-            <fieldset class="mb-3 p-3 border border-secondary">
-
-              <legend>Camera</legend>
-
-              <!-- Camera Coordinates -->
-              <div class="row mb-3">
-                <span id="cameraCoordinates" class="badge badge-dark"></span>
-              </div>
-
-            </fieldset>
-
-            <!-- MAP -->
-
-            <fieldset class="mb-3 p-3 border border-secondary">
-
-              <legend>Map</legend>
-
-              <!-- Block Size -->
-              <div class="mb-3">
-                <label for="blockSize" class="form-label">Block size (px)</label>
-                <input type="number" class="form-control" id="blockSize" value="64">
-              </div>
-
-              <!-- Map Dimensions -->
-              <div class="row mb-3">
-
-                <!-- Width -->
-                <div class="col-6">
-                  <label for="mapWidth" class="form-label">Width (px)</label>
-                  <input type="number" class="form-control" id="mapWidth" value="2560">
-                </div>
-
-                <!-- Height -->
-                <div class="col-6">
-                  <label for="mapHeight" class="form-label">Height (px)</label>
-                  <input type="number" class="form-control" id="mapHeight" value="1440">
-                </div>
-
-              </div>
-
-              <div class="row mb-3">
-
-                <!-- Blocks per Row -->
-                <div class="col-6">
-                  <label for="blocksPerRow" class="form-label">Blocks per Row</label>
-                  <input type="number" class="form-control" id="blocksPerRow">
-                </div>
-
-                <!-- Blocks per Col -->
-                <div class="col-6">
-                  <label for="blocksPerCol" class="form-label">Blocks per Col</label>
-                  <input type="number" class="form-control" id="blocksPerCol">
-                </div>
-
               </div>
 
             </fieldset>

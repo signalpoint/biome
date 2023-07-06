@@ -10,6 +10,9 @@ class DesignerCamera {
   x() { return this._x }
   y() { return this._y }
 
+  xOffset() { return this.x() * d.getBlockSize() }
+  yOffset() { return this.y() * d.getBlockSize() }
+
   moveUp() { this._y-- }
   moveDown() { this._y++ }
   moveLeft() { this._x-- }

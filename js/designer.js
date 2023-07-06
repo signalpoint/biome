@@ -94,11 +94,13 @@ let designerModeBtnsContainer = document.querySelector('#designerModeBtns')
 let designerModeBtns = designerModeBtnsContainer.querySelectorAll('button')
 
 let selectModePane = document.querySelector('#designerModePanes div[data-mode="select"]')
-
 let paintModePane = document.querySelector('#designerModePanes div[data-mode="paint"]')
+let cameraModePane = document.querySelector('#designerModePanes div[data-mode="camera"]')
+let mapModePane = document.querySelector('#designerModePanes div[data-mode="map"]')
+let displayModePane = document.querySelector('#designerModePanes div[data-mode="display"]')
+
 let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
 
-let cameraModePane = document.querySelector('#designerModePanes div[data-mode="camera"]')
 let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
 let cameraMoveLeftBtn = document.querySelector('#cameraMoveLeftBtn')

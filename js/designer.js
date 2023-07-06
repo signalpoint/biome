@@ -104,6 +104,8 @@ let designerMenuBtns = document.querySelectorAll('#d-menu .d-menu-op')
 
 let playbackBtnsContainer = document.querySelector('#playbackBtns')
 let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
+let pauseBtn = playbackBtnsContainer.querySelector('button[data-playback="pause"]')
+let playBtn = playbackBtnsContainer.querySelector('button[data-playback="play"]')
 
 // designer mode
 
@@ -305,6 +307,8 @@ addEventListener('load', function() {
 
   addEventListener('keydown', ({ keyCode } ) => {
 
+    console.log(keyCode)
+
     switch (keyCode) {
 
       // CAMERA
@@ -335,23 +339,36 @@ addEventListener('load', function() {
 
     }
 
-    if (d.isPaused()) { return }
+    if (d.isPaused()) {
 
-    switch (keyCode) {
+      // play (SPACE)
+      if (keyCode == 32) {
+        playBtn.click();
+      }
 
-      // PLAYER
+    }
+    else {
 
-      // up (arrow)
-      case 38: keys.up.pressed = true; break
+      switch (keyCode) {
 
-      // down (arrow)
-      case 40: keys.down.pressed = true; break
+        // pause (SPACE)
+        case 32: pauseBtn.click(); break
 
-      // left (arrow)
-      case 37: keys.left.pressed = true; break
+        // PLAYER
 
-      // right (arrow)
-      case 39: keys.right.pressed = true; break
+        // up (arrow)
+        case 38: keys.up.pressed = true; break
+
+        // down (arrow)
+        case 40: keys.down.pressed = true; break
+
+        // left (arrow)
+        case 37: keys.left.pressed = true; break
+
+        // right (arrow)
+        case 39: keys.right.pressed = true; break
+
+      }
 
     }
 
@@ -379,23 +396,28 @@ addEventListener('load', function() {
 
     }
 
-    if (d.isPaused()) { return }
+    if (d.isPaused()) {
 
-    switch (keyCode) {
+    }
+    else {
 
-      // PLAYER
+      switch (keyCode) {
 
-      // up (arrow)
-      case 38: keys.up.pressed = false; break
+        // PLAYER
 
-      // down (arrow)
-      case 40: keys.down.pressed = false; break
+        // up (arrow)
+        case 38: keys.up.pressed = false; break
 
-      // left (arrow)
-      case 37: keys.left.pressed = false; break
+        // down (arrow)
+        case 40: keys.down.pressed = false; break
 
-      // right (arrow)
-      case 39: keys.right.pressed = false; break
+        // left (arrow)
+        case 37: keys.left.pressed = false; break
+
+        // right (arrow)
+        case 39: keys.right.pressed = false; break
+
+      }
 
     }
 

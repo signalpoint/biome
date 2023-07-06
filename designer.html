@@ -103,11 +103,23 @@
             <!-- PLAYBACK -->
 
             <div class="mb-3">
+
               <h4 class="visually-hidden">Playback</h4>
+
               <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
-                <button type="button" class="btn btn-light active" data-playback="pause" title="Pause"><i class="fas fa-pause"></i></button>
-                <button type="button" class="btn btn-light" data-playback="play" title="Play"><i class="fas fa-play"></i></button>
+
+                <!-- Pause -->
+                <button type="button" class="btn btn-light active" data-playback="pause" title="Pause (SPACE)">
+                  <i class="fas fa-pause"></i>
+                </button>
+
+                <!-- Play -->
+                <button type="button" class="btn btn-light" data-playback="play" title="Play (SPACE)">
+                  <i class="fas fa-play"></i>
+                </button>
+
               </div>
+
             </div>
 
             <!-- MODE -->
@@ -120,19 +132,34 @@
               <div id="designerModeBtns" class="btn-group mb-3" role="group" aria-label="Designer mode">
 
                 <!-- Select -->
-                <button type="button" class="btn btn-light active" data-mode="select" title="Select"><i class="fas fa-mouse-pointer"></i></button>
+                <button type="button" class="btn btn-light active" data-mode="select" title="Select">
+                  <i class="fas fa-mouse-pointer"></i>
+                </button>
 
                 <!-- Paint -->
-                <button type="button" class="btn btn-light" data-mode="paint" title="Paint"><i class="fas fa-brush"></i></button>
+                <button type="button" class="btn btn-light" data-mode="paint" title="Paint">
+                  <i class="fas fa-brush"></i>
+                </button>
+
+                <!-- Edges -->
+                <button type="button" class="btn btn-light" data-mode="edges" title="Edges">
+                  <i class="fas fa-border-style"></i>
+                </button>
 
                 <!-- Camera -->
-                <button type="button" class="btn btn-light" data-mode="camera" title="Camera"><i class="fas fa-camera"></i></button>
+                <button type="button" class="btn btn-light" data-mode="camera" title="Camera">
+                  <i class="fas fa-camera"></i>
+                </button>
 
                 <!-- Map -->
-                <button type="button" class="btn btn-light" data-mode="map" title="Map"><i class="fas fa-map"></i></button>
+                <button type="button" class="btn btn-light" data-mode="map" title="Map">
+                  <i class="fas fa-map"></i>
+                </button>
 
                 <!-- Display -->
-                <button type="button" class="btn btn-light" data-mode="display" title="Display"><i class="fas fa-tv"></i></button>
+                <button type="button" class="btn btn-light" data-mode="display" title="Display">
+                  <i class="fas fa-tv"></i>
+                </button>
 
               </div>
 
@@ -151,6 +178,17 @@
 
                     <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
                     <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+
+                  </fieldset>
+
+                </div>
+
+                <!-- Edges -->
+                <div class="designerModePane d-none" data-mode="edges">
+
+                  <fieldset class="border border-secondary mb-3 p-3">
+
+                    <legend class="fs-5">Edges</legend>
 
                   </fieldset>
 

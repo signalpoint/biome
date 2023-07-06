@@ -99,6 +99,18 @@ class DesignerMode {
 
         break;
 
+      // EDGES
+
+      case 'edges':
+
+        if (existingBlock) {
+
+          console.log('edges', block)
+
+        }
+
+        break;
+
       // CAMERA
 
       case 'camera':

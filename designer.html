@@ -8,6 +8,9 @@
 
     <title>Biome Designer</title>
 
+    <!-- Font Awesome -->
+    <script src="vendor/fontawesome-free-5.15.4-web/js/all.min.js"></script>
+
     <script type="text/javascript" src="js/Designer.js"></script>
     <script type="text/javascript" src="js/DesignerMenu.js"></script>
     <script type="text/javascript" src="js/DesignerPlayback.js"></script>
@@ -102,19 +105,31 @@
             <div class="mb-3">
               <h4 class="visually-hidden">Playback</h4>
               <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
-                <button type="button" class="btn btn-light active" data-playback="pause">Pause</button>
-                <button type="button" class="btn btn-light" data-playback="play">Play</button>
+                <button type="button" class="btn btn-light active" data-playback="pause" title="Pause"><i class="fas fa-pause"></i></button>
+                <button type="button" class="btn btn-light" data-playback="play" title="Play"><i class="fas fa-play"></i></button>
               </div>
             </div>
 
             <!-- MODE -->
 
             <div class="pb-3 border-bottom border-secondary mb-3">
-              <h4>Mode</h4>
+
+              <h4 class="visually-hidden">Mode</h4>
+
+              <!-- Mode Buttons -->
               <div id="designerModeBtns" class="btn-group mb-3" role="group" aria-label="Designer mode">
-                <button type="button" class="btn btn-light active" data-mode="select">Select</button>
-                <button type="button" class="btn btn-light" data-mode="paint">Paint</button>
+
+                <!-- Select -->
+                <button type="button" class="btn btn-light active" data-mode="select" title="Select"><i class="fas fa-mouse-pointer"></i></button>
+
+                <!-- Paint -->
+                <button type="button" class="btn btn-light" data-mode="paint" title="Paint"><i class="fas fa-brush"></i></button>
+
+                <!-- Camera -->
+                <button type="button" class="btn btn-light" data-mode="camera" title="Camera"><i class="fas fa-camera"></i></button>
               </div>
+
+              <!-- Mode Panes -->
               <div id="designerModePanes">
 
                 <!-- SELECT -->
@@ -126,6 +141,57 @@
                     <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
                     <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
                   </div>
+                </div>
+
+                <!-- CAMERA -->
+                <div class="designerModePane d-none" data-mode="camera">
+
+                  <fieldset class="border p-3">
+
+                    <legend class="fs-5">Camera</legend>
+
+                    <div class="mb-3">
+
+                      <!-- Vertical Movement -->
+                      <div class="btn-group" role="group" aria-label="Camera Vertical Movement">
+
+                        <!-- Up -->
+                        <button id="cameraMoveUpBtn" type="button" class="btn btn-light" title="Move Up">
+                          <i class="fas fa-arrow-up"></i>
+                        </button>
+
+                        <!-- Down -->
+                        <button id="cameraMoveDownBtn" type="button" class="btn btn-light" title="Move Down">
+                          <i class="fas fa-arrow-down"></i>
+                        </button>
+
+                      </div>
+
+                      <!-- Horizontal Movement -->
+                      <div class="btn-group" role="group" aria-label="Camera Horizontal Movement">
+
+                        <!-- Left -->
+                        <button id="cameraMoveLeftBtn" type="button" class="btn btn-light" title="Move Left">
+                          <i class="fas fa-arrow-left"></i>
+                        </button>
+
+                        <!-- Right -->
+                        <button id="cameraMoveRightBtn" type="button" class="btn btn-light" title="Move Right">
+                          <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                    <!-- Elevation -->
+                    <div class="">
+                      <label for="cameraModeElevationRange" class="form-label">Elevation</label>
+                      <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
+                    </div>
+
+                  </fieldset>
+
                 </div>
 
               </div>

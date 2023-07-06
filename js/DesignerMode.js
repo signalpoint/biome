@@ -50,28 +50,50 @@ class DesignerMode {
     let existingBlock = d.blocks[delta] !== 0
     let block = existingBlock ? d.blocks[delta] : null
 
-    let html = null
-
     switch (d.getMode()) {
 
       // SELECT
 
       case 'select':
 
+        let html = ''
+
+        // On existing blocks...
         if (existingBlock) {
 
-//          console.log(block)
+          // Toggle its selected state.
+          d.blockSelected(delta) ?
 
-          html = JSON.stringify(block)
+            d.deselectBlock(delta) :
 
-        }
-        else {
-
-          html = '-'
+            d.selectBlock(delta);
 
         }
 
-        this.getActivePane().innerHTML = JSON.stringify(block)
+        // Show any selected blocks...
+        let selectedBlocks = d.selectedBlocks()
+        if (selectedBlocks.length) {
+          html += '<ul class="list-group">'
+          for (var i = 0; i < selectedBlocks.length; i++) {
+            let selectedBlockDelta = selectedBlocks[i]
+            let selectedBlock = d.blocks[selectedBlockDelta]
+            html +=
+              `<li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">${selectedBlock.type}</div>
+                </div>
+                <span class="badge bg-primary rounded-pill">#${selectedBlock.delta}</span>
+              </li>`
+          }
+          html += '</ul>'
+        }
+
+        // Update the pane
+        this.getActivePane().innerHTML =
+          `<fieldset class="border border-secondary mb-3 p-3">
+            <legend class="fs-5">Select<span class="badge bg-secondary float-end">${selectedBlocks.length}</span></legend>
+            ${html}
+          </fieldset>`
 
         break;
 

@@ -21,9 +21,9 @@ class DesignerCamera {
   move(direction) {
     switch (direction) {
       case 'up': if (this.y() > 0) { this.moveUp(); } break;
-      case 'down': this.moveDown(); break;
+      case 'down': if (this.y() < d.blocksPerCol() - d.blocksPerScreenCol()) { this.moveDown(); } break;
       case 'left': if (this.x() > 0) { this.moveLeft(); } break;
-      case 'right': this.moveRight(); break;
+      case 'right': if (this.x() < d.blocksPerRow() - d.blocksPerScreenRow()) { this.moveRight(); } break;
     }
     refresh()
   }

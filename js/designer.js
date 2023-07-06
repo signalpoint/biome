@@ -92,7 +92,17 @@ let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
 
 let designerModeBtnsContainer = document.querySelector('#designerModeBtns')
 let designerModeBtns = designerModeBtnsContainer.querySelectorAll('button')
+
+let selectModePane = document.querySelector('#designerModePanes div[data-mode="select"]')
+
+let paintModePane = document.querySelector('#designerModePanes div[data-mode="paint"]')
 let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
+
+let cameraModePane = document.querySelector('#designerModePanes div[data-mode="camera"]')
+let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
+let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
+let cameraMoveLeftBtn = document.querySelector('#cameraMoveLeftBtn')
+let cameraMoveRightBtn = document.querySelector('#cameraMoveRightBtn')
 
 let blockSizeInput = document.querySelector('#blockSize')
 let showGridInput = document.querySelector('#showGrid')
@@ -126,6 +136,9 @@ addEventListener('load', function() {
 
   // set mode
   d.setMode('select')
+
+  // set the active pane for the mode
+  dMode.setActivePane(selectModePane)
 
   // paint mode: block type
   for (var i = 0; i < blockTypes.length; i++) {
@@ -195,6 +208,12 @@ addEventListener('load', function() {
   paintModeBlockTypeSelect.addEventListener('change', function() {
     d.setPaintModeBlockType(this.value)
   })
+
+  // camera: movement
+  cameraMoveUpBtn.addEventListener('click', function() { dCamera.move('up') })
+  cameraMoveDownBtn.addEventListener('click', function() { dCamera.move('down') })
+  cameraMoveLeftBtn.addEventListener('click', function() { dCamera.move('left') })
+  cameraMoveRightBtn.addEventListener('click', function() { dCamera.move('right') })
 
   // screen resolution
   screenResolutionSelect.addEventListener('change', function() {
@@ -359,19 +378,33 @@ function draw() {
 
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  // TODO only draw the blocks that are visible on the canvas; instead of all the blocks!
-
   // blocks
-  let startX = 0 // this will change as viewport changes
-  let startY = 0 // this will change as viewport changes
+
+  let startX = dCamera.x()
+  let startY = dCamera.y()
+  let endX = startX + d.blocksPerScreenRow()
+  let endY = startY + d.blocksPerScreenCol()
+  if (endX > d.blocksPerRow() - d.blocksPerScreenRow()) { // don't scroll too far
+    endX = d.blocksPerRow() - d.blocksPerScreenRow() - 1
+  }
+  if (endY > d.blocksPerCol() - d.blocksPerScreenCol()) { // don't scroll too far
+    endY = d.blocksPerCol() - d.blocksPerScreenCol() - 1
+  }
+
   let blockDelta = null
   let block = null
 
-  for (var y = startY; y < d.blocksPerScreenCol(); y++) {
+  let yCameraDelta = 0
+  let xCameraDelta = 0
 
-    for (var x = startX; x < d.blocksPerScreenRow(); x++) {
+  for (var y = startY; y < endY; y++) {
+
+    xCameraDelta = 0
+
+    for (var x = startX; x < endX; x++) {
 
       blockDelta = d.getBlockDeltaFromPos(x, y)
+
       block = d.blocks[blockDelta]
 
       // debug
@@ -380,7 +413,7 @@ function draw() {
       // If the block exists...
       if (block) {
 
-        block.draw(x, y)
+        block.draw(xCameraDelta, yCameraDelta)
 
       }
 
@@ -392,11 +425,17 @@ function draw() {
         c.stroke();
       }
 
+      xCameraDelta++
+
     }
+
+    yCameraDelta++
 
 //    console.log('-------------------------')
 
   }
+
+//  console.log(`${startX},${startY} => ${endX},${endY}`)
 
   // player
   for (let i = 0; i < players.length; i++) {

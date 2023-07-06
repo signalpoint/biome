@@ -26,6 +26,7 @@ class Designer {
     this._mouseBlockDelta = null
 
     this.blocks = []
+    this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
   }
 
@@ -111,6 +112,17 @@ class Designer {
   getBlockDeltaFromPos(x, y) {
     return y * this.blocksPerRow() + x
   }
+
+  selectedBlocks() { return this._selectedBlocks }
+  selectBlock(delta) {
+    this.selectedBlocks().push(delta)
+    this.blocks[delta].select()
+  }
+  deselectBlock(delta) {
+    this.selectedBlocks().splice(this.selectedBlocks().indexOf(delta), 1)
+    this.blocks[delta].deselect()
+  }
+  blockSelected(delta) { return this.selectedBlocks().includes(delta) }
 
   // map
 

@@ -372,7 +372,7 @@ addEventListener('load', function() {
       case 83: keys.cameraDown.pressed = false; break
 
       // left (A)
-      case 65: meraLeft.pressed = false; break
+      case 65: keys.cameraLeft.pressed = false; break
 
       // right (D)
       case 68: keys.cameraRight.pressed = false; break

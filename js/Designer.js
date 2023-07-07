@@ -113,16 +113,25 @@ class Designer {
     return y * this.blocksPerRow() + x
   }
 
-  selectedBlocks() { return this._selectedBlocks }
+  getSelectedBlocks() { return this._selectedBlocks }
+  clearSelectedBlocks() {
+    let selectedBlocks = this.getSelectedBlocks()
+    for (let i = 0; i < selectedBlocks.length; i++) {
+      let delta = selectedBlocks[i]
+      d.blocks[delta].selected = false
+    }
+    this._selectedBlocks = []
+  }
+
   selectBlock(delta) {
-    this.selectedBlocks().push(delta)
+    this.getSelectedBlocks().push(delta)
     this.blocks[delta].select()
   }
   deselectBlock(delta) {
-    this.selectedBlocks().splice(this.selectedBlocks().indexOf(delta), 1)
+    this.getSelectedBlocks().splice(this.getSelectedBlocks().indexOf(delta), 1)
     this.blocks[delta].deselect()
   }
-  blockSelected(delta) { return this.selectedBlocks().includes(delta) }
+  blockSelected(delta) { return this.getSelectedBlocks().includes(delta) }
 
   // map
 

@@ -477,6 +477,17 @@ function draw() {
 
         block.draw(xCameraDelta, yCameraDelta)
 
+        // selected block highlight effect
+        if (block.selected) {
+          c.save()
+          c.beginPath()
+          c.lineWidth = 2;
+          c.strokeStyle = 'rgba(0,0,0,1)'
+          c.rect(xCameraDelta * d.getBlockSize(), yCameraDelta * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
+          c.stroke()
+          c.restore()
+        }
+
       }
 
       // block mouse hover effect

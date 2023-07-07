@@ -36,12 +36,10 @@ class DesignerStorage {
 
   importMapJson(map) {
 
-    let name = map.name
-    let blockSize = map.blockSize
-    let mapWidth = map.mapWidth
-    let mapHeight = map.mapHeight
+//    console.log('importMapJson', map)
 
-    let blockType = null
+    let type = null
+    let solid = null
 
     d.blocks = []
 
@@ -51,12 +49,14 @@ class DesignerStorage {
 
       else {
 
-        blockType = map.blocks[delta].t
+        type = map.blocks[delta].t
+        solid = map.blocks[delta].s
 
         // create the new block using the current type
-        d.blocks[delta] = new blockTypesDict[blockType]({
+        d.blocks[delta] = new blockTypesDict[type]({
           delta,
-          type: blockType
+          type,
+          solid
         })
 
       }
@@ -82,7 +82,8 @@ class DesignerStorage {
         block = d.blocks[delta]
 
         blocks.push(block ? {
-          t: block.type
+          t: block.type,
+          s: block.solid
         } : 0)
 
         delta++

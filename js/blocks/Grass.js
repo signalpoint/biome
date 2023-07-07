@@ -2,12 +2,16 @@ class Grass extends Block {
 
   constructor({
     delta,
-    type
+    type,
+    selected = 0,
+    solid = 0
   }) {
 
     super({
       delta,
-      type
+      type,
+      selected,
+      solid
     })
 
   }

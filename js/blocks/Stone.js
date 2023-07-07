@@ -2,12 +2,16 @@ class Stone extends Block {
 
   constructor({
     delta,
-    type
+    type,
+    selected = 0,
+    solid = 0
   }) {
 
     super({
       delta,
-      type
+      type,
+      selected,
+      solid
     })
 
   }
@@ -20,7 +24,7 @@ class Stone extends Block {
 
     c.beginPath()
     c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#adb5bd'
+    c.fillStyle = this.solid ? '#6c757d' : '#adb5bd'
     c.fill()
 
   }

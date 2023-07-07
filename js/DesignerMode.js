@@ -1,3 +1,5 @@
+let blockModal = null
+
 class DesignerMode {
 
   constructor() {
@@ -61,11 +63,28 @@ class DesignerMode {
         // On existing blocks...
         if (existingBlock) {
 
-          if (d.getSelectedBlocks().length) {
-            d.clearSelectedBlocks();
+          if (d.getSelectedBlocks().length) { // at least one block is selected...
+
+            if (d.blocks[d.getSelectedBlocks()[0]].delta == delta) { // clicked on selected block...
+
+              dMode.openBlockModal(delta)
+
+            }
+            else { // clicked on a different block....
+
+              d.clearSelectedBlocks();
+              d.selectBlock(delta)
+
+            }
+
+          }
+          else { // no blocks are selected...
+
+            d.selectBlock(delta)
+
           }
 
-          d.selectBlock(delta)
+
 
           // TODO ctrl+ click implementation
           // Toggle its selected state.
@@ -145,6 +164,27 @@ class DesignerMode {
         break;
 
     }
+
+  }
+
+
+
+  openBlockModal(delta) {
+
+    let body = delta
+
+    document.querySelector('#blockModal .modal-body').innerHTML = body
+    blockModal = new bootstrap.Modal('#blockModal')
+    blockModal.show()
+
+    // after modal opens...
+
+    setTimeout(function() {
+
+      // hide modal
+//      window[id].hide()
+
+    })
 
   }
 

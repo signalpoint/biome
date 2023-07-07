@@ -3,13 +3,16 @@ class Block {
   constructor({
     delta,
     type,
-    selected = false
+    selected = 0,
+    solid = 0
 //    edges = null
   }) {
 
     this.delta = delta
     this.type = type
     this.selected = selected
+    this.solid = solid
+
 //    this.edges = edges ? edges : {
 //      t: 0, // top
 //      b: 0, // bottom
@@ -25,7 +28,7 @@ class Block {
 
   draw(x, y) {}
 
-  select() { this.selected = true }
-  deselect() { this.selected = false }
+  select() { this.selected = 1 }
+  deselect() { this.selected = 0 }
 
 }

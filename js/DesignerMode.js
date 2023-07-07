@@ -1,4 +1,5 @@
 let blockModal = null
+let blockSolidCheckbox = null
 
 class DesignerMode {
 
@@ -171,20 +172,34 @@ class DesignerMode {
 
   openBlockModal(delta) {
 
-    let body = delta
+    let block = d.blocks[delta]
+//    console.log(delta, block)
 
-    document.querySelector('#blockModal .modal-body').innerHTML = body
+    let body =
+      `<h5>${block.type}<span class="badge badge-secondary float-end">${delta}</span></h5>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" ${block.solid ? 'checked' : ''} value="" id="blockSolidCheckbox">
+        <label class="form-check-label" for="blockSolidCheckbox">
+          Solid
+        </label>
+      </div>`
+
+    let blockModalEl = document.getElementById('blockModal')
+    blockModalEl.querySelector('.modal-body').innerHTML = body
     blockModal = new bootstrap.Modal('#blockModal')
-    blockModal.show()
 
     // after modal opens...
+    blockModalEl.addEventListener('show.bs.modal', event => {
 
-    setTimeout(function() {
-
-      // hide modal
-//      window[id].hide()
+      // solid checkbox click listener
+      blockSolidCheckbox = document.getElementById('blockSolidCheckbox')
+      blockSolidCheckbox.addEventListener('click', function() {
+        block.solid = blockSolidCheckbox.checked ? 1: 0
+      })
 
     })
+
+    blockModal.show()
 
   }
 

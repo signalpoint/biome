@@ -61,17 +61,20 @@ class DesignerMode {
         // On existing blocks...
         if (existingBlock) {
 
+          if (d.getSelectedBlocks().length) {
+            d.clearSelectedBlocks();
+          }
+
+          d.selectBlock(delta)
+
+          // TODO ctrl+ click implementation
           // Toggle its selected state.
-          d.blockSelected(delta) ?
-
-            d.deselectBlock(delta) :
-
-            d.selectBlock(delta);
+//          d.blockSelected(delta) ? d.deselectBlock(delta) : d.selectBlock(delta);
 
         }
 
         // Show any selected blocks...
-        let selectedBlocks = d.selectedBlocks()
+        let selectedBlocks = d.getSelectedBlocks()
         if (selectedBlocks.length) {
           html += '<ul class="list-group">'
           for (var i = 0; i < selectedBlocks.length; i++) {

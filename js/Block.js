@@ -31,4 +31,15 @@ class Block {
   select() { this.selected = 1 }
   deselect() { this.selected = 0 }
 
+  handleCollisionWithPlayer(player) {
+
+    if (this.solid) {
+      if (player.isMovingUp()) { player.state.collision.top = true }
+      if (player.isMovingDown()) { player.state.collision.bottom = true }
+      if (player.isMovingLeft()) { player.state.collision.left = true }
+      if (player.isMovingRight()) { player.state.collision.right = true }
+    }
+
+  }
+
 }

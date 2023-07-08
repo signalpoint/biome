@@ -85,8 +85,6 @@ class DesignerMode {
 
           }
 
-
-
           // TODO ctrl+ click implementation
           // Toggle its selected state.
 //          d.blockSelected(delta) ? d.deselectBlock(delta) : d.selectBlock(delta);
@@ -124,15 +122,24 @@ class DesignerMode {
 
       case 'paint':
 
+        let blockType = d.getPaintModeBlockType()
+
         // If the block already exists...
         if (existingBlock) {
+
+          // changing block type
+          if (block.type != blockType) {
+            console.log(`${block.type} => ${blockType}`)
+            d.blocks[delta] = new blockTypesDict[blockType]({
+              delta,
+              type: blockType
+            })
+          }
 
         }
         else {
 
           // The block does not exist...
-
-          let blockType = d.getPaintModeBlockType()
 
           // create the new block using the current type
           d.blocks[delta] = new blockTypesDict[blockType]({

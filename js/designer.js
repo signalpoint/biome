@@ -307,8 +307,6 @@ addEventListener('load', function() {
 
   addEventListener('keydown', ({ keyCode } ) => {
 
-    console.log(keyCode)
-
     switch (keyCode) {
 
       // CAMERA
@@ -435,9 +433,29 @@ addEventListener('load', function() {
 
 function update() {
 
-  // player
+  // player(s)...
   for (let i = 0; i < players.length; i++) {
+
+    // begin: collision detection...
+
+    // reset player colission states
+    players[i].resetCollisionStates()
+
+    // player + block
+
+    // TODO the problem seems to be we're detecting the collision after it takes place, instead of just before it!
+
+    let playerBlockDeltas = players[i].getBlockDeltasFromPosition()
+    if (playerBlockDeltas.length) {
+      for (let j = 0; j < playerBlockDeltas.length; j++) {
+        d.blocks[playerBlockDeltas[j]].handleCollisionWithPlayer(players[i])
+      }
+    }
+
+    // end: collision detection
+
     players[i].update()
+
   }
 
 }

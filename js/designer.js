@@ -37,6 +37,14 @@ const keys = {
 
 }
 
+const mouse = {
+
+  left: {
+    pressed: false
+  }
+
+}
+
 // DEFAULT CONFIGURATION
 
 // mouse coordinate offsets
@@ -58,6 +66,7 @@ canvasMouseOffsetY = -2
 let blockTypesDict = {
   'BlueberryBush': BlueberryBush,
   'Grass': Grass,
+  'OakTree': OakTree,
   'Sand': Sand,
   'Stone': Stone,
   'Water': Water
@@ -71,6 +80,7 @@ for (var type in blockTypesDict) {
 // Designer
 
 let d = null
+let dGame = null
 let dMenu = null
 let dPlayback = null
 let dMode = null
@@ -155,6 +165,8 @@ addEventListener('load', function() {
   d = new Designer()
 
   dStorage = new DesignerStorage()
+
+  dGame = new DesignerGame()
 
   dMenu = new DesignerMenu()
 
@@ -593,5 +605,13 @@ function getCanvasMouseCoords(evt) {
   return {
     x,
     y
+  }
+}
+
+function getCanvasMouseCoordsWithCameraOffset(evt) {
+  let coords = getCanvasMouseCoords(evt)
+  return {
+    x: coords.x + dCamera.xOffset(),
+    y: coords.y + dCamera.yOffset()
   }
 }

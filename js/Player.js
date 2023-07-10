@@ -47,6 +47,23 @@ class Player {
     }
   }
 
+  save() {
+    dStorage.save('player', {
+      name: this.name,
+      x: this.x,
+      y: this.y
+    })
+  }
+
+  load() {
+    let p = dStorage.load('player')
+    if (p) {
+      this.name = p.name
+      this.x = p.x
+      this.y = p.y
+    }
+  }
+
   update() {
 
 //    console.log('player velocity: ' + this.vX + ', ' + this.vY)
@@ -129,7 +146,8 @@ class Player {
 //    if (this.vX !== 0 && (canMoveLeft || canMoveRight)) { this.x += this.vX }
 //    if (this.vY !== 0 && (canMoveUp || canMoveDown)) { this.y += this.vY }
 
-    dPlayer.refreshCoordinates()
+    dPlayer.refreshCoordinatesBadge()
+    dPlayer.refreshVelocityBadge()
 
   }
 

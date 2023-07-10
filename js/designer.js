@@ -56,6 +56,7 @@ canvasMouseOffsetY = -2
 // Block Types
 
 let blockTypesDict = {
+  'BlueberryBush': BlueberryBush,
   'Grass': Grass,
   'Sand': Sand,
   'Stone': Stone,
@@ -119,6 +120,8 @@ let mapModePane = document.querySelector('#designerModePanes div[data-mode="map"
 let displayModePane = document.querySelector('#designerModePanes div[data-mode="display"]')
 
 let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
+let paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
+
 
 let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
@@ -150,12 +153,19 @@ addEventListener('load', function() {
   // DESIGNER
 
   d = new Designer()
-  dMenu = new DesignerMenu()
-  dPlayback = new DesignerPlayback()
-  dMode = new DesignerMode()
-  dPlayer = new DesignerPlayer()
-  dCamera = new DesignerCamera()
+
   dStorage = new DesignerStorage()
+
+  dMenu = new DesignerMenu()
+
+  dPlayback = new DesignerPlayback()
+
+  dMode = new DesignerMode()
+
+  dPlayer = new DesignerPlayer()
+
+  dCamera = new DesignerCamera()
+  dCamera.load()
 
   // set playback
   d.setPlayback('pause')
@@ -200,6 +210,8 @@ addEventListener('load', function() {
     x: 576 + 8,
     y: 256 + 4
   })
+
+  player.load()
 
   players.push(player)
 
@@ -315,27 +327,33 @@ addEventListener('load', function() {
       case 87:
         keys.cameraUp.pressed = true
         dCamera.move('up')
+        dCamera.save()
         break
 
       // down (S)
       case 83:
         keys.cameraDown.pressed = true
         dCamera.move('down')
+        dCamera.save()
         break
 
       // left (A)
       case 65:
         keys.cameraLeft.pressed = true
         dCamera.move('left')
+        dCamera.save()
         break
 
       // right (D)
       case 68:
         keys.cameraRight.pressed = true
         dCamera.move('right')
+        dCamera.save()
         break
 
     }
+
+    // PAUSED...
 
     if (d.isPaused()) {
 
@@ -346,6 +364,8 @@ addEventListener('load', function() {
 
     }
     else {
+
+      // PLAYING...
 
       switch (keyCode) {
 

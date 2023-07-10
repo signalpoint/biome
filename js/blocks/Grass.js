@@ -24,7 +24,7 @@ class Grass extends Block {
 
     c.beginPath()
     c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#25a244'
+    c.fillStyle = this.solid ? '#1a7431' : '#25a244'
     c.fill()
 
   }

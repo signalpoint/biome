@@ -132,8 +132,18 @@ class DesignerMode {
             console.log(`${block.type} => ${blockType}`)
             d.blocks[delta] = new blockTypesDict[blockType]({
               delta,
-              type: blockType
+              type: blockType,
+              solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
             })
+          }
+          else { // clicking on same block type...
+
+            //open block modal
+//            dMode.openBlockModal(delta)
+
+            // update solid value
+            d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
+
           }
 
         }
@@ -144,7 +154,8 @@ class DesignerMode {
           // create the new block using the current type
           d.blocks[delta] = new blockTypesDict[blockType]({
             delta,
-            type: blockType
+            type: blockType,
+            solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
           })
 
         }

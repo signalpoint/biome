@@ -31,6 +31,11 @@ class DesignerMenu {
         // Save map to storage
         d.saveMap(name, dStorage.exportMapJson())
 
+        console.log(name, dStorage.exportMapJson())
+
+        // Save player
+        player.save()
+
         break;
 
     }

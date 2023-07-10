@@ -213,32 +213,42 @@ class Designer {
     let coords = getCanvasMouseCoords(e)
     canvasMouseCoordsBadge.innerHTML = coords.x + ',' + coords.y
 
-    // track which block delta the mouse is over
     let blockDelta = d.getBlockDelta(coords.x, coords.y)
+
     if (blockDelta != d.getMouseBlockDelta()) {
+
+      // track which block delta the mouse is over
       d.setMouseBlockDelta(blockDelta)
+
       refresh()
+
     }
+
+    d.isPlaying() ? dGame.canvasMouseMoveListener(e) : dMode.canvasMouseMoveListener(e)
 
   }
 
   // mouse down
   canvasMouseDownListener(e) {
 
+    mouse.left.pressed = 1
+
     // Get the mouse coordinates and set them aside.
     let coords = getCanvasMouseCoords(e)
     this.setMouseDownCoords(coords)
 
-    dMode.canvasMouseDownListener(e)
+    d.isPlaying() ? dGame.canvasMouseDownListener(e) : dMode.canvasMouseDownListener(e)
 
   }
 
   // mouse up
   canvasMouseUpListener(e) {
 
+    mouse.left.pressed = 0
+
     this.setMouseUpCoords(getCanvasMouseCoords(e))
 
-    refresh()
+    d.isPlaying() ? dGame.canvasMouseUpListener(e) : dMode.canvasMouseUpListener(e)
 
   }
 

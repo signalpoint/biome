@@ -2,12 +2,17 @@ class DesignerPlayer {
 
   constructor() {
 
-    this.playerCoordinatesSpan = document.querySelector('#playerCoordinates')
+    this.playerCoordinatesBadge = document.querySelector('#playerCoordinatesBadge')
+    this.playerVelocityBadge = document.querySelector('#playerVelocityBadge')
 
   }
 
-  refreshCoordinates() {
-    this.playerCoordinatesSpan.innerHTML = player.x + ', ' + player.y
+  refreshCoordinatesBadge() {
+    this.playerCoordinatesBadge.innerHTML = player.x + ', ' + player.y
+  }
+
+  refreshVelocityBadge() {
+    this.playerVelocityBadge.innerHTML = player.vX + ', ' + player.vY
   }
 
 }

@@ -20,6 +20,7 @@
     <script type="text/javascript" src="js/DesignerStorage.js"></script>
 
     <script type="text/javascript" src="js/Block.js"></script>
+    <script type="text/javascript" src="js/blocks/BlueberryBush.js"></script>
     <script type="text/javascript" src="js/blocks/Grass.js"></script>
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
     <script type="text/javascript" src="js/blocks/Stone.js"></script>
@@ -176,8 +177,17 @@
 
                     <legend class="fs-5">Paint</legend>
 
-                    <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
-                    <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+                    <!-- Block: type-->
+                    <div class="mb-3">
+                      <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
+                      <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+                    </div>
+
+                    <!-- Block: solid -->
+                    <div class="mb-3">
+                      <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
+                      <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
+                    </div>
 
                   </fieldset>
 
@@ -340,9 +350,24 @@
 
               <legend>Player</legend>
 
-              <!-- Player Coordinates -->
               <div class="row mb-3">
-                <span id="playerCoordinates" class="badge badge-dark"></span>
+
+                <ul class="list-group ms-2 pe-3">
+
+                  <!-- Coordinates -->
+                  <li class="list-group-item list-group-item-dark">
+                    Coordinates
+                    <span id="playerCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
+                  </li>
+
+                  <!-- Velocity -->
+                  <li class="list-group-item list-group-item-dark">
+                    Velocity
+                    <span id="playerVelocityBadge" class="badge bg-primary float-end ms-3"></span>
+                  </li>
+
+                </ul>
+
               </div>
 
               <div class="mb-3">
@@ -396,6 +421,20 @@
 
           <!-- CANVAS -->
           <canvas id="biome"></canvas>
+
+          <!-- BELT -->
+          <div class="btn-group" role="group" aria-label="Large button group">
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+          </div>
 
         </main>
 

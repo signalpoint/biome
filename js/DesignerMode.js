@@ -38,7 +38,39 @@ class DesignerMode {
 
   }
 
-  canvasMouseDownListener(evt) {
+  canvasMouseMoveListener(e) {
+
+    if (mouse.left.pressed) { // dragging...
+
+      let mode = d.getMode()
+
+      if (mode == 'select') {
+
+      }
+      else if (mode == 'paint') {
+
+        let coords = getCanvasMouseCoordsWithCameraOffset(e)
+        let delta = d.getBlockDelta(coords.x, coords.y)
+        let type = d.getPaintModeBlockType()
+        let existingBlock = d.blocks[delta] !== 0
+        let block = existingBlock ? d.blocks[delta] : null
+
+        if (existingBlock) {
+          if (type != block.type) {
+            this.paintBlock(delta, type)
+          }
+        }
+        else {
+          this.paintBlock(delta, type)
+        }
+
+      }
+
+    }
+
+  }
+
+  canvasMouseDownListener(e) {
 
     let coords = d.getMouseDownCoords()
 
@@ -130,11 +162,7 @@ class DesignerMode {
           // changing block type
           if (block.type != blockType) {
             console.log(`${block.type} => ${blockType}`)
-            d.blocks[delta] = new blockTypesDict[blockType]({
-              delta,
-              type: blockType,
-              solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
-            })
+            this.paintBlock(delta, blockType)
           }
           else { // clicking on same block type...
 
@@ -152,11 +180,7 @@ class DesignerMode {
           // The block does not exist...
 
           // create the new block using the current type
-          d.blocks[delta] = new blockTypesDict[blockType]({
-            delta,
-            type: blockType,
-            solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
-          })
+          this.paintBlock(delta, blockType)
 
         }
 
@@ -186,7 +210,18 @@ class DesignerMode {
 
   }
 
+  canvasMouseUpListener(e) {
 
+  }
+
+  paintBlock(delta, type) {
+    d.blocks[delta] = new blockTypesDict[type]({
+      delta,
+      type,
+      solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
+    })
+    refresh()
+  }
 
   openBlockModal(delta) {
 

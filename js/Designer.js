@@ -233,9 +233,10 @@ class Designer {
 
     mouse.left.pressed = 1
 
-    // Get the mouse coordinates and set them aside.
-    let coords = getCanvasMouseCoords(e)
-    this.setMouseDownCoords(coords)
+    // start the timer
+    mouse.left.timer.start()
+
+    this.setMouseDownCoords(getCanvasMouseCoords(e))
 
     d.isPlaying() ? dGame.canvasMouseDownListener(e) : dMode.canvasMouseDownListener(e)
 
@@ -246,9 +247,15 @@ class Designer {
 
     mouse.left.pressed = 0
 
+    // stop the timer
+    mouse.left.timer.stop()
+
     this.setMouseUpCoords(getCanvasMouseCoords(e))
 
     d.isPlaying() ? dGame.canvasMouseUpListener(e) : dMode.canvasMouseUpListener(e)
+
+    // reset the timer
+    mouse.left.timer.reset()
 
   }
 

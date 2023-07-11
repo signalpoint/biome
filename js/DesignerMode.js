@@ -9,45 +9,16 @@ class DesignerMode {
 
   }
 
-  setActivePane(el) { this._activePane = el }
-  getActivePane() { return this._activePane }
-
-  btnOnclickListener(btn) {
-
-    let mode = btn.getAttribute('data-mode')
-
-    // swap active class on buttons
-    designerModeBtnsContainer.querySelector('button.active').classList.remove('active')
-    btn.classList.add('active')
-
-    // swap the panes...
-
-    let activePane = document.querySelector('.designerModePane.active')
-    activePane.classList.remove('active')
-    activePane.classList.add('d-none')
-
-    let chosenPane = document.querySelector('.designerModePane[data-mode="' + mode + '"]')
-    chosenPane.classList.add('active')
-    chosenPane.classList.remove('d-none')
-
-    // udpate the mode
-    d.setMode(mode)
-
-    // set the active pane
-    this.setActivePane(chosenPane)
-
-  }
-
   canvasMouseMoveListener(e) {
 
     if (mouse.left.pressed) { // dragging...
 
       let mode = d.getMode()
 
-      if (mode == 'select') {
+      if (mode == 'toolbar:select') {
 
       }
-      else if (mode == 'paint') {
+      else if (mode == 'toolbar:paint') {
 
         let coords = getCanvasMouseCoordsWithCameraOffset(e)
         let delta = d.getBlockDelta(coords.x, coords.y)
@@ -80,7 +51,8 @@ class DesignerMode {
     // Get block delta and coordinates
     let delta = d.getBlockDelta(x, y)
     let blockCoords = d.getBlockCoords(x, y);
-    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
+
+//    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
 
     let existingBlock = d.blocks[delta] !== 0
     let block = existingBlock ? d.blocks[delta] : null
@@ -89,7 +61,7 @@ class DesignerMode {
 
       // SELECT
 
-      case 'select':
+      case 'toolbar:select':
 
         let html = ''
 
@@ -152,7 +124,7 @@ class DesignerMode {
 
       // PAINT
 
-      case 'paint':
+      case 'toolbar:paint':
 
         let blockType = d.getPaintModeBlockType()
 
@@ -188,7 +160,7 @@ class DesignerMode {
 
       // EDGES
 
-      case 'edges':
+      case 'toolbar:edges':
 
         if (existingBlock) {
 
@@ -200,7 +172,7 @@ class DesignerMode {
 
       // CAMERA
 
-      case 'camera':
+      case 'toolbar:camera':
 
         console.log('camera!')
 

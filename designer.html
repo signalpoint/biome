@@ -11,7 +11,10 @@
     <!-- Font Awesome -->
     <script src="vendor/fontawesome-free-5.15.4-web/js/all.min.js"></script>
 
+    <script type="text/javascript" src="js/StopWatch.js"></script>
+
     <script type="text/javascript" src="js/Designer.js"></script>
+    <script type="text/javascript" src="js/DesignerWidget.js"></script>
     <script type="text/javascript" src="js/DesignerGame.js"></script>
     <script type="text/javascript" src="js/DesignerMenu.js"></script>
     <script type="text/javascript" src="js/DesignerPlayback.js"></script>
@@ -31,7 +34,7 @@
     <script type="text/javascript" src="js/Player.js"></script>
 
     <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bm.css">
+    <link rel="stylesheet" href="css/designer.css">
 
   </head>
 
@@ -89,363 +92,404 @@
               </ul>
             </li>
 
+            <!-- View -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                View
+              </a>
+              <ul class="dropdown-menu">
+
+                <!-- Design Mode -->
+                <li>
+                  <a class="dropdown-item designer-widget-btn" href="#" data-op="view:design-mode" data-designer-widget="designModeWidget">
+                    Toolbar
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+            <!-- ABOUT -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                About
+              </a>
+              <ul class="dropdown-menu pt-0">
+
+                <!-- Title -->
+                <li><div class="alert alert-dark text-center fs-5">CanvasCraft</div></li>
+
+                <!-- Version -->
+                <li class="px-3 pb-3">Version <span class="badge bg-info fs-6 float-end">0.0.0</span></li>
+
+                <!-- GitHub -->
+                <li>
+                  <a class="dropdown-item" href="https://github.com/signalpoint/biome" target="_blank" title="CanvasCraft on GitHub"><i class="fab fa-github me-2"></i>signalpoint/biome</a>
+                </li>
+
+              </ul>
+            </li>
+
           </ul>
         </div>
+
+        <!-- Player Icon -->
+        <button type="button" id="playerBtn" class="btn btn-dark" title="Player"><i class="fas fa-user"></i></button>
 
       </div>
 
     </nav>
 
-    <div class="container-fluid">
+    <!--<div class="container-fluid">-->
 
-      <div class="row">
+      <!-- PLAYER -->
 
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar text-light">
-          <div class="position-sticky pt-3 sidebar-sticky">
+      <fieldset id="playerFieldset" class="d-none border border-secondary position-absolute end-0 text-light p-3 bg-dark text-light">
 
-            <!-- PLAYBACK -->
+        <legend>Player</legend>
 
-            <div class="mb-3">
+        <div class="mb-3">
 
-              <h4 class="visually-hidden">Playback</h4>
+          <ul class="list-group">
 
-              <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
+            <!-- Coordinates -->
+            <li class="list-group-item list-group-item-dark">
+              Coordinates
+              <span id="playerCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
+            </li>
 
-                <!-- Pause -->
-                <button type="button" class="btn btn-light active" data-playback="pause" title="Pause (SPACE)">
-                  <i class="fas fa-pause"></i>
-                </button>
+            <!-- Velocity -->
+            <li class="list-group-item list-group-item-dark">
+              Velocity
+              <span id="playerVelocityBadge" class="badge bg-primary float-end ms-3"></span>
+            </li>
 
-                <!-- Play -->
-                <button type="button" class="btn btn-light" data-playback="play" title="Play (SPACE)">
-                  <i class="fas fa-play"></i>
-                </button>
+          </ul>
 
-              </div>
+        </div>
 
-            </div>
+        <div class="mb-3">
 
-            <!-- MODE -->
+        <!-- Vertical Movement -->
+        <div class="btn-group" role="group" aria-label="Player Vertical Movement">
 
-            <div class="">
+          <!-- Up -->
+          <button id="playerMoveUpBtn" type="button" class="btn btn-dark" title="Move Up (UP ARROW)">
+            <i class="fas fa-arrow-up"></i>
+          </button>
 
-              <h4 class="visually-hidden">Mode</h4>
+          <!-- Down -->
+          <button id="playerMoveDownBtn" type="button" class="btn btn-dark" title="Move Down (DOWN ARROW)">
+            <i class="fas fa-arrow-down"></i>
+          </button>
 
-              <!-- Mode Buttons -->
-              <div id="designerModeBtns" class="btn-group mb-3" role="group" aria-label="Designer mode">
+        </div>
 
-                <!-- Select -->
-                <button type="button" class="btn btn-light active" data-mode="select" title="Select">
-                  <i class="fas fa-mouse-pointer"></i>
-                </button>
+        <!-- Horizontal Movement -->
+        <div class="btn-group" role="group" aria-label="Player Horizontal Movement">
 
-                <!-- Paint -->
-                <button type="button" class="btn btn-light" data-mode="paint" title="Paint">
-                  <i class="fas fa-brush"></i>
-                </button>
+          <!-- Left -->
+          <button id="playerMoveLeftBtn" type="button" class="btn btn-dark" title="Move Left (LEFT ARROW)">
+            <i class="fas fa-arrow-left"></i>
+          </button>
 
-                <!-- Edges -->
-                <button type="button" class="btn btn-light" data-mode="edges" title="Edges">
-                  <i class="fas fa-border-style"></i>
-                </button>
+          <!-- Right -->
+          <button id="playerMoveRightBtn" type="button" class="btn btn-dark" title="Move Right (RIGHT ARROW)">
+            <i class="fas fa-arrow-right"></i>
+          </button>
 
-                <!-- Camera -->
-                <button type="button" class="btn btn-light" data-mode="camera" title="Camera">
-                  <i class="fas fa-camera"></i>
-                </button>
-
-                <!-- Map -->
-                <button type="button" class="btn btn-light" data-mode="map" title="Map">
-                  <i class="fas fa-map"></i>
-                </button>
-
-                <!-- Display -->
-                <button type="button" class="btn btn-light" data-mode="display" title="Display">
-                  <i class="fas fa-tv"></i>
-                </button>
-
-              </div>
-
-              <!-- Mode Panes -->
-              <div id="designerModePanes">
-
-                <!-- Select -->
-                <div class="designerModePane active" data-mode="select"></div>
-
-                <!-- Paint -->
-                <div class="designerModePane d-none" data-mode="paint">
-
-                  <fieldset class="border border-secondary mb-3 p-3">
-
-                    <legend class="fs-5">Paint</legend>
-
-                    <!-- Block: type-->
-                    <div class="mb-3">
-                      <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
-                      <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
-                    </div>
-
-                    <!-- Block: solid -->
-                    <div class="mb-3">
-                      <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
-                      <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
-                    </div>
-
-                  </fieldset>
-
-                </div>
-
-                <!-- Edges -->
-                <div class="designerModePane d-none" data-mode="edges">
-
-                  <fieldset class="border border-secondary mb-3 p-3">
-
-                    <legend class="fs-5">Edges</legend>
-
-                    <div class="btn-group" role="group" aria-label="Edge selection">
-                      <button type="button" class="btn btn-outline-light">
-                        <i class="fas fa-border-all"></i>
-                      </button>
-                      <button type="button" class="btn btn-outline-light">
-                        <i class="fas fa-border-none"></i>
-                      </button>
-                    </div>
-
-                  </fieldset>
-
-                </div>
-
-                <!-- Camera -->
-                <div class="designerModePane d-none" data-mode="camera">
-
-                  <fieldset class="border border-secondary mb-3 p-3">
-
-                    <legend class="fs-5">Camera</legend>
-
-                    <div class="mb-3">
-
-                      <!-- Vertical Movement -->
-                      <div class="btn-group" role="group" aria-label="Camera Vertical Movement">
-
-                        <!-- Up -->
-                        <button id="cameraMoveUpBtn" type="button" class="btn btn-light" title="Move Up (W)">
-                          <i class="fas fa-arrow-up"></i>
-                        </button>
-
-                        <!-- Down -->
-                        <button id="cameraMoveDownBtn" type="button" class="btn btn-light" title="Move Down (S)">
-                          <i class="fas fa-arrow-down"></i>
-                        </button>
-
-                      </div>
-
-                      <!-- Horizontal Movement -->
-                      <div class="btn-group" role="group" aria-label="Camera Horizontal Movement">
-
-                        <!-- Left -->
-                        <button id="cameraMoveLeftBtn" type="button" class="btn btn-light" title="Move Left (A)">
-                          <i class="fas fa-arrow-left"></i>
-                        </button>
-
-                        <!-- Right -->
-                        <button id="cameraMoveRightBtn" type="button" class="btn btn-light" title="Move Right (D)">
-                          <i class="fas fa-arrow-right"></i>
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                    <!-- Elevation -->
-                    <div class="">
-                      <label for="cameraModeElevationRange" class="form-label">Elevation</label>
-                      <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
-                    </div>
-
-                    <!-- Camera Coordinates -->
-                    <div class="row mb-3">
-                      <span id="cameraCoordinates" class="badge badge-dark"></span>
-                    </div>
-
-                  </fieldset>
-
-                </div>
-
-                <!-- Map -->
-                <div class="designerModePane d-none" data-mode="map">
-
-                  <fieldset class="border border-secondary p-3">
-
-                    <legend class="fs-5">Map</legend>
-
-                    <!-- Block Size -->
-                    <div class="mb-3">
-                      <label for="blockSize" class="form-label">Block size (px)</label>
-                      <input type="number" class="form-control" id="blockSize" value="64">
-                    </div>
-
-                    <!-- Map Dimensions -->
-                    <div class="row mb-3">
-
-                      <!-- Width -->
-                      <div class="col-6">
-                        <label for="mapWidth" class="form-label">Width (px)</label>
-                        <input type="number" class="form-control" id="mapWidth" value="2560">
-                      </div>
-
-                      <!-- Height -->
-                      <div class="col-6">
-                        <label for="mapHeight" class="form-label">Height (px)</label>
-                        <input type="number" class="form-control" id="mapHeight" value="1440">
-                      </div>
-
-                    </div>
-
-                    <div class="row mb-3">
-
-                      <!-- Blocks per Row -->
-                      <div class="col-6">
-                        <label for="blocksPerRow" class="form-label">Blocks per Row</label>
-                        <input type="number" class="form-control" id="blocksPerRow">
-                      </div>
-
-                      <!-- Blocks per Col -->
-                      <div class="col-6">
-                        <label for="blocksPerCol" class="form-label">Blocks per Col</label>
-                        <input type="number" class="form-control" id="blocksPerCol">
-                      </div>
-
-                    </div>
-
-                  </fieldset>
-
-                </div>
-
-                <!-- Display -->
-                <div class="designerModePane d-none" data-mode="display">
-
-                  <fieldset class="border border-secondary mb-3 p-3">
-
-                    <legend class="fs-5">Display</legend>
-
-                    <!-- Screen resolution -->
-                    <div class="mb-3">
-                      <label for="screenResolution" class="form-label">Screen resolution</label>
-                      <select id="screenResolution" class="form-select" aria-label="Screen Size">
-                        <option value="720p">720p</option>
-                        <option value="1080p">1080p</option>
-                        <option value="1024x768">1024x768</option>
-                      </select>
-                    </div>
-
-                  </fieldset>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            <!-- PLAYER -->
-
-            <fieldset class="border border-secondary mb-3 p-3">
-
-              <legend>Player</legend>
-
-              <div class="row mb-3">
-
-                <ul class="list-group ms-2 pe-3">
-
-                  <!-- Coordinates -->
-                  <li class="list-group-item list-group-item-dark">
-                    Coordinates
-                    <span id="playerCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
-                  </li>
-
-                  <!-- Velocity -->
-                  <li class="list-group-item list-group-item-dark">
-                    Velocity
-                    <span id="playerVelocityBadge" class="badge bg-primary float-end ms-3"></span>
-                  </li>
-
-                </ul>
-
-              </div>
-
-              <div class="mb-3">
-
-              <!-- Vertical Movement -->
-              <div class="btn-group" role="group" aria-label="Player Vertical Movement">
-
-                <!-- Up -->
-                <button id="playerMoveUpBtn" type="button" class="btn btn-light" title="Move Up (UP ARROW)">
-                  <i class="fas fa-arrow-up"></i>
-                </button>
-
-                <!-- Down -->
-                <button id="playerMoveDownBtn" type="button" class="btn btn-light" title="Move Down (DOWN ARROW)">
-                  <i class="fas fa-arrow-down"></i>
-                </button>
-
-              </div>
-
-              <!-- Horizontal Movement -->
-              <div class="btn-group" role="group" aria-label="Player Horizontal Movement">
-
-                <!-- Left -->
-                <button id="playerMoveLeftBtn" type="button" class="btn btn-light" title="Move Left (LEFT ARROW)">
-                  <i class="fas fa-arrow-left"></i>
-                </button>
-
-                <!-- Right -->
-                <button id="playerMoveRightBtn" type="button" class="btn btn-light" title="Move Right (RIGHT ARROW)">
-                  <i class="fas fa-arrow-right"></i>
-                </button>
-
-              </div>
-
-            </div>
-
-            </fieldset>
-
-            <!-- Show Grid -->
-            <div class="mb-3">
-              <input class="form-check-input" type="checkbox" value="" id="showGrid" checked>
-              <label class="form-check-label" for="showGrid">
-                Show grid
-              </label>
-            </div>
-
-          </div>
-        </nav>
-
-        <main class="col-md-9 ms-sm-auto col-lg-10 pt-3">
-
-          <!-- CANVAS -->
-          <canvas id="biome"></canvas>
-
-          <!-- BELT -->
-          <div class="btn-group" role="group" aria-label="Large button group">
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-            <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-          </div>
-
-        </main>
+        </div>
 
       </div>
 
-    </div>
+      </fieldset>
+
+      <!-- CANVAS -->
+      <canvas id="biome"></canvas>
+
+      <!-- TOOLBAR (aka mode v2) -->
+      <fieldset id="designModeWidget" class="designer-widget d-none bg-light">
+
+        <legend class="bg-dark text-light mb-0">
+          Toolbar
+          <button type="button" class="designer-widget-close btn btn-sm btn-light float-end" title="Close">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </legend>
+
+        <ul class="designer-widget-nav nav nav-tabs bg-light">
+
+          <!-- Select -->
+          <li class="nav-item">
+            <a class="nav-link active" href="#" title="Select" data-op="toolbar:select">
+              <i class="fas fa-mouse-pointer"></i>
+            </a>
+          </li>
+
+          <!-- Paint -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Paint" data-op="toolbar:paint">
+              <i class="fas fa-brush"></i>
+            </a>
+          </li>
+
+          <!-- Edges -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Edges" data-op="toolbar:edges">
+              <i class="fas fa-border-style"></i>
+            </a>
+          </li>
+
+          <!-- Camera -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Camera" data-op="toolbar:camera">
+              <i class="fas fa-camera"></i>
+            </a>
+          </li>
+
+          <!-- Map -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Map" data-op="toolbar:map">
+              <i class="fas fa-map"></i>
+            </a>
+          </li>
+
+          <!-- Display -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Display" data-op="toolbar:display">
+              <i class="fas fa-tv"></i>
+            </a>
+          </li>
+
+        </ul>
+
+        <div class="designer-widget-panes m-3">
+
+          <!-- SELECT -->
+          <div class="active" data-op="toolbar:select">
+            <fieldset class="border border-secondary mb-3 p-3">
+              <legend class="fs-5">Select<span class="badge bg-secondary float-end"></span></legend>
+            </fieldset>
+          </div>
+
+          <!-- PAINT -->
+          <div class="d-none" data-op="toolbar:paint">
+            <fieldset class="border border-secondary mb-3 p-3">
+
+              <legend class="fs-5">Paint</legend>
+
+              <!-- Block: type-->
+              <div class="mb-3">
+                <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
+                <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+              </div>
+
+              <!-- Block: solid -->
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
+                <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
+              </div>
+
+            </fieldset>
+          </div>
+
+          <!-- EDGES -->
+          <div class="d-none" data-op="toolbar:edges">
+            <fieldset class="border border-secondary mb-3 p-3">
+              <legend class="fs-5">Edges</legend>
+              <div class="btn-group" role="group" aria-label="Edge selection">
+                <button type="button" class="btn btn-outline-light">
+                  <i class="fas fa-border-all"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light">
+                  <i class="fas fa-border-none"></i>
+                </button>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- CAMERA -->
+          <div class="d-none" data-op="toolbar:camera">
+            <fieldset class="border border-secondary mb-3 p-3">
+
+              <legend class="fs-5">Camera</legend>
+
+              <div class="mb-3">
+
+                <!-- Vertical Movement -->
+                <div class="btn-group" role="group" aria-label="Camera Vertical Movement">
+
+                  <!-- Up -->
+                  <button id="cameraMoveUpBtn" type="button" class="btn btn-light" title="Move Up (W)">
+                    <i class="fas fa-arrow-up"></i>
+                  </button>
+
+                  <!-- Down -->
+                  <button id="cameraMoveDownBtn" type="button" class="btn btn-light" title="Move Down (S)">
+                    <i class="fas fa-arrow-down"></i>
+                  </button>
+
+                </div>
+
+                <!-- Horizontal Movement -->
+                <div class="btn-group" role="group" aria-label="Camera Horizontal Movement">
+
+                  <!-- Left -->
+                  <button id="cameraMoveLeftBtn" type="button" class="btn btn-light" title="Move Left (A)">
+                    <i class="fas fa-arrow-left"></i>
+                  </button>
+
+                  <!-- Right -->
+                  <button id="cameraMoveRightBtn" type="button" class="btn btn-light" title="Move Right (D)">
+                    <i class="fas fa-arrow-right"></i>
+                  </button>
+
+                </div>
+
+              </div>
+
+              <!-- Elevation -->
+              <div class="">
+                <label for="cameraModeElevationRange" class="form-label">Elevation</label>
+                <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
+              </div>
+
+              <!-- Camera Coordinates -->
+              <div class="row mb-3">
+                <span id="cameraCoordinates" class="badge badge-dark"></span>
+              </div>
+
+            </fieldset>
+          </div>
+
+          <!-- MAP -->
+          <div class="d-none" data-op="toolbar:map">
+
+            <fieldset class="border border-secondary p-3">
+
+              <legend class="fs-5">Map</legend>
+
+              <!-- Block Size -->
+              <div class="mb-3">
+                <label for="blockSize" class="form-label">Block size (px)</label>
+                <input type="number" class="form-control" id="blockSize" value="64">
+              </div>
+
+              <!-- Map Dimensions -->
+              <div class="row mb-3">
+
+                <!-- Width -->
+                <div class="col-6">
+                  <label for="mapWidth" class="form-label">Width (px)</label>
+                  <input type="number" class="form-control" id="mapWidth" value="2560">
+                </div>
+
+                <!-- Height -->
+                <div class="col-6">
+                  <label for="mapHeight" class="form-label">Height (px)</label>
+                  <input type="number" class="form-control" id="mapHeight" value="1440">
+                </div>
+
+              </div>
+
+              <div class="row mb-3">
+
+                <!-- Blocks per Row -->
+                <div class="col-6">
+                  <label for="blocksPerRow" class="form-label">Blocks per Row</label>
+                  <input type="number" class="form-control" id="blocksPerRow">
+                </div>
+
+                <!-- Blocks per Col -->
+                <div class="col-6">
+                  <label for="blocksPerCol" class="form-label">Blocks per Col</label>
+                  <input type="number" class="form-control" id="blocksPerCol">
+                </div>
+
+              </div>
+
+            </fieldset>
+
+          </div>
+
+          <!-- DISPLAY -->
+          <div class="d-none" data-op="toolbar:display">
+            <fieldset class="border border-secondary mb-3 p-3">
+
+              <legend class="fs-5">Display</legend>
+
+              <!-- Screen resolution -->
+              <div class="mb-3">
+                <label for="screenResolution" class="form-label">Screen resolution</label>
+                <select id="screenResolution" class="form-select" aria-label="Screen Size">
+                  <option value="720p">720p</option>
+                  <option value="1080p">1080p</option>
+                  <option value="1024x768">1024x768</option>
+                </select>
+              </div>
+
+            </fieldset>
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <!-- BELT -->
+      <div class="position-absolute top-90 start-50 translate-middle btn-group pb-5" role="group" aria-label="Large button group">
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+      </div>
+
+    <!--</div>-->
+
+    <!-- FOOTER -->
 
     <footer class="navbar navbar-dark fixed-bottom bg-dark flex-md-nowrap p-0 shadow text-light">
-      <span id="canvasMouseCoords" class="badge"></span>
+
+      <div class="ps-3">
+
+        <!-- MOUSE COORDINATES -->
+        <span id="canvasMouseCoords" class="badge">0,0</span>
+
+        <!-- Show Grid -->
+        <div class="mb-3">
+          <input class="form-check-input" type="checkbox" value="" id="showGrid" checked>
+          <label class="form-check-label text-light" for="showGrid">Show grid</label>
+        </div>
+
+      </div>
+
+      <!-- PLAYBACK -->
+
+      <div class="pe-3">
+
+        <h4 class="visually-hidden">Playback</h4>
+
+        <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
+
+          <!-- Pause -->
+          <button type="button" class="btn btn-dark active" data-playback="pause" title="Pause (SPACE)">
+            <i class="fas fa-pause"></i>
+          </button>
+
+          <!-- Play -->
+          <button type="button" class="btn btn-dark" data-playback="play" title="Play (SPACE)">
+            <i class="fas fa-play"></i>
+          </button>
+
+        </div>
+
+      </div>
+
     </footer>
 
 <!-- Modal: File / Save -->

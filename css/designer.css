@@ -1,0 +1,18 @@
+
+/**
+ * DESIGNER WIDGET
+ */
+
+.designer-widget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid black;
+}
+.designer-widget > legend {
+  border-bottom: 1px solid black;
+  padding: .5rem;
+}
+/*.designer-widget > legend:hover {
+  cursor: move;
+}*/

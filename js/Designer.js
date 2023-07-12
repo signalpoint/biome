@@ -95,8 +95,8 @@ class Designer {
   blocksPerRow() { return this.getMapWidth() / this.getBlockSize() }
   blocksPerCol() { return this.getMapHeight() / this.getBlockSize() }
 
-  blocksPerScreenRow() { return this.getScreenWidth() / this.getBlockSize() }
-  blocksPerScreenCol() { return this.getScreenHeight() / this.getBlockSize() }
+  blocksPerScreenRow() { return Math.ceil(this.getScreenWidth() / this.getBlockSize()) }
+  blocksPerScreenCol() { return Math.ceil(this.getScreenHeight() / this.getBlockSize()) }
 
   getBlockCoords(x, y) {
    return {
@@ -109,6 +109,12 @@ class Designer {
     return this.getBlockDeltaFromPos(coords.x, coords.y)
   }
 
+  /**
+   * Given a row and column number, this will return the delta of the block that resides there.
+   * @param {number} x The row number, starting at 0
+   * @param {number} y The column number, starting at 0
+   * @returns {Number}
+   */
   getBlockDeltaFromPos(x, y) {
     return y * this.blocksPerRow() + x
   }

@@ -70,10 +70,10 @@ class Player {
 
     // determine if the player can move up, down, left and/or right...
 
-    let upwardDestination = this.y - 1
-    let downwardDestination = this.y + this.height  + 1
-    let leftDestination = this.x - 1
-    let rightDestination = this.x + this.width + 1
+    let upwardDestination = this.y - Math.abs(this.vY)
+    let downwardDestination = this.y + this.height + Math.abs(this.vY)
+    let leftDestination = this.x - Math.abs(this.vX)
+    let rightDestination = this.x + this.width + Math.abs(this.vX)
 
     let blockAboveTopLeft = d.blocks[d.getBlockDelta(this.x, upwardDestination)]
     let blockAboveTopRight = d.blocks[d.getBlockDelta(this.x + this.width, upwardDestination)]
@@ -148,6 +148,13 @@ class Player {
 
     dPlayer.refreshCoordinatesBadge()
     dPlayer.refreshVelocityBadge()
+    dPlayer.refreshBlocksBadge()
+    dPlayer.refreshBlockCoordinatesBadge()
+    dPlayer.refreshBlockDeltaFromPositionBadge()
+
+    if (this.isMoving()) {
+      this.panCamera()
+    }
 
   }
 
@@ -161,6 +168,7 @@ class Player {
     )
   }
 
+  isMoving() { return this.isMovingUp() || this.isMovingDown() || this.isMovingLeft() || this.isMovingRight() }
   isMovingUp() { return this.state.moving.up }
   isMovingDown() { return this.state.moving.down }
   isMovingLeft() { return this.state.moving.left }
@@ -199,6 +207,26 @@ class Player {
       left: false,
       right: false
     }
+  }
+
+  panCamera() {
+
+    let startX = dCamera.x()
+    let startY = dCamera.y()
+    let endX = startX + d.blocksPerScreenRow()
+    let endY = startY + d.blocksPerScreenCol()
+    let thresholdX = 7
+    let thresholdY = 5
+    let pos = d.getBlockCoords(this.x, this.y)
+
+//    console.log(`${startX},${startY} => ${endX},${endY}`)
+
+    if (this.state.moving.up && pos.y - startY < thresholdY) { dCamera.move('up') }
+    else if (this.state.moving.down && endY - pos.y < thresholdY) { dCamera.move('down') }
+
+    if (this.state.moving.left && pos.x - startX < thresholdX) { dCamera.move('left') }
+    else if (this.state.moving.right && endX - pos.x < thresholdX) { dCamera.move('right') }
+
   }
 
 }

@@ -40,7 +40,8 @@ const keys = {
 const mouse = {
 
   left: {
-    pressed: false
+    pressed: false,
+    timer: new StopWatch()
   }
 
 }
@@ -61,12 +62,14 @@ canvasMouseOffsetY = -2
 
 // END: CONFIGURATION
 
-// Block Types
+// BLOCK TYPES
 
 let blockTypesDict = {
   'BlueberryBush': BlueberryBush,
   'Grass': Grass,
   'OakTree': OakTree,
+  'OakTreeWood': OakTreeWood,
+  'OakTreeLeaves': OakTreeLeaves,
   'Sand': Sand,
   'Stone': Stone,
   'Water': Water
@@ -118,25 +121,17 @@ let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
 let pauseBtn = playbackBtnsContainer.querySelector('button[data-playback="pause"]')
 let playBtn = playbackBtnsContainer.querySelector('button[data-playback="play"]')
 
-// designer mode
-
-let designerModeBtnsContainer = document.querySelector('#designerModeBtns')
-let designerModeBtns = designerModeBtnsContainer.querySelectorAll('button')
-
-let selectModePane = document.querySelector('#designerModePanes div[data-mode="select"]')
-let paintModePane = document.querySelector('#designerModePanes div[data-mode="paint"]')
-let cameraModePane = document.querySelector('#designerModePanes div[data-mode="camera"]')
-let mapModePane = document.querySelector('#designerModePanes div[data-mode="map"]')
-let displayModePane = document.querySelector('#designerModePanes div[data-mode="display"]')
+// toolbar
 
 let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
 let paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
-
 
 let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
 let cameraMoveLeftBtn = document.querySelector('#cameraMoveLeftBtn')
 let cameraMoveRightBtn = document.querySelector('#cameraMoveRightBtn')
+
+let cameraCoordinatesBadge = document.getElementById('cameraCoordinatesBadge')
 
 let playerMoveUpBtn = document.querySelector('#playerMoveUpBtn')
 let playerMoveDownBtn = document.querySelector('#playerMoveDownBtn')
@@ -183,10 +178,10 @@ addEventListener('load', function() {
   d.setPlayback('pause')
 
   // set mode
-  d.setMode('select')
+  d.setMode('toolbar:select')
 
   // set the active pane for the mode
-  dMode.setActivePane(selectModePane)
+//  dMode.setActivePane(selectModePane)
 
   // paint mode: block type
   for (var i = 0; i < blockTypes.length; i++) {
@@ -198,8 +193,29 @@ addEventListener('load', function() {
   d.setPaintModeBlockType(paintModeBlockTypeSelect.options[0].value)
 
   // set screen resolution
-  let resolution = screenResolutionMap[screenResolutionSelect.value]
-  d.setScreenResolution(resolution.w, resolution.h)
+
+  let screenWidth = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth
+
+  let screenHeight = window.innerHeight
+    || document.documentElement.clientHeight
+    || document.body.clientHeight
+
+  let headerHeight = document.getElementById('d-menu').clientHeight
+  let footerHeight = document.querySelector('footer').clientHeight
+  let canvasHeight = screenHeight - (headerHeight + footerHeight)
+
+//  console.log('screenWidth', screenWidth)
+//  console.log('screenHeight', screenHeight)
+//  console.log('headerHeight', headerHeight)
+//  console.log('footerHeight', footerHeight)
+//  console.log('canvasHeight', canvasHeight)
+
+  d.setScreenResolution(screenWidth, canvasHeight)
+
+//  let resolution = screenResolutionMap[screenResolutionSelect.value]
+//  d.setScreenResolution(resolution.w, resolution.h)
 //  d.setScreenResolution(innerWidth, innerHeight) // full screen
 
   // set block size
@@ -232,11 +248,9 @@ addEventListener('load', function() {
   // designer menu buttons
   for (var i = 0; i < designerMenuBtns.length; i++) {
     designerMenuBtns[i].addEventListener('click', function(e) {
-
       let op = this.getAttribute('data-op')
       dMenu.onclick(e, op)
       return false
-
     })
   }
 
@@ -247,12 +261,7 @@ addEventListener('load', function() {
     })
   }
 
-  // designer mode buttons
-  for (var i = 0; i < designerModeBtns.length; i++) {
-    designerModeBtns[i].addEventListener('click', function() {
-      dMode.btnOnclickListener(this)
-    })
-  }
+  initDesignerWidgets()
 
   // paint mode: block type
   paintModeBlockTypeSelect.addEventListener('change', function() {
@@ -459,10 +468,6 @@ addEventListener('load', function() {
 
 })
 
-// TODO use these instead of smushing the code in Designer.js
-// - keeps the class clean
-// - wouldn't need things in the animation loop to declare a function to call a function
-
 function update() {
 
   // player(s)...
@@ -474,8 +479,6 @@ function update() {
     players[i].resetCollisionStates()
 
     // player + block
-
-    // TODO the problem seems to be we're detecting the collision after it takes place, instead of just before it!
 
     let playerBlockDeltas = players[i].getBlockDeltasFromPosition()
     if (playerBlockDeltas.length) {

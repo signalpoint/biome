@@ -25,6 +25,7 @@ class DesignerCamera {
       case 'left': if (this.x() > 0) { this._moveLeft(); } break;
       case 'right': if (this.x() < d.blocksPerRow() - d.blocksPerScreenRow()) { this._moveRight(); } break;
     }
+    this.refreshCoordinatesBadge()
     refresh()
   }
 
@@ -41,6 +42,10 @@ class DesignerCamera {
       this._x = cam.x
       this._y = cam.y
     }
+  }
+
+  refreshCoordinatesBadge() {
+    cameraCoordinatesBadge.innerHTML = `${this.x()},${this.y()}`
   }
 
 }

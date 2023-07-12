@@ -27,6 +27,8 @@
     <script type="text/javascript" src="js/blocks/BlueberryBush.js"></script>
     <script type="text/javascript" src="js/blocks/Grass.js"></script>
     <script type="text/javascript" src="js/blocks/OakTree.js"></script>
+    <script type="text/javascript" src="js/blocks/OakTreeWood.js"></script>
+    <script type="text/javascript" src="js/blocks/OakTreeLeaves.js"></script>
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
     <script type="text/javascript" src="js/blocks/Stone.js"></script>
     <script type="text/javascript" src="js/blocks/Water.js"></script>
@@ -39,18 +41,6 @@
   </head>
 
   <body class="bg-dark">
-
-<!--    <header class="">
-      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Biome Designer</a>
-      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-nav">
-        <div class="nav-item text-nowrap">
-          <a class="nav-link px-3" href="#">&nbsp;</a>
-        </div>
-      </div>
-    </header>-->
 
     <nav id="d-menu" class="navbar navbar-expand-lg navbar-dark bg-dark flex-md-nowrap p-0 shadow">
 
@@ -99,10 +89,17 @@
               </a>
               <ul class="dropdown-menu">
 
-                <!-- Design Mode -->
+                <!-- Toolbar -->
                 <li>
-                  <a class="dropdown-item designer-widget-btn" href="#" data-op="view:design-mode" data-designer-widget="designModeWidget">
-                    Toolbar
+                  <a class="dropdown-item designer-widget-btn" href="#" data-designer-widget="designModeWidget">
+                    <i class="fas fa-tools me-2"></i>Toolbar
+                  </a>
+                </li>
+
+                <!-- Camera -->
+                <li>
+                  <a class="dropdown-item designer-widget-btn" href="#" data-designer-widget="cameraWidget">
+                    <i class="fas fa-camera me-2"></i>Camera
                   </a>
                 </li>
 
@@ -134,7 +131,9 @@
         </div>
 
         <!-- Player Icon -->
-        <button type="button" id="playerBtn" class="btn btn-dark" title="Player"><i class="fas fa-user"></i></button>
+        <button type="button" id="playerBtn" class="designer-widget-btn btn btn-dark" data-designer-widget="playerWidget" title="Player">
+          <i class="fas fa-user"></i>
+        </button>
 
       </div>
 
@@ -143,76 +142,122 @@
     <!--<div class="container-fluid">-->
 
       <!-- PLAYER -->
+      <fieldset id="playerWidget" class="designer-widget d-none border border-secondary bg-light">
 
-      <fieldset id="playerFieldset" class="d-none border border-secondary position-absolute end-0 text-light p-3 bg-dark text-light">
+        <legend class="bg-dark text-light mb-0">
+          Player
+          <button type="button" class="designer-widget-close btn btn-sm btn-light float-end" title="Close">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </legend>
 
-        <legend>Player</legend>
+        <ul class="designer-widget-nav nav nav-tabs bg-light">
 
-        <div class="mb-3">
+          <!-- Info -->
+          <li class="nav-item">
+            <a class="nav-link active" href="#" title="Info" data-op="player:info">
+              <i class="fas fa-info"></i>
+            </a>
+          </li>
 
-          <ul class="list-group">
+          <!-- Movement -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Movement" data-op="player:movement">
+              <i class="fas fa-arrows-alt"></i>
+            </a>
+          </li>
 
-            <!-- Coordinates -->
-            <li class="list-group-item list-group-item-dark">
-              Coordinates
-              <span id="playerCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
-            </li>
+        </ul>
 
-            <!-- Velocity -->
-            <li class="list-group-item list-group-item-dark">
-              Velocity
-              <span id="playerVelocityBadge" class="badge bg-primary float-end ms-3"></span>
-            </li>
+        <div class="designer-widget-panes m-3">
 
-          </ul>
+          <!-- INFO -->
+          <div class="active" data-op="player:info">
+
+            <ul class="list-group">
+
+              <!-- Coordinates -->
+              <li class="list-group-item list-group-item-dark">
+                Coordinates
+                <span id="playerCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+              <!-- Velocity -->
+              <li class="list-group-item list-group-item-dark">
+                Velocity
+                <span id="playerVelocityBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+              <!-- Blocks -->
+              <li class="list-group-item list-group-item-dark">
+                Blocks
+                <span id="playerBlocksBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+              <!-- Block Coordinates -->
+              <li class="list-group-item list-group-item-dark">
+                Block Coordinates
+                <span id="playerBlockCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+              <!-- Block Delta from Position -->
+              <li class="list-group-item list-group-item-dark">
+                Block Delta from Position
+                <span id="playerBlockDeltaFromPositionBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+            </ul>
+
+          </div>
+
+          <!-- MOVEMENT -->
+          <div data-op="player:movement">
+
+            <!-- Vertical Movement -->
+            <div class="btn-group" role="group" aria-label="Player Vertical Movement">
+
+              <!-- Up -->
+              <button id="playerMoveUpBtn" type="button" class="btn btn-dark" title="Move Up (UP ARROW)">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+
+              <!-- Down -->
+              <button id="playerMoveDownBtn" type="button" class="btn btn-dark" title="Move Down (DOWN ARROW)">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+
+            </div>
+
+            <!-- Horizontal Movement -->
+            <div class="btn-group" role="group" aria-label="Player Horizontal Movement">
+
+              <!-- Left -->
+              <button id="playerMoveLeftBtn" type="button" class="btn btn-dark" title="Move Left (LEFT ARROW)">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+
+              <!-- Right -->
+              <button id="playerMoveRightBtn" type="button" class="btn btn-dark" title="Move Right (RIGHT ARROW)">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
-
-        <div class="mb-3">
-
-        <!-- Vertical Movement -->
-        <div class="btn-group" role="group" aria-label="Player Vertical Movement">
-
-          <!-- Up -->
-          <button id="playerMoveUpBtn" type="button" class="btn btn-dark" title="Move Up (UP ARROW)">
-            <i class="fas fa-arrow-up"></i>
-          </button>
-
-          <!-- Down -->
-          <button id="playerMoveDownBtn" type="button" class="btn btn-dark" title="Move Down (DOWN ARROW)">
-            <i class="fas fa-arrow-down"></i>
-          </button>
-
-        </div>
-
-        <!-- Horizontal Movement -->
-        <div class="btn-group" role="group" aria-label="Player Horizontal Movement">
-
-          <!-- Left -->
-          <button id="playerMoveLeftBtn" type="button" class="btn btn-dark" title="Move Left (LEFT ARROW)">
-            <i class="fas fa-arrow-left"></i>
-          </button>
-
-          <!-- Right -->
-          <button id="playerMoveRightBtn" type="button" class="btn btn-dark" title="Move Right (RIGHT ARROW)">
-            <i class="fas fa-arrow-right"></i>
-          </button>
-
-        </div>
-
-      </div>
 
       </fieldset>
 
       <!-- CANVAS -->
       <canvas id="biome"></canvas>
 
-      <!-- TOOLBAR (aka mode v2) -->
+      <!-- TOOLBAR -->
       <fieldset id="designModeWidget" class="designer-widget d-none bg-light">
 
         <legend class="bg-dark text-light mb-0">
-          Toolbar
-          <button type="button" class="designer-widget-close btn btn-sm btn-light float-end" title="Close">
+          <i class="fas fa-tools me-2"></i>Toolbar
+          <button type="button" class="designer-widget-close btn btn-sm btn-dark float-end" title="Close">
             <i class="fas fa-times-circle"></i>
           </button>
         </legend>
@@ -237,13 +282,6 @@
           <li class="nav-item">
             <a class="nav-link" href="#" title="Edges" data-op="toolbar:edges">
               <i class="fas fa-border-style"></i>
-            </a>
-          </li>
-
-          <!-- Camera -->
-          <li class="nav-item">
-            <a class="nav-link" href="#" title="Camera" data-op="toolbar:camera">
-              <i class="fas fa-camera"></i>
             </a>
           </li>
 
@@ -305,60 +343,6 @@
                   <i class="fas fa-border-none"></i>
                 </button>
               </div>
-            </fieldset>
-          </div>
-
-          <!-- CAMERA -->
-          <div class="d-none" data-op="toolbar:camera">
-            <fieldset class="border border-secondary mb-3 p-3">
-
-              <legend class="fs-5">Camera</legend>
-
-              <div class="mb-3">
-
-                <!-- Vertical Movement -->
-                <div class="btn-group" role="group" aria-label="Camera Vertical Movement">
-
-                  <!-- Up -->
-                  <button id="cameraMoveUpBtn" type="button" class="btn btn-light" title="Move Up (W)">
-                    <i class="fas fa-arrow-up"></i>
-                  </button>
-
-                  <!-- Down -->
-                  <button id="cameraMoveDownBtn" type="button" class="btn btn-light" title="Move Down (S)">
-                    <i class="fas fa-arrow-down"></i>
-                  </button>
-
-                </div>
-
-                <!-- Horizontal Movement -->
-                <div class="btn-group" role="group" aria-label="Camera Horizontal Movement">
-
-                  <!-- Left -->
-                  <button id="cameraMoveLeftBtn" type="button" class="btn btn-light" title="Move Left (A)">
-                    <i class="fas fa-arrow-left"></i>
-                  </button>
-
-                  <!-- Right -->
-                  <button id="cameraMoveRightBtn" type="button" class="btn btn-light" title="Move Right (D)">
-                    <i class="fas fa-arrow-right"></i>
-                  </button>
-
-                </div>
-
-              </div>
-
-              <!-- Elevation -->
-              <div class="">
-                <label for="cameraModeElevationRange" class="form-label">Elevation</label>
-                <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
-              </div>
-
-              <!-- Camera Coordinates -->
-              <div class="row mb-3">
-                <span id="cameraCoordinates" class="badge badge-dark"></span>
-              </div>
-
             </fieldset>
           </div>
 
@@ -429,6 +413,96 @@
               </div>
 
             </fieldset>
+          </div>
+
+        </div>
+
+      </fieldset>
+
+      <!-- CAMERA -->
+      <fieldset id="cameraWidget" class="designer-widget d-none bg-light">
+
+        <legend class="bg-dark text-light mb-0">
+          <i class="fas fa-camera me-2"></i>Camera
+          <button type="button" class="designer-widget-close btn btn-sm btn-dark float-end" title="Close">
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </legend>
+
+        <ul class="designer-widget-nav nav nav-tabs bg-light">
+
+          <!-- Info -->
+          <li class="nav-item">
+            <a class="nav-link active" href="#" title="Select" data-op="camera:info">
+              <i class="fas fa-info"></i>
+            </a>
+          </li>
+
+          <!-- Movement -->
+          <li class="nav-item">
+            <a class="nav-link" href="#" title="Paint" data-op="camera:movement">
+              <i class="fas fa-arrows-alt"></i>
+            </a>
+          </li>
+
+        </ul>
+
+        <div class="designer-widget-panes m-3">
+
+          <!-- INFO -->
+          <div class="active" data-op="camera:info">
+
+            <ul class="list-group mb-3">
+
+              <!-- Coordinates -->
+              <li class="list-group-item list-group-item-dark">
+                Coordinates
+                <span id="cameraCoordinatesBadge" class="badge bg-primary float-end ms-3"></span>
+              </li>
+
+            </ul>
+
+            <!-- Elevation -->
+            <div class="">
+              <label for="cameraModeElevationRange" class="form-label">Elevation</label>
+              <input type="range" class="form-range" min="1" max="4" value="1" id="cameraModeElevationRange">
+            </div>
+
+          </div>
+
+          <!-- MOVEMENT -->
+          <div class="d-none" data-op="camera:movement">
+
+            <!-- Vertical Movement -->
+            <div class="btn-group" role="group" aria-label="Camera Vertical Movement">
+
+              <!-- Up -->
+              <button id="cameraMoveUpBtn" type="button" class="btn btn-light" title="Move Up (W)">
+                <i class="fas fa-arrow-up"></i>
+              </button>
+
+              <!-- Down -->
+              <button id="cameraMoveDownBtn" type="button" class="btn btn-light" title="Move Down (S)">
+                <i class="fas fa-arrow-down"></i>
+              </button>
+
+            </div>
+
+            <!-- Horizontal Movement -->
+            <div class="btn-group" role="group" aria-label="Camera Horizontal Movement">
+
+              <!-- Left -->
+              <button id="cameraMoveLeftBtn" type="button" class="btn btn-light" title="Move Left (A)">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+
+              <!-- Right -->
+              <button id="cameraMoveRightBtn" type="button" class="btn btn-light" title="Move Right (D)">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+
+            </div>
+
           </div>
 
         </div>

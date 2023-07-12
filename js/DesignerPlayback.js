@@ -34,7 +34,7 @@ class DesignerPlayback {
           playbackBtnsContainer.querySelector('button[data-playback="pause"]').click()
 
 
-        }, 60000)
+        }, 60000 * 3)
 
 //        console.log('playing animation...')
 

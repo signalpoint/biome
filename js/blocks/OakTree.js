@@ -24,7 +24,7 @@ class OakTree extends Block {
 
     c.beginPath()
     c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#6c584c'
+    c.fillStyle = this.solid ? '#582f0e' : '#7f4f24'
     c.fill()
 
   }

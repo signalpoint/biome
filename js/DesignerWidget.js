@@ -45,13 +45,6 @@ class DesignerWidget {
 
   getPanes() { return this.getElement().querySelector('.designer-widget-panes') }
   showPane(op) {
-    console.log(op)
-
-    // change nav
-//    let li = btn.parentNode
-//    let ul = li.parentNode
-//    ul.querySelector('a.active').classList.remove('active')
-//    btn.classList.add('active')
 
     // change nav
     this.getActiveNavBtn().classList.remove('active')
@@ -78,8 +71,6 @@ class DesignerWidget {
     let fieldset = this.getElement()
     fieldset.style.left = x + 'px'
     fieldset.style.top = y + 'px'
-//    this.setOffsetX(x)
-//    this.setOffsetY(y)
   }
 
 }
@@ -100,8 +91,8 @@ function designerWidgetDragMouseDown(e) {
     let offsetX = e.clientX - fieldset.offsetLeft
     let offsetY = e.clientY - fieldset.offsetTop
 
-    console.log(`(${e.clientX},${e.clientY}) - (${fieldset.offsetLeft},${fieldset.offsetTop}) (${offsetX},${offsetY})`)
-    console.log('-----')
+//    console.log(`(${e.clientX},${e.clientY}) - (${fieldset.offsetLeft},${fieldset.offsetTop}) (${offsetX},${offsetY})`)
+//    console.log('-----')
 
     widget.setOffsetX(offsetX)
     widget.setOffsetY(offsetY)
@@ -121,7 +112,7 @@ function designerWidgetDragMouseMove(e) {
   const x = e.clientX - widget.getOffsetX()
   const y = e.clientY - widget.getOffsetY()
 
-  console.log(`(${e.clientX},${e.clientY}) - (${widget.getOffsetX()},${widget.getOffsetY()}) (${x},${y})`)
+//  console.log(`(${e.clientX},${e.clientY}) - (${widget.getOffsetX()},${widget.getOffsetY()}) (${x},${y})`)
 
   widget.move(x, y)
 
@@ -167,17 +158,22 @@ function initDesignerWidgets() {
 
   }
 
-  // menu open buttons
+  // widget open buttons
   // e.g. view -> toolbar
   let designerWidgetBtns = document.querySelectorAll('.designer-widget-btn')
   for (var i = 0; i < designerWidgetBtns.length; i++) {
     designerWidgetBtns[i].addEventListener('click', function(e) {
-      let widgetBtn = e.target
-      let widgetId = widgetBtn.getAttribute('data-designer-widget')
+
+      // find the btn
+      let btn = e.target
+      while (btn && !btn.classList.contains('designer-widget-btn')) { btn = btn.parentNode }
+
+      let widgetId = btn.getAttribute('data-designer-widget')
       let widget = loadDesignerWidget(widgetId)
       widget.setOp(widget.getDefaultOp())
       widget.show()
       saveDesignerWidgets()
+
     })
   }
 

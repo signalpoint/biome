@@ -65,6 +65,7 @@ canvasMouseOffsetY = -2
 // BLOCK TYPES
 
 let blockTypesDict = {
+  'Bedrock': Bedrock,
   'BlueberryBush': BlueberryBush,
   'Grass': Grass,
   'OakTree': OakTree,
@@ -154,6 +155,12 @@ addEventListener('load', function() {
 
   canvas = document.getElementById("biome")
   c = canvas.getContext("2d")
+
+  // disable right click on canvas
+  canvas.oncontextmenu = function(e) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
 
   // DESIGNER
 
@@ -340,6 +347,8 @@ addEventListener('load', function() {
 
   addEventListener('keydown', ({ keyCode } ) => {
 
+//    console.log('keydown', keyCode)
+
     switch (keyCode) {
 
       // CAMERA
@@ -406,6 +415,20 @@ addEventListener('load', function() {
 
         // right (arrow)
         case 39: keys.right.pressed = true; break
+
+        // BELT
+
+        // 1, 2, 3, ..., 0
+        case 49: player.changeActiveBeltButton(0); break; // 1
+        case 50: player.changeActiveBeltButton(1); break; // 2
+        case 51: player.changeActiveBeltButton(2); break; // 3
+        case 52: player.changeActiveBeltButton(3); break; // 4
+        case 53: player.changeActiveBeltButton(4); break; // 5
+        case 54: player.changeActiveBeltButton(5); break; // 6
+        case 55: player.changeActiveBeltButton(6); break; // 7
+        case 56: player.changeActiveBeltButton(7); break; // 8
+        case 57: player.changeActiveBeltButton(8); break; // 9
+        case 48: player.changeActiveBeltButton(9); break; // 0
 
       }
 
@@ -481,9 +504,12 @@ function update() {
     // player + block
 
     let playerBlockDeltas = players[i].getBlockDeltasFromPosition()
+    let block = null
     if (playerBlockDeltas.length) {
       for (let j = 0; j < playerBlockDeltas.length; j++) {
-        d.blocks[playerBlockDeltas[j]].handleCollisionWithPlayer(players[i])
+        block = d.blocks[playerBlockDeltas[j]]
+        if (!block) { continue }
+        block.handleCollisionWithPlayer(players[i])
       }
     }
 

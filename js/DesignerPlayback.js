@@ -9,45 +9,50 @@ class DesignerPlayback {
     let playback = btn.getAttribute('data-playback')
 
     switch (playback) {
+      case 'pause': this.pause(); break
+      case 'play': this.play(); break
+    }
 
-      case 'pause':
+  }
 
-//        console.log('pausing animation...')
+  getPauseBtn() { return document.querySelector('#playbackBtns button[data-playback="pause"]') }
+  getPlayBtn() { return document.querySelector('#playbackBtns button[data-playback="play"]') }
 
-        cancelAnimationFrame(d._animationFrame)
-        d._animationFrame = null
+  pause() {
 
-        break;
+    cancelAnimationFrame(d._animationFrame)
+    d._animationFrame = null
 
-      case 'play':
+    this.getPauseBtn().classList.add('active')
+    this.getPlayBtn().classList.remove('active')
 
-        // make sure we get rid of the other draw calls when animate is running!
+    d.setPlayback('pause')
+
+  }
+
+  play() {
+
+    // make sure we get rid of the other draw calls when animate is running!
 
 //        console.log('starting animation...')
 
-        d._animationFrame = requestAnimationFrame(animate)
+    d._animationFrame = requestAnimationFrame(animate)
 
-        setTimeout(function() {
+    setTimeout(function() {
 
-          console.log('canceling animation...')
+      console.log('canceling animation...')
 
-          playbackBtnsContainer.querySelector('button[data-playback="pause"]').click()
+      playbackBtnsContainer.querySelector('button[data-playback="pause"]').click()
 
 
-        }, 60000 * 3)
+    }, 60000 * 3)
 
 //        console.log('playing animation...')
 
-        break;
+    this.getPauseBtn().classList.remove('active')
+    this.getPlayBtn().classList.add('active')
 
-    }
-
-    // swap active class on buttons
-    playbackBtnsContainer.querySelector('button.active').classList.remove('active')
-    btn.classList.add('active')
-
-    // udpate the playback
-    d.setPlayback(playback)
+    d.setPlayback('play')
 
   }
 

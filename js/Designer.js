@@ -19,6 +19,8 @@ class Designer {
     this._mapWidth = null
     this._mapHeight = null
 
+    this._mouseX = null
+    this._mouseY = null
     this._mouseDownX = null
     this._mouseDownY = null
     this._mouseUpX = null
@@ -27,6 +29,9 @@ class Designer {
 
     this.blocks = []
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
+
+    this._mouseDownBlockDelta = null
+    this._mouseUpBlockDelta = null
 
   }
 
@@ -139,6 +144,11 @@ class Designer {
   }
   blockSelected(delta) { return this.getSelectedBlocks().includes(delta) }
 
+  getMouseDownBlockDelta() { return this._mouseDownBlockDelta }
+  setMouseDownBlockDelta(delta) { this._mouseDownBlockDelta = delta}
+  getMouseUpBlockDelta() { return this._mouseUpBlockDelta }
+  setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta}
+
   // map
 
   setMapWidth(width) { this._mapWidth = width }
@@ -148,6 +158,24 @@ class Designer {
   getMapHeight() { return this._mapHeight }
 
   // mouse
+
+  setMouseX(x) { this._mouseX = x }
+  getMouseX() { return this._mouseX }
+
+  setMouseY(y) { this._mouseY = y }
+  getMouseY() { return this._mouseY }
+
+  setMouseCoords(coords) {
+    this._mouseX = coords.x
+    this._mouseY = coords.y
+  }
+
+  getMouseCoords() {
+    return {
+      x: this._mouseX,
+      y: this._mouseY
+    }
+  }
 
   setMouseDownX(x) { this._mouseDownX = x }
   getMouseDownX() { return this._mouseDownX }
@@ -208,6 +236,9 @@ class Designer {
 
     }
 
+    dMode.init()
+    dGame.init()
+
   }
 
   // CANVAS MOUSE EVENT LISTENERS
@@ -215,8 +246,13 @@ class Designer {
   // move
   canvasMouseMoveListener(e) {
 
-    // show mouse x,y coords
     let coords = getCanvasMouseCoords(e)
+
+    this.setMouseX(coords.x)
+    this.setMouseY(coords.y)
+
+    // show mouse x,y coords
+
     canvasMouseCoordsBadge.innerHTML = coords.x + ',' + coords.y
 
     let blockDelta = d.getBlockDelta(coords.x, coords.y)
@@ -226,7 +262,7 @@ class Designer {
       // track which block delta the mouse is over
       d.setMouseBlockDelta(blockDelta)
 
-      refresh()
+//      refresh()
 
     }
 
@@ -239,10 +275,14 @@ class Designer {
 
     mouse.left.pressed = 1
 
+    let pos = getCanvasMouseCoords(e)
+    let delta = d.getBlockDelta(pos.x + dCamera.xOffset(), pos.y + dCamera.yOffset())
+
     // start the timer
     mouse.left.timer.start()
 
-    this.setMouseDownCoords(getCanvasMouseCoords(e))
+    this.setMouseDownCoords(pos)
+    this.setMouseDownBlockDelta(delta)
 
     d.isPlaying() ? dGame.canvasMouseDownListener(e) : dMode.canvasMouseDownListener(e)
 
@@ -253,10 +293,14 @@ class Designer {
 
     mouse.left.pressed = 0
 
+    let pos = getCanvasMouseCoords(e)
+    let delta = d.getBlockDelta(pos.x + dCamera.xOffset(), pos.y + dCamera.yOffset())
+
     // stop the timer
     mouse.left.timer.stop()
 
-    this.setMouseUpCoords(getCanvasMouseCoords(e))
+    this.setMouseUpCoords(pos)
+    this.setMouseUpBlockDelta(delta)
 
     d.isPlaying() ? dGame.canvasMouseUpListener(e) : dMode.canvasMouseUpListener(e)
 
@@ -270,15 +314,17 @@ class Designer {
 
 //    console.log(e);
 
-    // ZOOM OUT
+    // BACKWARD / ZOOM OUT
     if (e.deltaY > 0) {
 
     }
 
-    // ZOOM IN
+    // FORWARD / ZOOM IN
     else {
 
     }
+
+    d.isPlaying() ? dGame.canvasMouseWheelListener(e) : dMode.canvasMouseWheelListener(e)
 
     return false
 

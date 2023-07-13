@@ -9,6 +9,12 @@ class DesignerMode {
 
   }
 
+  init() {
+
+    // ...
+
+  }
+
   canvasMouseMoveListener(e) {
 
     if (mouse.left.pressed) { // dragging...
@@ -28,11 +34,11 @@ class DesignerMode {
 
         if (existingBlock) {
           if (type != block.type) {
-            this.paintBlock(delta, type)
+            this.paintNewBlock(delta, type)
           }
         }
         else {
-          this.paintBlock(delta, type)
+          this.paintNewBlock(delta, type)
         }
 
       }
@@ -133,8 +139,8 @@ class DesignerMode {
 
           // changing block type
           if (block.type != blockType) {
-            console.log(`${block.type} => ${blockType}`)
-            this.paintBlock(delta, blockType)
+//            console.log(`${block.type} => ${blockType}`)
+            this.paintNewBlock(delta, blockType)
           }
           else { // clicking on same block type...
 
@@ -152,7 +158,7 @@ class DesignerMode {
           // The block does not exist...
 
           // create the new block using the current type
-          this.paintBlock(delta, blockType)
+          this.paintNewBlock(delta, blockType)
 
         }
 
@@ -186,7 +192,16 @@ class DesignerMode {
 
   }
 
-  paintBlock(delta, type) {
+  canvasMouseWheelListener(e) {
+
+  }
+
+  paintBlock(delta, block) {
+    d.blocks[delta] = block
+    refresh()
+  }
+
+  paintNewBlock(delta, type) {
     d.blocks[delta] = new blockTypesDict[type]({
       delta,
       type,

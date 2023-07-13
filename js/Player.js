@@ -62,16 +62,20 @@ class Player {
     dStorage.save('player', {
       name: this.name,
       x: this.x,
-      y: this.y
+      y: this.y,
+      belt: this.exportBelt()
     })
   }
 
   load() {
-    let p = dStorage.load('player')
-    if (p) {
-      this.name = p.name
-      this.x = p.x
-      this.y = p.y
+    let data = dStorage.load('player')
+    if (data) {
+      this.name = data.name
+      this.x = data.x
+      this.y = data.y
+      if (data.belt) {
+        this.importBelt(data.belt)
+      }
     }
   }
 
@@ -303,6 +307,18 @@ class Player {
 
   getBelt() { return this._belt }
   getBeltSize() { return this._beltSize }
+
+  exportBelt() { return this._belt }
+  importBelt(data) {
+    for (let i = 0; i < data.length; i++) {
+      let block = data[i]
+      this._belt.push(new blockTypesDict[block.type]({
+        delta: null,
+        type: block.type,
+        solid: block.solid
+      }))
+    }
+  }
 
   getBeltItem(index) { return this._belt[index] }
   deleteBeltItem(index) { this._belt.splice(index, 1) }

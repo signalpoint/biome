@@ -14,7 +14,7 @@ class Player {
     this.x = x
     this.y = y
 
-    this.width = 24
+    this.width = 48
     this.height = 48
 
     this.vX = 0
@@ -23,8 +23,19 @@ class Player {
     this.maxVelocityX = 5
     this.maxVelocityY = 5
 
+    this._belt = []
+    this._beltSize = 10
+    this._beltElement = null
+    this._beltButtons = null
+
     this.state = {
       moving: {
+        up: false,
+        down: false,
+        left: false,
+        right: false
+      },
+      facing: {
         up: false,
         down: false,
         left: false,
@@ -159,13 +170,30 @@ class Player {
   }
 
   draw() {
+
+    let x = this.x - dCamera.xOffset()
+    let y = this.y - dCamera.yOffset()
+
+    // body
     c.fillStyle = '#000'
-    c.fillRect(
-      this.x - dCamera.xOffset(),
-      this.y - dCamera.yOffset(),
-      this.width,
-      this.height
-    )
+    c.fillRect(x, y, this.width, this.height)
+
+    // eyes
+    c.fillStyle = '#333'
+    this.refreshFacingStates()
+    if (this.state.facing.up) {
+      c.fillRect(x, y, this.width, this.height / 8)
+    }
+    if (this.state.facing.down) {
+      c.fillRect(x, y + this.height - this.height / 8, this.width, this.height / 8)
+    }
+    if (this.state.facing.left) {
+      c.fillRect(x, y, this.width / 8, this.height)
+    }
+    if (this.state.facing.right) {
+      c.fillRect(x + this.width - this.width / 8, y, this.width / 8, this.height)
+    }
+
   }
 
   isMoving() { return this.isMovingUp() || this.isMovingDown() || this.isMovingLeft() || this.isMovingRight() }
@@ -200,6 +228,48 @@ class Player {
 
   }
 
+  resetFacingStates() {
+    this.state.facing = {
+      up: false,
+      down: false,
+      left: false,
+      right: false
+    }
+  }
+  refreshFacingStates() {
+
+    let x = this.x - dCamera.xOffset()
+    let y = this.y - dCamera.yOffset()
+    let mouseCoords = d.getMouseCoords()
+
+    if (mouseCoords.x < x) {
+      this.state.facing.left = true
+      this.state.facing.right = false
+    }
+    else if (mouseCoords.x < x + this.width) {
+      this.state.facing.left = false
+      this.state.facing.right = false
+    }
+    else {
+      this.state.facing.left = false
+      this.state.facing.right = true
+    }
+
+    if (mouseCoords.y < y) {
+      this.state.facing.up = true
+      this.state.facing.down = false
+    }
+    else if (mouseCoords.y < y + this.height) {
+      this.state.facing.up = false
+      this.state.facing.down = false
+    }
+    else {
+      this.state.facing.up = false
+      this.state.facing.down = true
+    }
+
+  }
+
   resetCollisionStates() {
     this.state.collision = {
       top: false,
@@ -227,6 +297,80 @@ class Player {
     if (this.state.moving.left && pos.x - startX < thresholdX) { dCamera.move('left') }
     else if (this.state.moving.right && endX - pos.x < thresholdX) { dCamera.move('right') }
 
+  }
+
+  // BELT
+
+  getBelt() { return this._belt }
+  getBeltSize() { return this._beltSize }
+
+  getBeltItem(index) { return this._belt[index] }
+  deleteBeltItem(index) { this._belt.splice(index, 1) }
+
+  beltIsFull() { return this.getBelt().length == this.getBeltSize() }
+  beltIsEmpty() { return !this.getBelt().length }
+
+  addBlockToBelt(delta) {
+    let block = d.blocks[delta]
+    this._belt.push(new blockTypesDict[block.type]({
+      delta: null,
+      type: block.type,
+      solid: block.solid
+    }))
+  }
+
+  getBeltElement() {
+    if (!this._beltElement) { this._beltElement = document.getElementById('playerBeltElement') }
+    return this._beltElement
+  }
+  getBeltButtons() {
+    if (!this._beltButtons) { this._beltButtons = this.getBeltElement().querySelectorAll('button') }
+    return this._beltButtons
+  }
+  getBeltButton(index) { return this.getBeltButtons()[index] }
+
+  getActiveBeltButton() { return this.getBeltElement().querySelector('button.active') }
+  setActiveBeltButton(index) { this.getBeltButton(index).classList.add('active') }
+  clearActiveBeltButton() { this.getActiveBeltButton().classList.remove('active') }
+  changeActiveBeltButton(index) {
+    this.clearActiveBeltButton()
+    this.setActiveBeltButton(index)
+  }
+
+  getActiveBeltButtonIndex() { return parseInt(this.getActiveBeltButton().getAttribute('data-index')) }
+
+  getNextBeltButton() { return this.getActiveBeltButton().nextSibling }
+  getPreviosBeltButton() { return this.getActiveBeltButton().previousSibling }
+
+  initBelt() {
+
+    for (let i = 0; i < this.getBeltSize(); i++) {
+
+      let btn = this.getBeltButton(i)
+      btn.addEventListener('click', function(e) {
+
+        btn = e.target
+        while (btn && btn.tagName != 'BUTTON') { btn = btn.parentNode }
+
+        let index = btn.getAttribute('data-index')
+        player.clearActiveBeltButton()
+        player.setActiveBeltButton(index)
+
+        // Start the game if it's paused.
+        if (d.isPaused()) { dPlayback.play() }
+
+      })
+
+    }
+
+  }
+
+  refreshBelt() {
+    for (let i = 0; i < this.getBeltSize(); i++) {
+      let block = this.getBelt()[i]
+      this.getBeltButton(i).innerHTML = block ?
+        block.type : '<i class="fas fa-circle-notch"></i>'
+    }
   }
 
 }

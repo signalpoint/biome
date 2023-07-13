@@ -54,6 +54,11 @@ class Designer {
     return dStorage.load(name)
   }
 
+  saveCurrentMap() {
+    let name = 'BakedLake'
+    this.saveMap(name, dStorage.exportMapJson())
+  }
+
   // playback
 
   setPlayback(p) { this._playback = p } // pause, play

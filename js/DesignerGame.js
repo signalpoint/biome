@@ -19,6 +19,7 @@ class DesignerGame {
 
     // init player belt
     player.initBelt()
+    player.refreshBelt()
 
   }
 
@@ -55,6 +56,12 @@ class DesignerGame {
             // refresh the belt
             player.refreshBelt()
 
+            // save the map
+            d.saveCurrentMap()
+
+            // save the player
+            player.save()
+
           }
 
         }
@@ -63,16 +70,25 @@ class DesignerGame {
 
         else if (e.which == 3) { // right click...
 
-          // If the block was bedrock...
+          // If on bedrock...
           if (isBedrock) {
 
-            // place the block from their active belt item
+            // If they have an active belt item...
             let index = player.getActiveBeltButtonIndex()
             let item = player.getBeltItem(index)
             if (item) {
+
+              // place the block from their active belt item
               dMode.paintBlock(delta, item)
               player.deleteBeltItem(index)
               player.refreshBelt()
+
+              // save the map
+              d.saveCurrentMap()
+
+              // save the player
+              player.save()
+
             }
 
           }

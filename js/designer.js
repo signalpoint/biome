@@ -353,29 +353,29 @@ addEventListener('load', function() {
 
       // CAMERA
 
-      // up (W)
-      case 87:
+      // up (arrow)
+      case 38:
         keys.cameraUp.pressed = true
         dCamera.move('up')
         dCamera.save()
         break
 
-      // down (S)
-      case 83:
+      // down (arrow)
+      case 40:
         keys.cameraDown.pressed = true
         dCamera.move('down')
         dCamera.save()
         break
 
-      // left (A)
-      case 65:
+      // left (arrow)
+      case 37:
         keys.cameraLeft.pressed = true
         dCamera.move('left')
         dCamera.save()
         break
 
-      // right (D)
-      case 68:
+      // right (arrow)
+      case 39:
         keys.cameraRight.pressed = true
         dCamera.move('right')
         dCamera.save()
@@ -404,17 +404,17 @@ addEventListener('load', function() {
 
         // PLAYER
 
-        // up (arrow)
-        case 38: keys.up.pressed = true; break
+        // up (W)
+        case 87: keys.up.pressed = true; break
 
-        // down (arrow)
-        case 40: keys.down.pressed = true; break
+        // down (A)
+        case 83: keys.down.pressed = true; break
 
-        // left (arrow)
-        case 37: keys.left.pressed = true; break
+        // left (S)
+        case 65: keys.left.pressed = true; break
 
-        // right (arrow)
-        case 39: keys.right.pressed = true; break
+        // right (D)
+        case 68: keys.right.pressed = true; break
 
         // BELT
 
@@ -444,17 +444,17 @@ addEventListener('load', function() {
 
       // CAMERA
 
-      // up (W)
-      case 87: keys.cameraUp.pressed = false; break
+      // up (arrow)
+      case 38: keys.cameraUp.pressed = false; break
 
-      // down (S)
-      case 83: keys.cameraDown.pressed = false; break
+      // down (arrow)
+      case 40: keys.cameraDown.pressed = false; break
 
-      // left (A)
-      case 65: keys.cameraLeft.pressed = false; break
+      // left (arrow)
+      case 37: keys.cameraLeft.pressed = false; break
 
-      // right (D)
-      case 68: keys.cameraRight.pressed = false; break
+      // right (arrow)
+      case 39: keys.cameraRight.pressed = false; break
 
     }
 
@@ -467,17 +467,17 @@ addEventListener('load', function() {
 
         // PLAYER
 
-        // up (arrow)
-        case 38: keys.up.pressed = false; break
+        // up (W)
+        case 87: keys.up.pressed = false; break
 
-        // down (arrow)
-        case 40: keys.down.pressed = false; break
+        // down (S)
+        case 83: keys.down.pressed = false; break
 
-        // left (arrow)
-        case 37: keys.left.pressed = false; break
+        // left (A)
+        case 65: keys.left.pressed = false; break
 
-        // right (arrow)
-        case 39: keys.right.pressed = false; break
+        // right (D)
+        case 68: keys.right.pressed = false; break
 
       }
 

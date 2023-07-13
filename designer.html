@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Biome Designer</title>
+    <title>CanvasCraft | Pixel Art Game</title>
 
     <!-- Font Awesome -->
     <script src="vendor/fontawesome-free-5.15.4-web/js/all.min.js"></script>
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="js/DesignerStorage.js"></script>
 
     <script type="text/javascript" src="js/Block.js"></script>
+    <script type="text/javascript" src="js/blocks/Bedrock.js"></script>
     <script type="text/javascript" src="js/blocks/BlueberryBush.js"></script>
     <script type="text/javascript" src="js/blocks/Grass.js"></script>
     <script type="text/javascript" src="js/blocks/OakTree.js"></script>
@@ -510,17 +511,17 @@
       </fieldset>
 
       <!-- BELT -->
-      <div class="position-absolute top-90 start-50 translate-middle btn-group pb-5" role="group" aria-label="Large button group">
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg"><i class="fas fa-circle-notch"></i></button>
+      <div id="playerBeltElement" class="position-absolute top-90 start-50 translate-middle btn-group pb-5 bg-dark text-light" role="group" aria-label="Large button group">
+        <button type="button" class="btn btn-outline-light btn-lg active" data-index="0"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="1"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="2"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="3"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="4"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="5"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="6"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="7"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="8"><i class="fas fa-circle-notch"></i></button>
+        <button type="button" class="btn btn-outline-light btn-lg" data-index="9"><i class="fas fa-circle-notch"></i></button>
       </div>
 
     <!--</div>-->

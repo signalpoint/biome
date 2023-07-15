@@ -37,6 +37,8 @@ const keys = {
 
 }
 
+// MOUSE
+
 const mouse = {
 
   left: {
@@ -68,9 +70,9 @@ let blockTypesDict = {
   'Bedrock': Bedrock,
   'BlueberryBush': BlueberryBush,
   'Grass': Grass,
-  'OakTree': OakTree,
-  'OakTreeWood': OakTreeWood,
+  'OakPlank': OakPlank,
   'OakTreeLeaves': OakTreeLeaves,
+  'OakTreeWood': OakTreeWood,
   'Sand': Sand,
   'Stone': Stone,
   'Water': Water
@@ -79,6 +81,22 @@ let blockTypes = []
 for (var type in blockTypesDict) {
   if (!blockTypesDict.hasOwnProperty(type)) { continue; }
   blockTypes.push(type)
+}
+
+// BUILDING TYPES
+
+let buildingTypesDict = {
+  'Campground': Campground,
+  'BuildersWorkshop': BuildersWorkshop
+}
+let buildingIconsDict = {
+  'Campground': 'fas fa-campground',
+  'BuildersWorkshop': 'fas fa-toolbox'
+}
+let buildingTypes = []
+for (var type in buildingTypesDict) {
+  if (!buildingTypesDict.hasOwnProperty(type)) { continue; }
+  buildingTypes.push(type)
 }
 
 // Designer
@@ -91,6 +109,8 @@ let dMode = null
 let dPlayer = null
 let dCamera = null
 let dStorage = null
+
+let playerMode = null
 
 // supported screen resolutions
 let screenResolutionSelect = document.querySelector('#screenResolution')
@@ -111,18 +131,12 @@ let screenResolutionMap = {
 
 // DOM ELEMENTS
 
-// designer menu
-
 let designerMenuBtns = document.querySelectorAll('#d-menu .d-menu-op')
-
-// designer playback
 
 let playbackBtnsContainer = document.querySelector('#playbackBtns')
 let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
 let pauseBtn = playbackBtnsContainer.querySelector('button[data-playback="pause"]')
 let playBtn = playbackBtnsContainer.querySelector('button[data-playback="play"]')
-
-// toolbar
 
 let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
 let paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
@@ -180,6 +194,8 @@ addEventListener('load', function() {
 
   dCamera = new DesignerCamera()
   dCamera.load()
+
+  playerMode = new PlayerMode()
 
   // set playback
   d.setPlayback('pause')
@@ -267,8 +283,6 @@ addEventListener('load', function() {
       dPlayback.btnOnclickListener(this)
     })
   }
-
-  initDesignerWidgets()
 
   // paint mode: block type
   paintModeBlockTypeSelect.addEventListener('change', function() {
@@ -519,6 +533,15 @@ function update() {
 
   }
 
+  // building(s)...
+  for (let i = 0; i < d.buildings.length; i++) {
+
+    if (d.buildings[i]) {
+      d.buildings[i].update()
+    }
+
+  }
+
 }
 
 function draw() {
@@ -534,6 +557,7 @@ function draw() {
 
   let blockDelta = null
   let block = null
+  let building = null
 
   let yCameraDelta = 0
   let xCameraDelta = 0
@@ -547,6 +571,7 @@ function draw() {
       blockDelta = d.getBlockDeltaFromPos(x, y)
 
       block = d.blocks[blockDelta]
+      building = d.buildings[blockDelta]
 
       // debug
 //      console.log(`${x},${y} => ` + blockDelta)
@@ -575,6 +600,13 @@ function draw() {
         c.strokeStyle = 'rgba(0,0,0,1)';
         c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize());
         c.stroke();
+      }
+
+      // If the building exists...
+      if (building) {
+
+        building.draw(xCameraDelta, yCameraDelta)
+
       }
 
       xCameraDelta++

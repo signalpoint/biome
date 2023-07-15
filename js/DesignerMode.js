@@ -49,142 +49,124 @@ class DesignerMode {
 
   canvasMouseDownListener(e) {
 
-    let coords = d.getMouseDownCoords()
+    let leftClick = e.which == 1
+    let rightClick = e.which == 3
+    let mode = d.getMode()
+    let widget = loadDesignerWidget('designerModeWidget')
 
-    let x = coords.x + dCamera.xOffset()
-    let y = coords.y + dCamera.yOffset()
-
-    // Get block delta and coordinates
-    let delta = d.getBlockDelta(x, y)
-    let blockCoords = d.getBlockCoords(x, y);
-
-//    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
+    let delta = d.getMouseDownBlockDelta()
 
     let existingBlock = d.blocks[delta] !== 0
     let block = existingBlock ? d.blocks[delta] : null
 
-    switch (d.getMode()) {
+    // SELECT
+    if (mode == 'toolbar:select') {
 
-      // SELECT
+      let html = ''
 
-      case 'toolbar:select':
+      // On existing blocks...
+      if (existingBlock) {
 
-        let html = ''
+        if (d.getSelectedBlocks().length) { // at least one block is selected...
 
-        // On existing blocks...
-        if (existingBlock) {
+          if (d.blocks[d.getSelectedBlocks()[0]].delta == delta) { // clicked on selected block...
 
-          if (d.getSelectedBlocks().length) { // at least one block is selected...
-
-            if (d.blocks[d.getSelectedBlocks()[0]].delta == delta) { // clicked on selected block...
-
-              dMode.openBlockModal(delta)
-
-            }
-            else { // clicked on a different block....
-
-              d.clearSelectedBlocks();
-              d.selectBlock(delta)
-
-            }
+            dMode.openBlockModal(delta)
 
           }
-          else { // no blocks are selected...
+          else { // clicked on a different block....
 
+            d.clearSelectedBlocks();
             d.selectBlock(delta)
 
           }
 
-          // TODO ctrl+ click implementation
-          // Toggle its selected state.
+        }
+        else { // no blocks are selected...
+
+          d.selectBlock(delta)
+
+        }
+
+        // TODO ctrl+ click implementation
+        // Toggle its selected state.
 //          d.blockSelected(delta) ? d.deselectBlock(delta) : d.selectBlock(delta);
 
+      }
+
+      // Show any selected blocks...
+      let selectedBlocks = d.getSelectedBlocks()
+      if (selectedBlocks.length) {
+        html += '<ul class="list-group">'
+        for (var i = 0; i < selectedBlocks.length; i++) {
+          let selectedBlockDelta = selectedBlocks[i]
+          let selectedBlock = d.blocks[selectedBlockDelta]
+          html +=
+            `<li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">${selectedBlock.type}</div>
+              </div>
+              <span class="badge bg-primary rounded-pill">#${selectedBlock.delta}</span>
+            </li>`
         }
+        html += '</ul>'
+      }
 
-        // Show any selected blocks...
-        let selectedBlocks = d.getSelectedBlocks()
-        if (selectedBlocks.length) {
-          html += '<ul class="list-group">'
-          for (var i = 0; i < selectedBlocks.length; i++) {
-            let selectedBlockDelta = selectedBlocks[i]
-            let selectedBlock = d.blocks[selectedBlockDelta]
-            html +=
-              `<li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                  <div class="fw-bold">${selectedBlock.type}</div>
-                </div>
-                <span class="badge bg-primary rounded-pill">#${selectedBlock.delta}</span>
-              </li>`
-          }
-          html += '</ul>'
-        }
 
-        // Update the pane
-        this.getActivePane().innerHTML =
-          `<fieldset class="border border-secondary mb-3 p-3">
-            <legend class="fs-5">Select<span class="badge bg-secondary float-end">${selectedBlocks.length}</span></legend>
-            ${html}
-          </fieldset>`
 
-        break;
+      // Update the pane
+      widget.setPaneContent(
+        mode,
+        `<fieldset class="border border-secondary mb-3 p-3">
+          <legend class="fs-5">Select<span class="badge bg-secondary float-end">${selectedBlocks.length}</span></legend>
+          ${html}
+        </fieldset>`
+      )
 
-      // PAINT
-
-      case 'toolbar:paint':
-
-        let blockType = d.getPaintModeBlockType()
-
-        // If the block already exists...
-        if (existingBlock) {
-
-          // changing block type
-          if (block.type != blockType) {
-//            console.log(`${block.type} => ${blockType}`)
-            this.paintNewBlock(delta, blockType)
-          }
-          else { // clicking on same block type...
-
-            //open block modal
-//            dMode.openBlockModal(delta)
-
-            // update solid value
-            d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
-
-          }
-
-        }
-        else {
-
-          // The block does not exist...
-
-          // create the new block using the current type
-          this.paintNewBlock(delta, blockType)
-
-        }
-
-        break;
-
-      // EDGES
-
-      case 'toolbar:edges':
-
-        if (existingBlock) {
-
-          console.log('edges', block)
-
-        }
-
-        break;
-
-      // CAMERA
-
-      case 'toolbar:camera':
-
-        console.log('camera!')
-
-        break;
 
     }
+
+    // PAINT
+    else if (mode == 'toolbar:paint') {
+
+      let blockType = d.getPaintModeBlockType()
+
+      // If the block already exists...
+      if (existingBlock) {
+
+        // changing block type
+        if (block.type != blockType) {
+//            console.log(`${block.type} => ${blockType}`)
+          this.paintNewBlock(delta, blockType)
+        }
+        else { // clicking on same block type...
+
+          //open block modal
+//            dMode.openBlockModal(delta)
+
+          // update solid value
+          d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
+
+        }
+
+      }
+      else {
+
+        // The block does not exist...
+
+        // create the new block using the current type
+        this.paintNewBlock(delta, blockType)
+
+      }
+
+    }
+
+    // CAMERA
+    else if (mode == 'toolbar:camera') {
+
+    }
+
+    playerMode.canvasMouseDownListener(e)
 
   }
 

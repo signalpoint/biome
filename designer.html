@@ -27,14 +27,19 @@
     <script type="text/javascript" src="js/blocks/Bedrock.js"></script>
     <script type="text/javascript" src="js/blocks/BlueberryBush.js"></script>
     <script type="text/javascript" src="js/blocks/Grass.js"></script>
-    <script type="text/javascript" src="js/blocks/OakTree.js"></script>
+    <script type="text/javascript" src="js/blocks/OakPlank.js"></script>
     <script type="text/javascript" src="js/blocks/OakTreeWood.js"></script>
     <script type="text/javascript" src="js/blocks/OakTreeLeaves.js"></script>
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
     <script type="text/javascript" src="js/blocks/Stone.js"></script>
     <script type="text/javascript" src="js/blocks/Water.js"></script>
 
+    <script type="text/javascript" src="js/Building.js"></script>
+    <script type="text/javascript" src="js/buildings/Campground.js"></script>
+    <script type="text/javascript" src="js/buildings/BuildersWorkshop.js"></script>
+
     <script type="text/javascript" src="js/Player.js"></script>
+    <script type="text/javascript" src="js/PlayerMode.js"></script>
 
     <link rel="stylesheet" href="vendor/bootstrap-5.2.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/designer.css">
@@ -92,7 +97,7 @@
 
                 <!-- Toolbar -->
                 <li>
-                  <a class="dropdown-item designer-widget-btn" href="#" data-designer-widget="designModeWidget">
+                  <a class="dropdown-item designer-widget-btn" href="#" data-designer-widget="designerModeWidget">
                     <i class="fas fa-tools me-2"></i>Toolbar
                   </a>
                 </li>
@@ -145,7 +150,7 @@
       <!-- PLAYER -->
       <fieldset id="playerWidget" class="designer-widget d-none border border-secondary bg-light">
 
-        <legend class="bg-dark text-light mb-0">
+        <legend class="bg-dark text-light mb-0 user-select-none">
           Player
           <button type="button" class="designer-widget-close btn btn-sm btn-light float-end" title="Close">
             <i class="fas fa-times-circle"></i>
@@ -254,9 +259,9 @@
       <canvas id="biome"></canvas>
 
       <!-- TOOLBAR -->
-      <fieldset id="designModeWidget" class="designer-widget d-none bg-light">
+      <fieldset id="designerModeWidget" class="designer-widget d-none bg-light">
 
-        <legend class="bg-dark text-light mb-0">
+        <legend class="bg-dark text-light mb-0 user-select-none">
           <i class="fas fa-tools me-2"></i>Toolbar
           <button type="button" class="designer-widget-close btn btn-sm btn-dark float-end" title="Close">
             <i class="fas fa-times-circle"></i>
@@ -276,13 +281,6 @@
           <li class="nav-item">
             <a class="nav-link" href="#" title="Paint" data-op="toolbar:paint">
               <i class="fas fa-brush"></i>
-            </a>
-          </li>
-
-          <!-- Edges -->
-          <li class="nav-item">
-            <a class="nav-link" href="#" title="Edges" data-op="toolbar:edges">
-              <i class="fas fa-border-style"></i>
             </a>
           </li>
 
@@ -307,7 +305,7 @@
           <!-- SELECT -->
           <div class="active" data-op="toolbar:select">
             <fieldset class="border border-secondary mb-3 p-3">
-              <legend class="fs-5">Select<span class="badge bg-secondary float-end"></span></legend>
+              <legend class="fs-5 user-select-none">Select<span class="badge bg-secondary float-end"></span></legend>
             </fieldset>
           </div>
 
@@ -315,7 +313,7 @@
           <div class="d-none" data-op="toolbar:paint">
             <fieldset class="border border-secondary mb-3 p-3">
 
-              <legend class="fs-5">Paint</legend>
+              <legend class="fs-5 user-select-none">Paint</legend>
 
               <!-- Block: type-->
               <div class="mb-3">
@@ -332,27 +330,12 @@
             </fieldset>
           </div>
 
-          <!-- EDGES -->
-          <div class="d-none" data-op="toolbar:edges">
-            <fieldset class="border border-secondary mb-3 p-3">
-              <legend class="fs-5">Edges</legend>
-              <div class="btn-group" role="group" aria-label="Edge selection">
-                <button type="button" class="btn btn-outline-light">
-                  <i class="fas fa-border-all"></i>
-                </button>
-                <button type="button" class="btn btn-outline-light">
-                  <i class="fas fa-border-none"></i>
-                </button>
-              </div>
-            </fieldset>
-          </div>
-
           <!-- MAP -->
           <div class="d-none" data-op="toolbar:map">
 
             <fieldset class="border border-secondary p-3">
 
-              <legend class="fs-5">Map</legend>
+              <legend class="fs-5 user-select-none">Map</legend>
 
               <!-- Block Size -->
               <div class="mb-3">
@@ -401,7 +384,7 @@
           <div class="d-none" data-op="toolbar:display">
             <fieldset class="border border-secondary mb-3 p-3">
 
-              <legend class="fs-5">Display</legend>
+              <legend class="fs-5 user-select-none">Display</legend>
 
               <!-- Screen resolution -->
               <div class="mb-3">
@@ -423,7 +406,7 @@
       <!-- CAMERA -->
       <fieldset id="cameraWidget" class="designer-widget d-none bg-light">
 
-        <legend class="bg-dark text-light mb-0">
+        <legend class="bg-dark text-light mb-0 user-select-none">
           <i class="fas fa-camera me-2"></i>Camera
           <button type="button" class="designer-widget-close btn btn-sm btn-dark float-end" title="Close">
             <i class="fas fa-times-circle"></i>
@@ -510,21 +493,84 @@
 
       </fieldset>
 
-      <!-- BELT -->
-      <div id="playerBeltElement" class="position-absolute top-90 start-50 translate-middle btn-group pb-5 bg-dark text-light" role="group" aria-label="Large button group">
-        <button type="button" class="btn btn-outline-light btn-lg active" data-index="0"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="1"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="2"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="3"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="4"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="5"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="6"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="7"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="8"><i class="fas fa-circle-notch"></i></button>
-        <button type="button" class="btn btn-outline-light btn-lg" data-index="9"><i class="fas fa-circle-notch"></i></button>
+      <!-- PLAYER MODE -->
+      <div id="playerModeElement" class="position-absolute top-90 start-50 translate-middle btn-group bg-dark" role="group" aria-label="Tools">
+
+        <!-- Belt -->
+        <button type="button" class="btn btn-outline-dark btn-lg text-secondary active" data-op="belt" title="Belt">
+          <i class="fas fa-dice-d6"></i>
+        </button>
+
+        <!-- Build -->
+        <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-op="build" title="Build">
+          <i class="fas fa-tools"></i>
+        </button>
+
+        <!-- Paint-->
+        <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-op="paint" title="Paint">
+          <i class="fas fa-paint-brush"></i>
+        </button>
+
+      </div>
+      <div id="playerModePanes" class="position-absolute top-84 start-50 translate-middle bg-dark text-light">
+
+        <!-- BELT -->
+        <div id="playerBeltElement" class="player-mode-pane btn-group active" role="group" aria-label="Belt" data-op="belt">
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary active" data-index="0" title="(1)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="1" title="(2)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="2" title="(3)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="3" title="(4)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="4" title="(5)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="5" title="(6)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="6" title="(7)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="7" title="(8)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="8" title="(9)"></button>
+          <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-index="9" title="(0)"></button>
+        </div>
+
+        <!-- BUILD -->
+        <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="build"></div>
+
+        <!-- PAINT -->
+        <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="paint"></div>
+
       </div>
 
     <!--</div>-->
+
+    <!-- BUILDING (designer widget template) -->
+    <fieldset id="buildingWidget" class="designer-widget d-none border border-secondary bg-light">
+
+      <legend class="bg-dark text-light mb-0 me-3 user-select-none">
+        <span>Building</span>
+        <button type="button" class="designer-widget-close btn btn-sm btn-light float-end" title="Close">
+          <i class="fas fa-times-circle"></i>
+        </button>
+      </legend>
+
+      <ul class="designer-widget-nav nav nav-tabs bg-light">
+
+        <!-- Info -->
+        <li class="nav-item">
+          <a class="nav-link active" href="#" title="Info" data-op="info">
+            <i class="fas fa-info"></i>
+          </a>
+        </li>
+
+      </ul>
+
+      <div class="designer-widget-panes m-3">
+
+        <!-- INFO -->
+        <div class="active" data-op="info">
+
+          ...
+
+        </div>
+
+      </div>
+
+    </fieldset>
 
     <!-- FOOTER -->
 

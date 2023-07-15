@@ -22,9 +22,11 @@ class BlueberryBush extends Block {
 
   draw(x, y) {
 
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
+    c.strokeStyle = "rgb(0, 0, 0)"
     c.fillStyle = '#0077b6'
+    c.beginPath()
+    c.roundRect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize(), 20)
+    c.stroke()
     c.fill()
 
   }

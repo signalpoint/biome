@@ -30,6 +30,8 @@ class Designer {
     this.blocks = []
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
+    this.buildings = []
+
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
 
@@ -222,9 +224,7 @@ class Designer {
     // open the last map, if available...
 
     let lastMapOpened = dStorage.load('LastMapOpened')
-    if (lastMapOpened) {
-      dStorage.importMap(lastMapOpened)
-    }
+    if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
     else {
 
       // start with an empty map...
@@ -234,6 +234,7 @@ class Designer {
         for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
 
           this.blocks.push(0)
+          this.buildings.push(0)
 
         }
 
@@ -243,6 +244,8 @@ class Designer {
 
     dMode.init()
     dGame.init()
+
+    initDesignerWidgets()
 
   }
 
@@ -282,6 +285,12 @@ class Designer {
 
     let pos = getCanvasMouseCoords(e)
     let delta = d.getBlockDelta(pos.x + dCamera.xOffset(), pos.y + dCamera.yOffset())
+
+    // debug
+//    let x = pos.x + dCamera.xOffset()
+//    let y = pos.y + dCamera.yOffset()
+//    let blockCoords = d.getBlockCoords(x, y);
+//    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
 
     // start the timer
     mouse.left.timer.start()

@@ -29,75 +29,26 @@ class DesignerGame {
 
   canvasMouseDownListener(e) {
 
-    let delta = d.getMouseDownBlockDelta()
-    let block = d.blocks[delta]
-    let isBedrock = block.type == 'Bedrock'
+    let leftClick = e.which == 1
+    let rightClick = e.which == 3
+    let currentPlayerMode = playerMode.getMode()
 
-    if (block) {
-
-      // An existing block...
-
-      // If they clicked a block under the player...
-      if (player.getBlockDeltasFromPosition().includes(delta)) {
-
-        // MINING
-
-        if (e.which == 1) { // left click...
-
-          // If not on bedrock and the belt isn't full...
-          if (!isBedrock && !player.beltIsFull()) {
-
-            // "mine the "block" by adding it to the belt
-            player.addBlockToBelt(delta)
-
-            // place bedrock down in its place
-            dMode.paintNewBlock(delta, 'Bedrock')
-
-            // refresh the belt
-            player.refreshBelt()
-
-            // save the map
-            d.saveCurrentMap()
-
-            // save the player
-            player.save()
-
-          }
-
-        }
-
-        // PLACING
-
-        else if (e.which == 3) { // right click...
-
-          // If on bedrock...
-          if (isBedrock) {
-
-            // If they have an active belt item...
-            let index = player.getActiveBeltButtonIndex()
-            let item = player.getBeltItem(index)
-            if (item) {
-
-              // place the block from their active belt item
-              dMode.paintBlock(delta, item)
-              player.deleteBeltItem(index)
-              player.refreshBelt()
-
-              // save the map
-              d.saveCurrentMap()
-
-              // save the player
-              player.save()
-
-            }
-
-          }
-
-        }
-
-      }
-
+    // BELT
+    if (currentPlayerMode == 'belt') {
+      console.log('belt it')
     }
+
+    // BUILD
+    else if (currentPlayerMode == 'build') {
+      console.log('build it')
+    }
+
+    // PAINT
+    else if (currentPlayerMode == 'paint') {
+      console.log('paint it')
+    }
+
+    playerMode.canvasMouseDownListener(e)
 
   }
 

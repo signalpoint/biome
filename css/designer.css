@@ -16,3 +16,19 @@
 /*.designer-widget > legend:hover {
   cursor: move;
 }*/
+
+/**
+ * BS5 UTILITIES
+ */
+.top-83 { top: 83% !important; }
+.top-84 { top: 84% !important; }
+.top-85 { top: 85% !important; }
+.top-90 { top: 90% !important; }
+.top-95 { top: 95% !important; }
+
+
+#playerModeElement .active,
+#playerBeltElement .active,
+#playerBuildElement .active {
+  color: white !important;
+}

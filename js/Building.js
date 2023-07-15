@@ -39,12 +39,36 @@ function createBuildingWidget(delta) {
   widget.save()
   widget.init()
 
-  console.log(delta)
-
   let building = d.buildings[delta]
+  let title = building.type
+  let deleteBtnId = `deleteBuildingBtn${delta}`
 
-  widget.setTitle(building.type)
-  widget.setPaneContent('info', '---')
+  let html =
+
+    // Delete Button
+    `<button id="${deleteBtnId}" type="button" class="btn btn-danger" title="Delete ${title}" data-delta="${delta}">
+      <i class="fas fa-trash"></i>
+    </button>`
+
+  widget.setTitle(title)
+  widget.setPaneContent('info', html)
+
+  setTimeout(function() {
+    document.getElementById(deleteBtnId).addEventListener('click', function(e) {
+
+      let btn = e.target
+      while (btn && btn.tagName != 'BUTTON') { btn = btn.parentNode }
+
+      if (window.confirm("Delete building, are you sure?")) {
+        d.buildings[delta] = 0
+        d.saveCurrentMap()
+        refresh()
+        widget.hide()
+        deleteDesignerWidget(getBuildingWidgetId(delta))
+      }
+
+    })
+  })
 
   return widget
 

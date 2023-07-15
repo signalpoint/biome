@@ -31,6 +31,8 @@ class Block {
   select() { this.selected = 1 }
   deselect() { this.selected = 0 }
 
+  isBedrock() { return this.type == 'Bedrock' }
+
   handleCollisionWithPlayer(player) {
 
     if (this.solid) {

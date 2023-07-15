@@ -90,6 +90,11 @@ class DesignerWidget {
 }
 
 function loadDesignerWidget(id) { return _designerWidgets[id] }
+function deleteDesignerWidget(id) {
+  delete _designerWidgets[id]
+  document.getElementById(id).remove()
+  saveDesignerWidgets()
+}
 
 function designerWidgetDragMouseDown(e) {
 

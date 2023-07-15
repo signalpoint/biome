@@ -25,7 +25,8 @@ class DesignerStorage {
       blockSize: d.getBlockSize(),
       mapWidth: d.getMapWidth(),
       mapHeight: d.getMapHeight(),
-      blocks: this.exportBlocksJson()
+      blocks: this.exportBlocksJson(),
+      buildings: this.exportBuildingsJson()
     }
 
   }
@@ -42,21 +43,37 @@ class DesignerStorage {
     let solid = null
 
     d.blocks = []
+    d.buildings = []
 
     for (let delta = 0; delta < map.blocks.length; delta++) {
 
-      if (!map.blocks[delta]) { d.blocks.push(map.blocks[delta]) }
+      let hasBlock = !!map.blocks[delta]
+      let hasBuilding = !!map.buildings[delta]
 
+      if (!hasBlock) { d.blocks.push(map.blocks[delta]) }
       else {
 
         type = map.blocks[delta].t
         solid = map.blocks[delta].s
 
-        // create the new block using the current type
         d.blocks[delta] = new blockTypesDict[type]({
           delta,
           type,
           solid
+        })
+
+      }
+
+      if (!hasBuilding) {
+        d.buildings.push(map.buildings[delta])
+      }
+      else {
+
+        type = map.buildings[delta].t
+
+        d.buildings[delta] = new buildingTypesDict[type]({
+          delta,
+          type
         })
 
       }
@@ -67,7 +84,7 @@ class DesignerStorage {
 
   }
 
-  // block import / export
+  // blocks
 
   exportBlocksJson() {
 
@@ -93,6 +110,34 @@ class DesignerStorage {
     }
 
     return blocks
+
+  }
+
+  // buildings
+
+  exportBuildingsJson() {
+
+    let buildings = []
+    let building = null
+    let delta = 0
+
+    for (let y = 0; y < d.getMapHeight(); y += d.getBlockSize()) {
+
+      for (let x = 0; x < d.getMapWidth(); x += d.getBlockSize()) {
+
+        building = d.buildings[delta]
+
+        buildings.push(building ? {
+          t: building.type
+        } : 0)
+
+        delta++
+
+      }
+
+    }
+
+    return buildings
 
   }
 

@@ -87,11 +87,13 @@ for (var type in blockTypesDict) {
 
 let buildingTypesDict = {
   'Campground': Campground,
-  'BuildersWorkshop': BuildersWorkshop
+  'BuildersWorkshop': BuildersWorkshop,
+  'LumberCamp': LumberCamp
 }
-let buildingIconsDict = {
+let buildingIconsDict = { // @deprecated?
   'Campground': 'fas fa-campground',
-  'BuildersWorkshop': 'fas fa-toolbox'
+  'BuildersWorkshop': 'fas fa-toolbox',
+  'LumberCamp': 'fas fa-tree'
 }
 let buildingTypes = []
 for (var type in buildingTypesDict) {
@@ -265,6 +267,19 @@ addEventListener('load', function() {
   player.load()
 
   players.push(player)
+
+  // NPCs
+
+  let dummyNpc = new Villager({
+    id: 'chooch',
+    name: 'Chooch',
+    x: player.x - 92,
+    y: player.y - 92,
+    color: 'teal'
+  })
+  saveVillager(dummyNpc)
+
+  npcs.push(dummyNpc)
 
   // EVENT LISTENERS
 
@@ -533,6 +548,13 @@ function update() {
 
   }
 
+  // npc(s)...
+  for (let i = 0; i < npcs.length; i++) {
+
+    npcs[i].update()
+
+  }
+
   // building(s)...
   for (let i = 0; i < d.buildings.length; i++) {
 
@@ -621,11 +643,6 @@ function draw() {
 
 //  console.log(`${startX},${startY} => ${endX},${endY}`)
 
-  // player
-  for (let i = 0; i < players.length; i++) {
-    players[i].draw()
-  }
-
   // grid
   if (d.showGrid()) {
     c.strokeStyle = 'rgba(0,0,0,0.2)';
@@ -636,6 +653,16 @@ function draw() {
         c.stroke()
       }
     }
+  }
+
+  // player(s)
+  for (let i = 0; i < players.length; i++) {
+    players[i].draw()
+  }
+
+  // npc(s)
+  for (let i = 0; i < npcs.length; i++) {
+    npcs[i].draw()
   }
 
 }
@@ -675,4 +702,10 @@ function getCanvasMouseCoordsWithCameraOffset(evt) {
     x: coords.x + dCamera.xOffset(),
     y: coords.y + dCamera.yOffset()
   }
+}
+
+function getBtnFromEvent(e) {
+  let btn = e.target
+  while (btn && btn.tagName != 'BUTTON') { btn = btn.parentNode }
+  return btn.tagName == 'BUTTON' ? btn : null
 }

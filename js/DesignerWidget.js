@@ -4,11 +4,12 @@ let _designerWidgetToDrag = null
 class DesignerWidget {
 
   constructor({
-    id
+    id,
+    op = null
   }) {
     this.id = id
     this._open = false // open or closed (aka shown or hidden)
-    this._op = null // the current operation (aka nav item)
+    this._op = op // the current operation (aka nav item)
     this._offsetX = null
     this._offsetY = null
   }
@@ -16,6 +17,10 @@ class DesignerWidget {
   init() {
     this.getLegend().addEventListener('mousedown', designerWidgetDragMouseDown) // handle widget drag
     this.getCloseBtn().addEventListener('click', designerWidgetCloseBtnOnclick)
+    let self = this
+    setTimeout(function() {
+      self.attachEventListeners()
+    })
   }
 
   getElement() { return document.getElementById(this.id) }
@@ -31,12 +36,16 @@ class DesignerWidget {
   save() { _designerWidgets[this.id] = this }
 
   show() {
+    this.onShow()
     this.getElement().classList.remove('d-none')
     this._open = true
+    this.onShown()
   }
   hide() {
+    this.onHide()
     this.getElement().classList.add('d-none')
     this._open = false
+    this.onHidden()
   }
 
   isOpen() { return this._open }
@@ -77,8 +86,12 @@ class DesignerWidget {
 
   }
 
-  setPaneContent(op, html) {
-    this.getPane(op).innerHTML = html
+  setPaneContent(op, html) { this.getPane(op).innerHTML = html }
+
+  refresh() {
+    let op = this.getOp()
+    this.setPaneContent(op, this.getPaneContent(op))
+    this.attachEventListenersAfterRefresh()
   }
 
   move(x, y) {
@@ -86,6 +99,19 @@ class DesignerWidget {
     fieldset.style.left = x + 'px'
     fieldset.style.top = y + 'px'
   }
+
+  // abstracts / interfaces
+
+  attachEventListeners() {}
+  attachEventListenersAfterRefresh() {}
+
+  onShow() {}
+  onShown() {}
+
+  onHide() {}
+  onHidden() {}
+
+  getPaneContent() { return '' }
 
 }
 

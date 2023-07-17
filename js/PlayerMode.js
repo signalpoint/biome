@@ -175,22 +175,19 @@ class PlayerMode {
     let block = d.blocks[delta]
     let building = d.buildings[delta]
 
-    // BUILDING
-    if (building) { // clicked on a building...
+    // BUILDING ( clicked on a building... )
+
+    if (building) {
 
       console.log(building)
 
-      let widget = loadBuildingWidget(delta)
-      if (!widget) {
-        widget = createBuildingWidget(delta)
-      }
-
-      widget.show()
+      building.getWidget().show()
 
     }
 
-    // BLOCK
-    else { // clicked on a block
+    // BLOCK ( clicked on a block... )
+
+    else {
 
       let isBedrock = block && block.isBedrock()
 
@@ -265,7 +262,8 @@ class PlayerMode {
 
       }
 
-      // BUILD
+      // BUILD ( clicked to place a building... )
+
       else if (mode == 'build') {
 
         if (leftClick) {
@@ -284,11 +282,16 @@ class PlayerMode {
             let type = this.getBuildType()
             if (type) {
 
-              // place the building
-              d.buildings[delta] = new buildingTypesDict[type]({
+              let building = new buildingTypesDict[type]({
                 delta,
                 type
               })
+
+              // place the building
+              d.buildings[delta] = building
+
+              // open the building widget
+              building.getWidget().show()
 
               // save the map
               d.saveCurrentMap()

@@ -71,9 +71,12 @@ class DesignerStorage {
 
         type = map.buildings[delta].t
 
+        let pos = d.getBlockPosFromDelta(delta)
         d.buildings[delta] = new buildingTypesDict[type]({
           delta,
-          type
+          type,
+          x: pos.x,
+          y: pos.y
         })
 
       }

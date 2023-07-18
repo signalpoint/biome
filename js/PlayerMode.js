@@ -205,11 +205,14 @@ class PlayerMode {
 
             if (leftClick) { // left click...
 
-              // If not on bedrock and the belt isn't full...
-              if (!isBedrock && !player.beltIsFull()) {
+              // If the block can be mined and the belt isn't full...
+              if (block.canBeMined() && !player.beltIsFull()) {
 
                 // "mine the block" by adding it to the belt
                 player.addBlockToBelt(delta)
+
+                // remove the block from the index
+                d.removeBlockFromIndex(block)
 
                 // place bedrock down in its place
                 dMode.paintNewBlock(delta, 'Bedrock')
@@ -282,9 +285,12 @@ class PlayerMode {
             let type = this.getBuildType()
             if (type) {
 
+              let pos = d.getBlockPosFromDelta(delta)
               let building = new buildingTypesDict[type]({
                 delta,
-                type
+                type,
+                x: pos.x,
+                y: pos.y
               })
 
               // place the building

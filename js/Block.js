@@ -5,20 +5,12 @@ class Block {
     type,
     selected = 0,
     solid = 0
-//    edges = null
   }) {
 
     this.delta = delta
     this.type = type
     this.selected = selected
     this.solid = solid
-
-//    this.edges = edges ? edges : {
-//      t: 0, // top
-//      b: 0, // bottom
-//      s: 0, // start
-//      e: 0 // end
-//    }
 
   }
 
@@ -32,6 +24,8 @@ class Block {
   deselect() { this.selected = 0 }
 
   isBedrock() { return this.type == 'Bedrock' }
+  isBorder() { return this.type == 'Border' }
+  canBeMined() { return !this.isBedrock() && !this.isBorder() }
 
   handleCollisionWithPlayer(player) {
 

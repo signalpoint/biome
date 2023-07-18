@@ -100,31 +100,3 @@ class Building {
   }
 
 }
-
-function getBuildingWidgetId(delta) { return 'buildingWidget' + delta }
-
-function loadBuildingWidget(delta) { return _designerWidgets[getBuildingWidgetId(delta)] }
-
-function createBuildingWidget(delta) {
-
-  let template = document.getElementById('buildingWidget')
-  let newWidget = template.cloneNode(true);
-  let newId = getBuildingWidgetId(delta)
-  newWidget.setAttribute('id', newId)
-  template.after(newWidget)
-  widget = new BuildingWidget({
-    id: newId,
-    delta: delta
-  })
-  widget.save()
-  widget.init()
-
-  let building = d.buildings[delta]
-  let title = building.type
-
-  widget.setTitle(title)
-  widget.refresh()
-
-  return widget
-
-}

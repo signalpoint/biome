@@ -2,6 +2,8 @@ class BuildersWorkshop extends Building {
 
   constructor({
     delta,
+    x,
+    y,
     width = 64,
     height = 64,
     primaryColor = '#bcb8b1',
@@ -13,6 +15,8 @@ class BuildersWorkshop extends Building {
     super({
       delta,
       type: 'BuildersWorkshop',
+      x,
+      y,
       width,
       height,
       primaryColor,

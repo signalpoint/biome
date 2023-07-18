@@ -193,9 +193,18 @@ class Npc {
   // ACTIONS
 
   getActions() { return this._actions }
-  getAction(index) { return this._actions[index] }
+  getAction(index = 0) { return this._actions[index] }
   addAction(action) { this.getActions().push(action) }
   hasActions() { return !!this._actions.length }
   hasNoActions() { return !this._actions.length }
+  removeAction(index = 0) { return this._actions.splice(index, 1) }
+  finishAction() {
+    this.getAction().setStatus('complete')
+    this.removeAction()
+  }
+  failAction() {
+    this.getAction().setStatus('failed')
+    this.removeAction()
+  }
 
 }

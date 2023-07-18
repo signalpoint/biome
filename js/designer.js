@@ -3,6 +3,8 @@
 let canvas = null
 let c = null
 
+// TODO we should put our globals in the "d" namespace, e.g. d.keys, d.mouse, etc
+
 // KEYS
 
 const keys = {
@@ -69,6 +71,7 @@ canvasMouseOffsetY = -2
 let blockTypesDict = {
   'Bedrock': Bedrock,
   'BlueberryBush': BlueberryBush,
+  'Border': Border,
   'Grass': Grass,
   'OakPlank': OakPlank,
   'OakTreeLeaves': OakTreeLeaves,
@@ -270,16 +273,25 @@ addEventListener('load', function() {
 
   // NPCs
 
-  let dummyNpc = new Villager({
+  let npcChooch = new Villager({
     id: 'chooch',
     name: 'Chooch',
     x: player.x - 92,
     y: player.y - 92,
-    color: 'teal'
+    color: 'green'
   })
-  saveVillager(dummyNpc)
+  saveVillager(npcChooch)
+  npcs.push(npcChooch)
 
-  npcs.push(dummyNpc)
+  let npcLoan = new Villager({
+    id: 'loan',
+    name: 'Loan',
+    x: player.x + 56,
+    y: player.y - 28,
+    color: 'yellow'
+  })
+  saveVillager(npcLoan)
+  npcs.push(npcLoan)
 
   // EVENT LISTENERS
 

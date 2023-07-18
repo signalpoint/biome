@@ -15,6 +15,15 @@ _actionStatusLabels[ACTION_STATUS_POSTPONED] = 'postponed'
 _actionStatusLabels[ACTION_STATUS_COMPLETE] = 'complete'
 _actionStatusLabels[ACTION_STATUS_FAILED] = 'failed'
 
+let _actionStatusMap = {}
+_actionStatusMap['new'] = ACTION_STATUS_NEW
+_actionStatusMap['pending'] = ACTION_STATUS_PENDING
+_actionStatusMap['ready'] = ACTION_STATUS_READY
+_actionStatusMap['processing'] = ACTION_STATUS_PROCESSING
+_actionStatusMap['postponed'] = ACTION_STATUS_POSTPONED
+_actionStatusMap['complete'] = ACTION_STATUS_COMPLETE
+_actionStatusMap['failed'] = ACTION_STATUS_FAILED
+
 class Action {
 
   constructor() {
@@ -26,9 +35,15 @@ class Action {
   }
 
   getStatus() { return this._status }
-  setStatus(status) { this._status = status }
-
   getStatusLabel() { return _actionStatusLabels[this.getStatus()] }
+  setStatus(status) {
+//    this._status = typeof status === 'string' ? _actionStatusMap[status] : status
+    // DEBUG
+    let newStatus = typeof status === 'string' ? _actionStatusMap[status] : status
+    console.log(`${this.constructor.name}: ${this.getStatusLabel()} => ${status}`)
+    this._status = newStatus
+
+  }
 
   getTimer() { return this._timer }
 

@@ -1,7 +1,7 @@
-class ActionGoToBuilding extends Action {
+class ActionGoToBlock extends Action {
 
   constructor({
-    delta // the building delta
+    delta // the block delta
   }) {
 
     super({
@@ -14,17 +14,15 @@ class ActionGoToBuilding extends Action {
 
   // methods
 
-  getBuilding() { return d.buildings[this.delta] }
+  getBlock() { return d.blocks[this.delta] }
 
   // abstracts / interfaces
 
   update(npc) {
 
-    let building = this.getBuilding()
-    let pos = building.getPosition()
+    let pos = d.getBlockPosFromDelta(this.delta)
 
     if (npc.x == pos.x && npc.y == pos.y) {
-      building.handleVillagerArrival(npc)
       npc.finishAction()
     }
 

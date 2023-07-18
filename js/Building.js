@@ -3,6 +3,8 @@ class Building {
   constructor({
     delta,
     type,
+    x,
+    y,
     width,
     height,
     primaryColor = null,
@@ -14,6 +16,10 @@ class Building {
 
     this.delta = delta
     this.type = type
+
+    this.x = x
+    this.y = y
+
     this.width = width
     this.height = height
 
@@ -28,12 +34,9 @@ class Building {
 
   }
 
-  // abstracts
+  // abstracts / interfaces
 
   update() { }
-  getPaneContent(op) { return '' } // for use with BuildingWidget panes
-
-  // methods
 
   draw(x, y) {
 
@@ -55,6 +58,21 @@ class Building {
     c.fillText(this.iconUnicode, x * d.getBlockSize(), y * d.getBlockSize() + this.height)
 
   }
+
+  getPaneContent(op) { return '' } // for use with BuildingWidget panes
+
+  handleVillagerArrival() {}
+
+  // methods
+
+  getPosition() {
+    return {
+      x: this.x,
+      y: this.y
+    }
+  }
+
+  getCoordinates() { return d.getBlockCoordsFromDelta(this.delta) }
 
   getWidget() {
     let widget = loadBuildingWidget(this.delta)
@@ -86,8 +104,6 @@ class Building {
 function getBuildingWidgetId(delta) { return 'buildingWidget' + delta }
 
 function loadBuildingWidget(delta) { return _designerWidgets[getBuildingWidgetId(delta)] }
-
-// TODO we probably need a BuildingWidget class that extends a DesignerWidget
 
 function createBuildingWidget(delta) {
 

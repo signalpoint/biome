@@ -37,8 +37,19 @@ class Villager extends Npc {
     // has something to do...
     if (this.hasActions()) {
 
-      // continue doing it...
-      this.getAction(0).update(this)
+      let action = this.getAction()
+
+      switch (action.getStatusLabel()) {
+        case 'new':
+          action.setStatus('processing')
+          break
+        case 'processing':
+          action.update(this) // continue doing it...
+          break
+        case 'complete':
+          this.removeAction()
+          break
+      }
 
     }
 
@@ -48,8 +59,12 @@ class Villager extends Npc {
       // employed...
       if (this.isEmployed()) {
 
+        // TODO if they are already at work, react accordingly, otherwise it loops indefinitely here
+
         // go to work...
-        this.addAction(new ActionGoToBuilding())
+        this.addAction(new ActionGoToBuilding({
+          delta: this.getEmployer().delta
+        }))
 
       }
 

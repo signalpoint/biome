@@ -2,6 +2,8 @@ class LumberCamp extends Building {
 
   constructor({
     delta,
+    x,
+    y,
     width = 64,
     height = 64,
     primaryColor = '#588157',
@@ -13,6 +15,8 @@ class LumberCamp extends Building {
     super({
       delta,
       type: 'LumberCamp',
+      x,
+      y,
       width,
       height,
       primaryColor,
@@ -24,12 +28,37 @@ class LumberCamp extends Building {
 
   }
 
+  // asbtracts / interfaces
+
   update() {
 
   }
 
-  getPaneContent(op) {
-    return ''
+  handleVillagerArrival(villager) {
+
+    // find wood to cut down
+    let block = d.getBlockFromIndexByType('OakTreeWood')
+    if (block) {
+
+      villager.addAction(new ActionGoToBlock({
+        delta: block.delta
+      }))
+
+      villager.addAction(new ActionMineBlock({
+        delta: block.delta
+      }))
+
+    }
+    else {
+
+      console.log('LumberCamp', 'no wood to cut down')
+
+      // TODO go home, or back to the campground
+
+    }
+
+
+
   }
 
 }

@@ -28,6 +28,7 @@ class Designer {
     this._mouseBlockDelta = null
 
     this.blocks = []
+    this.blocksIndex = {}
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
     this.buildings = []
@@ -111,6 +112,7 @@ class Designer {
   blocksPerScreenCol() { return Math.ceil(this.getScreenHeight() / this.getBlockSize()) }
 
   getBlockCoords(x, y) {
+    // TODO rename x and y to col and row
    return {
       x: Math.floor(x / this.getBlockSize()),
       y: Math.floor(y / this.getBlockSize())
@@ -121,6 +123,18 @@ class Designer {
     return this.getBlockDeltaFromPos(coords.x, coords.y)
   }
 
+  addBlockToIndex(block) {
+    if (!this.blocksIndex[block.type]) { this.blocksIndex[block.type] = [] }
+    this.blocksIndex[block.type].push(block.delta)
+  }
+  removeBlockFromIndex(block) {
+    let index = this.blocksIndex[block.type].indexOf(block.delta)
+    this.blocksIndex[block.type].splice(index, 1)
+  }
+  getBlockFromIndexByType(type) {
+    return this.blocks[this.blocksIndex[type][0]]
+  }
+
   /**
    * Given a row and column number, this will return the delta of the block that resides there.
    * @param {number} x The row number, starting at 0
@@ -129,6 +143,21 @@ class Designer {
    */
   getBlockDeltaFromPos(x, y) {
     return y * this.blocksPerRow() + x
+  }
+
+  getBlockPosFromDelta(delta) {
+    let coords = this.getBlockCoordsFromDelta(delta)
+    return {
+      x: coords.col * d.getBlockSize(),
+      y: coords.row * d.getBlockSize()
+    }
+  }
+
+  getBlockCoordsFromDelta(delta) {
+    return {
+      col: delta % d.blocksPerRow(),
+      row: Math.floor(delta / d.blocksPerCol())
+    }
   }
 
   getSelectedBlocks() { return this._selectedBlocks }

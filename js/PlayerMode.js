@@ -247,6 +247,8 @@ class PlayerMode {
                   player.deleteBeltItem(index)
                   player.refreshBelt()
 
+                  d.addBlockToIndex(d.blocks[delta])
+
                   // save the map
                   d.saveCurrentMap()
 
@@ -279,7 +281,7 @@ class PlayerMode {
           else if (d.buildings[delta]) { console.log('cannot place on existing building') }
           else {
 
-            // OK to place block...
+            // OK to place building on block...
 
             // If they have an active building type...
             let type = this.getBuildType()

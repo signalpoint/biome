@@ -194,6 +194,7 @@ class Npc {
 
   getActions() { return this._actions }
   getAction(index = 0) { return this._actions[index] }
+  getActionCount() { return this._actions.length }
   addAction(action) { this.getActions().push(action) }
   hasActions() { return !!this._actions.length }
   hasNoActions() { return !this._actions.length }

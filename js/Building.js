@@ -32,6 +32,11 @@ class Building {
     this._maxWorkers = maxWorkers
     this._workers = []
 
+    this._inventory = []
+    this._inventoryIndex = {}
+
+    d.addBuildingToIndex(this)
+
   }
 
   // abstracts / interfaces
@@ -59,7 +64,7 @@ class Building {
 
   }
 
-  getPaneContent(op) { return '' } // for use with BuildingWidget panes
+  getPaneContent(op) { return this.renderInventory() } // for use with BuildingWidget panes
 
   handleVillagerArrival() {}
 
@@ -82,6 +87,8 @@ class Building {
     return widget
   }
 
+  // WORKERS
+
   getWorkers() { return this._workers }
   getWorker(i) { return loadVillager(this.getWorkers()[i]) }
   getWorkerIndex(id) { return this.getWorkers().indexOf(id) }
@@ -97,6 +104,48 @@ class Building {
   removeWorker(id) {
     this.getWorkers().splice(this.getWorkerIndex(id), 1)
     loadVillager(id).setEmployer(null)
+  }
+
+  // INVENTORY
+  // TODO class Inventory extends ItemCollection
+
+  getInventory() { return this._inventory }
+  getInventoryItem(index) { return this._inventory[index] }
+  addInventory(block) {
+    this._inventory.push(block)
+    this.addInventoryToIndex(block)
+  }
+
+  getInventoryIndex() { return this._inventoryIndex }
+  addInventoryToIndex(block) {
+    if (!this._inventoryIndex[block.type]) { this._inventoryIndex[block.type] = [] }
+    this._inventoryIndex[block.type].push(block.delta)
+  }
+  removeInventoryFromIndex(block) {
+    let index = this._inventoryIndex[block.type].indexOf(block.delta)
+    this._inventoryIndex[block.type].splice(index, 1)
+  }
+  getInventoryFromIndexByType(type) {
+    return this.inventory[this._inventoryIndex[type][0]]
+  }
+
+  renderInventory() {
+    let html = ''
+    let items = []
+    let inventoryIndex = this.getInventoryIndex()
+    for (let type in inventoryIndex) {
+      if (!inventoryIndex.hasOwnProperty(type)) { continue }
+      items.push(
+        `<li class="list-group-item">
+          ${type}
+          <span class="badge bg-dark text-light float-end">${inventoryIndex[type].length}</span>
+        </li>`
+      )
+    }
+    if (items.length) {
+      html += `<ul class="list-group mb-3">${items.join()}</ul>`
+    }
+    return html
   }
 
 }

@@ -91,12 +91,14 @@ for (var type in blockTypesDict) {
 let buildingTypesDict = {
   'Campground': Campground,
   'BuildersWorkshop': BuildersWorkshop,
-  'LumberCamp': LumberCamp
+  'LumberCamp': LumberCamp,
+  'StonecutterCamp': StonecutterCamp
 }
 let buildingIconsDict = { // @deprecated?
   'Campground': 'fas fa-campground',
   'BuildersWorkshop': 'fas fa-toolbox',
-  'LumberCamp': 'fas fa-tree'
+  'LumberCamp': 'fas fa-tree',
+  'StonecutterCamp': 'fas fa-gem'
 }
 let buildingTypes = []
 for (var type in buildingTypesDict) {
@@ -273,25 +275,35 @@ addEventListener('load', function() {
 
   // NPCs
 
-  let npcChooch = new Villager({
-    id: 'chooch',
-    name: 'Chooch',
-    x: player.x - 92,
-    y: player.y - 92,
-    color: 'green'
-  })
-  saveVillager(npcChooch)
-  npcs.push(npcChooch)
-
   let npcLoan = new Villager({
     id: 'loan',
     name: 'Loan',
-    x: player.x + 56,
+    x: player.x + 72,
     y: player.y - 28,
     color: 'yellow'
   })
   saveVillager(npcLoan)
   npcs.push(npcLoan)
+
+  let npcAvalina = new Villager({
+    id: 'avalina',
+    name: 'Avalina',
+    x: player.x + 16,
+    y: player.y - 121,
+    color: 'pink'
+  })
+  saveVillager(npcAvalina)
+  npcs.push(npcAvalina)
+
+  let npcMelvin = new Villager({
+    id: 'melvin',
+    name: 'Melvin',
+    x: player.x - 92,
+    y: player.y - 92,
+    color: 'red'
+  })
+  saveVillager(npcMelvin)
+  npcs.push(npcMelvin)
 
   // EVENT LISTENERS
 

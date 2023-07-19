@@ -36,16 +36,43 @@ class LumberCamp extends Building {
 
   handleVillagerArrival(villager) {
 
-    // find wood to cut down
-    let block = d.getBlockFromIndexByType('OakTreeWood')
-    if (block) {
+    // if the villager brought back any wood...
+    if (!villager.beltIsEmpty()) {
 
+      // place it in the lumber camp inventory
+      this.addInventory(villager.getBeltItem(0))
+      villager.deleteBeltItem(0)
+      this.getWidget().refresh()
+
+      // go to the campground
+      let campground = player.getCampground()
+      villager.addAction(new ActionGoToBuilding({
+        delta: campground.delta
+      }))
+
+    }
+
+    // check for wood to cut down
+    else if (d.indexHasBlockType('OakTreeWood')) {
+
+      // load the wood block that we're going to cut down
+      let block = d.getBlockFromIndexByType('OakTreeWood')
+
+      // have the villager...
+
+      // go to the wood
       villager.addAction(new ActionGoToBlock({
         delta: block.delta
       }))
 
+      // cut down the wood
       villager.addAction(new ActionMineBlock({
         delta: block.delta
+      }))
+
+      // bring the wood back here to the lumber camp
+      villager.addAction(new ActionGoToBuilding({
+        delta: villager.getEmployer().delta
       }))
 
     }
@@ -53,11 +80,13 @@ class LumberCamp extends Building {
 
       console.log('LumberCamp', 'no wood to cut down')
 
-      // TODO go home, or back to the campground
+      // go to the campground
+      let campground = player.getCampground()
+      villager.addAction(new ActionGoToBuilding({
+        delta: campground.delta
+      }))
 
     }
-
-
 
   }
 

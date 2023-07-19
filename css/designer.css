@@ -20,6 +20,7 @@
 /**
  * BS5 UTILITIES
  */
+
 .top-83 { top: 83% !important; }
 .top-84 { top: 84% !important; }
 .top-85 { top: 85% !important; }
@@ -31,4 +32,12 @@
 #playerBeltElement .active,
 #playerBuildElement .active {
   color: white !important;
+}
+
+/**
+ * PLAYER MODE
+ */
+
+#playerModeElement .badge {
+  z-index: 2; /* keeps badge above btn-group:hover border*/
 }

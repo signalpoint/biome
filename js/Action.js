@@ -37,12 +37,12 @@ class Action {
   getStatus() { return this._status }
   getStatusLabel() { return _actionStatusLabels[this.getStatus()] }
   setStatus(status) {
-//    this._status = typeof status === 'string' ? _actionStatusMap[status] : status
+    this._status = typeof status === 'string' ? _actionStatusMap[status] : status
     // DEBUG
-    let newStatus = typeof status === 'string' ? _actionStatusMap[status] : status
-    console.log(`${this.constructor.name}: ${this.getStatusLabel()} => ${status}`)
-    this._status = newStatus
-
+//    let newStatus = typeof status === 'string' ? _actionStatusMap[status] : status
+//    let oldStatus = this.getStatusLabel()
+//    console.log(`${this.constructor.name}: ${oldStatus} => ${status}`)
+//    this._status = newStatus
   }
 
   getTimer() { return this._timer }

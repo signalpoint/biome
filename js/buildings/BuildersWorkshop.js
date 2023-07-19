@@ -6,8 +6,8 @@ class BuildersWorkshop extends Building {
     y,
     width = 64,
     height = 64,
-    primaryColor = '#bcb8b1',
-    secondaryColor = '#936639',
+    primaryColor = '#ddca7d',
+    secondaryColor = '#b88b4a',
     icon = 'fas fa-toolbox',
     iconUnicode = '\u{f552}'
   }) {
@@ -30,10 +30,6 @@ class BuildersWorkshop extends Building {
 
   update() {
 
-  }
-
-  getPaneContent(op) {
-    return ''
   }
 
 }

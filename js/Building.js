@@ -138,7 +138,7 @@ class Building {
       items.push(
         `<li class="list-group-item">
           ${type}
-          <span class="badge bg-dark text-light float-end">${inventoryIndex[type].length}</span>
+          <span class="badge bg-primary text-light float-end">${inventoryIndex[type].length}</span>
         </li>`
       )
     }

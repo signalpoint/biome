@@ -12,6 +12,8 @@ class Block {
     this.selected = selected
     this.solid = solid
 
+    //d.addBlockToIndex(this)
+
   }
 
   // abstracts

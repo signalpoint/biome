@@ -179,7 +179,7 @@ class Player {
     let y = this.y - dCamera.yOffset()
 
     // body
-    c.fillStyle = '#000'
+    c.fillStyle = 'green'
     c.fillRect(x, y, this.width, this.height)
 
     // eyes
@@ -301,6 +301,13 @@ class Player {
     if (this.state.moving.left && pos.x - startX < thresholdX) { dCamera.move('left') }
     else if (this.state.moving.right && endX - pos.x < thresholdX) { dCamera.move('right') }
 
+  }
+
+  // CAMPGROUND
+
+  getCampground() {
+    return d.indexHasBuildingType('Campground') ?
+      d.getBuildingFromIndexByType('Campground') : null
   }
 
   // BELT

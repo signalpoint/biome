@@ -32,6 +32,7 @@ class Designer {
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
     this.buildings = []
+    this.buildingsIndex = {} // START HERE, implement this
 
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
@@ -134,6 +135,9 @@ class Designer {
   getBlockFromIndexByType(type) {
     return this.blocks[this.blocksIndex[type][0]]
   }
+  indexHasBlockType(type) {
+    return this.blocksIndex[type] && this.blocksIndex[type].length
+  }
 
   /**
    * Given a row and column number, this will return the delta of the block that resides there.
@@ -184,6 +188,23 @@ class Designer {
   setMouseDownBlockDelta(delta) { this._mouseDownBlockDelta = delta}
   getMouseUpBlockDelta() { return this._mouseUpBlockDelta }
   setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta}
+
+  // buildings
+
+  addBuildingToIndex(building) {
+    if (!this.buildingsIndex[building.type]) { this.buildingsIndex[building.type] = [] }
+    this.buildingsIndex[building.type].push(building.delta)
+  }
+  removeBuildingFromIndex(building) {
+    let index = this.buildingsIndex[building.type].indexOf(building.delta)
+    this.buildingsIndex[building.type].splice(index, 1)
+  }
+  getBuildingFromIndexByType(type) {
+    return this.buildings[this.buildingsIndex[type][0]]
+  }
+  indexHasBuildingType(type) {
+    return this.buildingsIndex[type] && this.buildingsIndex[type].length
+  }
 
   // map
 

@@ -37,7 +37,7 @@ class DesignerStorage {
 
   importMapJson(map) {
 
-//    console.log('importMapJson', map)
+    console.log('importMapJson', map)
 
     let type = null
     let solid = null
@@ -61,6 +61,7 @@ class DesignerStorage {
           type,
           solid
         })
+        d.addBlockToIndex(d.blocks[delta])
 
       }
 

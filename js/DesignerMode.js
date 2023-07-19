@@ -189,6 +189,7 @@ class DesignerMode {
       type,
       solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
     })
+    d.addBlockToIndex(d.blocks[delta])
     refresh()
   }
 

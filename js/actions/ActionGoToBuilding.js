@@ -24,8 +24,9 @@ class ActionGoToBuilding extends Action {
     let pos = building.getPosition()
 
     if (npc.x == pos.x && npc.y == pos.y) {
-      building.handleVillagerArrival(npc)
+//      console.log(`${npc.name} arrived at ${building.type}`)
       npc.finishAction()
+      building.handleVillagerArrival(npc)
     }
 
     if (npc.x < pos.x) { npc.x++ } // move right

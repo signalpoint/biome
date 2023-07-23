@@ -16,10 +16,6 @@ class Stone extends Block {
 
   }
 
-  update() {
-
-  }
-
   draw(x, y) {
 
     c.beginPath()

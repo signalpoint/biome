@@ -56,7 +56,13 @@ class DesignerStorage {
         type = map.blocks[delta].t
         solid = map.blocks[delta].s
 
-        d.blocks[delta] = new blockTypesDict[type]({
+        if (!dBlocks.getType(type)) {
+          console.log(`unknown block type encountered during map import: ${type}`)
+          continue
+        }
+
+        let blockClass = d.getBlockClass(type)
+        d.blocks[delta] = new blockClass({
           delta,
           type,
           solid
@@ -73,7 +79,8 @@ class DesignerStorage {
         type = map.buildings[delta].t
 
         let pos = d.getBlockPosFromDelta(delta)
-        d.buildings[delta] = new buildingTypesDict[type]({
+        let buildingClass = d.getBuildingClass(type)
+        d.buildings[delta] = new buildingClass({
           delta,
           type,
           x: pos.x,

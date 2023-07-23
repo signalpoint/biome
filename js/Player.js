@@ -24,9 +24,13 @@ class Player {
     this.maxVelocityY = 5
 
     this._belt = []
+    this._beltIndex = {}
     this._beltSize = 10
     this._beltElement = null
     this._beltButtons = null
+    this._beltActiveItem = 0
+
+    this._actions = []
 
     this.state = {
       moving: {
@@ -51,13 +55,6 @@ class Player {
 
   }
 
-  getVelocity() {
-    return {
-      x: this.vX,
-      y: this.vY
-    }
-  }
-
   save() {
     dStorage.save('player', {
       name: this.name,
@@ -80,6 +77,32 @@ class Player {
   }
 
   update() {
+
+    // has something to do...
+    if (this.hasActions()) {
+
+      let action = this.getAction()
+
+      switch (action.getStatusLabel()) {
+        case 'new':
+          action.setStatus('processing')
+          break
+        case 'processing':
+          action.update(this) // continue doing it...
+          break
+        case 'complete':
+          this.removeAction()
+          break
+      }
+
+    }
+
+    // has nothing to do...
+    else {
+
+      // wait for player input...
+
+    }
 
 //    console.log('player velocity: ' + this.vX + ', ' + this.vY)
 
@@ -155,6 +178,19 @@ class Player {
       }
     }
 
+    // if the player is moving in 2 directions simultaniously, cut each velocity in half
+    // NOTE this is close, but the originally velocity seems to get lost afterwards
+//    if (
+//      (this.state.moving.up && (this.state.moving.left || this.state.moving.right)) ||
+//      (this.state.moving.down && (this.state.moving.left || this.state.moving.right)) ||
+//      (this.state.moving.left && (this.state.moving.up || this.state.moving.down)) ||
+//      (this.state.moving.right && (this.state.moving.up || this.state.moving.down))
+//    ) {
+//      console.log('2 directions at once')
+//      this.vX *= .5
+//      this.vY *= .5
+//    }
+
     // if player has velocity in either direction, change their position accordingly
     if (this.vX !== 0) { this.x += this.vX }
     if (this.vY !== 0) { this.y += this.vY }
@@ -178,25 +214,100 @@ class Player {
     let x = this.x - dCamera.xOffset()
     let y = this.y - dCamera.yOffset()
 
+    this.refreshFacingStates()
+
     // body
     c.fillStyle = 'green'
     c.fillRect(x, y, this.width, this.height)
 
     // eyes
     c.fillStyle = '#333'
-    this.refreshFacingStates()
     if (this.state.facing.up) {
       c.fillRect(x, y, this.width, this.height / 8)
     }
-    if (this.state.facing.down) {
+    else if (this.state.facing.down) {
       c.fillRect(x, y + this.height - this.height / 8, this.width, this.height / 8)
     }
     if (this.state.facing.left) {
       c.fillRect(x, y, this.width / 8, this.height)
     }
-    if (this.state.facing.right) {
+    else if (this.state.facing.right) {
       c.fillRect(x + this.width - this.width / 8, y, this.width / 8, this.height)
     }
+
+    // item
+    let item = this.getBeltItem(this.getActiveBeltButtonIndex())
+    if (item) { item.draw(x, y, this) }
+
+  }
+
+  getPosition() {
+    return {
+      x: this.x,
+      y: this.y
+    }
+  }
+  getCenterPosition() {
+    let pos = this.getPosition()
+    return {
+      x: pos.x + this.width / 2,
+      y: pos.y + this.height / 2
+    }
+  }
+
+  getVelocity() {
+    return {
+      x: this.vX,
+      y: this.vY
+    }
+  }
+
+  getNearbyBlocks() {
+
+    let center = this.getCenterPosition()
+    let size = d.getBlockSize()
+
+    return [
+
+      // top: left, center, right
+      d.getBlockDelta(center.x - size, center.y - size),
+      d.getBlockDelta(center.x, center.y - size),
+      d.getBlockDelta(center.x + size, center.y - size),
+
+      // middle: left, center, right
+      d.getBlockDelta(center.x - size, center.y),
+      d.getBlockDelta(center.x, center.y),
+      d.getBlockDelta(center.x + size, center.y),
+
+      // bottom: left, center, right
+      d.getBlockDelta(center.x - size, center.y + size),
+      d.getBlockDelta(center.x, center.y + size),
+      d.getBlockDelta(center.x + size, center.y + size)
+
+    ]
+
+  }
+
+  mineBlock(delta) {
+
+    // "mine the block" by adding it to the belt
+//    if (!player.beltIsFull()) {}
+    player.addBlockToBelt(delta)
+
+    // remove the block from the index
+    d.removeBlockFromIndex(d.blocks[delta])
+
+    // place bedrock down in its place
+    dMode.paintNewBlock(delta, 'Bedrock')
+
+    // refresh the belt
+    player.refreshBelt()
+
+    // save the map
+    d.saveCurrentMap()
+
+    // save the player
+    player.save()
 
   }
 
@@ -311,15 +422,22 @@ class Player {
   }
 
   // BELT
+  // TODO turn this into Belt.js
 
   getBelt() { return this._belt }
+  getBeltIndex() { return this._beltIndex }
   getBeltSize() { return this._beltSize }
 
   exportBelt() { return this._belt }
   importBelt(data) {
     for (let i = 0; i < data.length; i++) {
       let block = data[i]
-      this._belt.push(new blockTypesDict[block.type]({
+      if (!dBlocks.getType(block.type)) {
+        console.log(`Player belt import skipping unknown block type: ${block.type}`)
+        continue
+      }
+      let blockClass = d.getBlockClass(block.type)
+      this._belt.push(new blockClass({
         delta: null,
         type: block.type,
         solid: block.solid
@@ -335,11 +453,31 @@ class Player {
 
   addBlockToBelt(delta) {
     let block = d.blocks[delta]
-    this._belt.push(new blockTypesDict[block.type]({
+    let blockClass = d.getBlockClass(block.type)
+    this._belt.push(new blockClass({
       delta: null,
       type: block.type,
       solid: block.solid
     }))
+  }
+
+  addItemToBelt(item) {
+    this.getBelt().push(item)
+    this.addItemToBeltIndex(item)
+  }
+  addItemToBeltIndex(item) {
+    if (!this._beltIndex[item.type]) { this._beltIndex[item.type] = [] }
+    this._beltIndex[item.type].push(item.id)
+  }
+  removeItemFromBeltIndex(item) {
+    let index = this._beltIndex[item.type].indexOf(item.id)
+    this._beltIndex[item.type].splice(index, 1)
+  }
+  getItemFromBeltIndexByType(type) {
+    return this.item.s[this._beltIndex[type][0]]
+  }
+  beltIndexHasItemType(type) {
+    return this._beltIndex[type] && this._beltIndex[type].length
   }
 
   getBeltElement() {
@@ -353,14 +491,19 @@ class Player {
   getBeltButton(index) { return this.getBeltButtons()[index] }
 
   getActiveBeltButton() { return this.getBeltElement().querySelector('button.active') }
-  setActiveBeltButton(index) { this.getBeltButton(index).classList.add('active') }
+  setActiveBeltButton(index) {
+    this.getBeltButton(index).classList.add('active')
+    this.setActiveBeltItem(index)
+  }
   clearActiveBeltButton() { this.getActiveBeltButton().classList.remove('active') }
   changeActiveBeltButton(index) {
     this.clearActiveBeltButton()
     this.setActiveBeltButton(index)
   }
 
-  getActiveBeltButtonIndex() { return parseInt(this.getActiveBeltButton().getAttribute('data-index')) }
+  getActiveBeltButtonIndex() { return this._beltActiveItem }
+
+  setActiveBeltItem(index) { this._beltActiveItem = parseInt(index) }
 
   getNextBeltButton() { return this.getActiveBeltButton().nextSibling }
   getPreviosBeltButton() { return this.getActiveBeltButton().previousSibling }
@@ -369,7 +512,35 @@ class Player {
 
     for (let i = 0; i < this.getBeltSize(); i++) {
 
-      let btn = this.getBeltButton(i)
+      let active = i == 0
+
+      // add btn to dom
+
+      // create a new button element
+      let btn = document.createElement("button");
+      let btnClasses = ['btn', 'btn-outline-dark', 'btn-lg', 'text-secondary']
+      if (active) { btnClasses.push('active') }
+      btn.classList.add(...btnClasses)
+      btn.setAttribute('type', 'button')
+      btn.setAttribute('data-index', i)
+      btn.setAttribute('title', `(${i+1})`)
+//      btn.innerHTML = '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">!</span>'
+
+      // add a notification badge within the button
+//      let span = document.createElement("span");
+//      let spanClasses = [
+//        'badge',
+//        'rounded-pill',
+//        'bg-danger',
+//        'position-absolute',
+//        'top-0',
+//        'start-100',
+//        'translate-middle'
+//      ]
+//      span.classList.add(...spanClasses)
+//      if (active) { span.innerHTML = '!' }
+
+      // add click listener to btn
       btn.addEventListener('click', function(e) {
 
         btn = e.target
@@ -384,6 +555,10 @@ class Player {
 
       })
 
+      // add the btn to the belt element
+      this.getBeltElement().appendChild(btn)
+//      btn.appendChild(span)
+
     }
 
   }
@@ -394,6 +569,24 @@ class Player {
       this.getBeltButton(i).innerHTML = block ?
         block.type : '<i class="fas fa-circle-notch"></i>'
     }
+  }
+
+  // ACTIONS
+
+  getActions() { return this._actions }
+  getAction(index = 0) { return this._actions[index] }
+  getActionCount() { return this._actions.length }
+  addAction(action) { this.getActions().push(action) }
+  hasActions() { return !!this._actions.length }
+  hasNoActions() { return !this._actions.length }
+  removeAction(index = 0) { return this._actions.splice(index, 1) }
+  finishAction() {
+    this.getAction().setStatus('complete')
+    this.removeAction()
+  }
+  failAction() {
+    this.getAction().setStatus('failed')
+    this.removeAction()
   }
 
 }

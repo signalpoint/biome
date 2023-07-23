@@ -5,19 +5,17 @@ class OakTreeWood extends Block {
     delta,
     type,
     selected = 0,
-    solid = 0
+    solid = 0,
+    canvasMouseDownInterval = 100
   }) {
 
     super({
       delta,
       type,
       selected,
-      solid
+      solid,
+      canvasMouseDownInterval
     })
-
-  }
-
-  update() {
 
   }
 

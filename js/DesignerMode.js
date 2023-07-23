@@ -166,17 +166,17 @@ class DesignerMode {
 
     }
 
-    playerMode.canvasMouseDownListener(e)
+//    playerMode.canvasMouseDownListener(e)
 
   }
 
-  canvasMouseUpListener(e) {
+  canvasMouseDownHoldListener(e) { }
 
-  }
+  canvasMouseDownHoldListener(e) { }
 
-  canvasMouseWheelListener(e) {
+  canvasMouseUpListener(e) { }
 
-  }
+  canvasMouseWheelListener(e) { }
 
   paintBlock(delta, block) {
     d.blocks[delta] = block
@@ -184,7 +184,8 @@ class DesignerMode {
   }
 
   paintNewBlock(delta, type) {
-    d.blocks[delta] = new blockTypesDict[type]({
+    let blockClass = d.getBlockClass(type)
+    d.blocks[delta] = new blockClass({
       delta,
       type,
       solid: paintModeBlockSolidCheckbox.checked ? 1 : 0

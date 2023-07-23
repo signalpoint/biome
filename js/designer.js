@@ -45,7 +45,14 @@ const mouse = {
 
   left: {
     pressed: false,
-    timer: new StopWatch()
+    timer: new StopWatch(),
+    interval: null
+  },
+
+  right: {
+    pressed: false,
+    timer: new StopWatch(),
+    interval: null
   }
 
 }
@@ -66,45 +73,45 @@ canvasMouseOffsetY = -2
 
 // END: CONFIGURATION
 
-// BLOCK TYPES
+// BLOCK TYPES (TODO: move this to the Designer namespace)
 
-let blockTypesDict = {
-  'Bedrock': Bedrock,
-  'BlueberryBush': BlueberryBush,
-  'Border': Border,
-  'Grass': Grass,
-  'OakPlank': OakPlank,
-  'OakTreeLeaves': OakTreeLeaves,
-  'OakTreeWood': OakTreeWood,
-  'Sand': Sand,
-  'Stone': Stone,
-  'Water': Water
-}
-let blockTypes = []
-for (var type in blockTypesDict) {
-  if (!blockTypesDict.hasOwnProperty(type)) { continue; }
-  blockTypes.push(type)
-}
+//let blockTypesDict = {
+//  'Bedrock': Bedrock,
+//  'BlueberryBush': BlueberryBush,
+//  'Border': Border,
+//  'Grass': Grass,
+//  'OakPlank': OakPlank,
+//  'OakTreeLeaves': OakTreeLeaves,
+//  'OakTreeWood': OakTreeWood,
+//  'Sand': Sand,
+//  'Stone': Stone,
+//  'Water': Water
+//}
+//let blockTypes = []
+//for (var type in blockTypesDict) {
+//  if (!blockTypesDict.hasOwnProperty(type)) { continue; }
+//  blockTypes.push(type)
+//}
 
-// BUILDING TYPES
+// BUILDING TYPES (TODO: move this to the Designer namespace)
 
-let buildingTypesDict = {
-  'Campground': Campground,
-  'BuildersWorkshop': BuildersWorkshop,
-  'LumberCamp': LumberCamp,
-  'StonecutterCamp': StonecutterCamp
-}
-let buildingIconsDict = { // @deprecated?
-  'Campground': 'fas fa-campground',
-  'BuildersWorkshop': 'fas fa-toolbox',
-  'LumberCamp': 'fas fa-tree',
-  'StonecutterCamp': 'fas fa-gem'
-}
-let buildingTypes = []
-for (var type in buildingTypesDict) {
-  if (!buildingTypesDict.hasOwnProperty(type)) { continue; }
-  buildingTypes.push(type)
-}
+//let buildingTypesDict = {
+//  'Campground': Campground,
+//  'BuildersWorkshop': BuildersWorkshop,
+//  'LumberCamp': LumberCamp,
+//  'StonecutterCamp': StonecutterCamp
+//}
+//let buildingIconsDict = { // @deprecated?
+//  'Campground': 'fas fa-campground',
+//  'BuildersWorkshop': 'fas fa-toolbox',
+//  'LumberCamp': 'fas fa-tree',
+//  'StonecutterCamp': 'fas fa-gem'
+//}
+//let buildingTypes = []
+//for (var type in buildingTypesDict) {
+//  if (!buildingTypesDict.hasOwnProperty(type)) { continue; }
+//  buildingTypes.push(type)
+//}
 
 // Designer
 
@@ -116,6 +123,9 @@ let dMode = null
 let dPlayer = null
 let dCamera = null
 let dStorage = null
+let dBlocks = null
+let dBuildings = null
+let dItems = null
 
 let playerMode = null
 
@@ -202,6 +212,12 @@ addEventListener('load', function() {
   dCamera = new DesignerCamera()
   dCamera.load()
 
+  dBlocks = new DesignerBlocks()
+
+  dBuildings = new DesignerBuildings()
+
+  dItems = new DesignerItems()
+
   playerMode = new PlayerMode()
 
   // set playback
@@ -214,10 +230,11 @@ addEventListener('load', function() {
 //  dMode.setActivePane(selectModePane)
 
   // paint mode: block type
-  for (var i = 0; i < blockTypes.length; i++) {
+  for (var i = 0; i < dBlocks.getTypes().length; i++) {
     var option = document.createElement('option');
-    option.value = blockTypes[i];
-    option.innerHTML = blockTypes[i];
+    let type = dBlocks.getTypes()[i]
+    option.value = type;
+    option.innerHTML = type;
     paintModeBlockTypeSelect.appendChild(option);
   }
   d.setPaintModeBlockType(paintModeBlockTypeSelect.options[0].value)
@@ -268,9 +285,11 @@ addEventListener('load', function() {
     x: 576 + 8,
     y: 256 + 4
   })
-
+  player.addItemToBelt(new Axe({
+    id: 'axe'
+  }))
+  player.setActiveBeltItem(0)
   player.load()
-
   players.push(player)
 
   // NPCs
@@ -576,6 +595,15 @@ function update() {
   for (let i = 0; i < npcs.length; i++) {
 
     npcs[i].update()
+
+  }
+
+  // block(s)...
+  for (let i = 0; i < d.blocks.length; i++) {
+
+    if (d.blocks[i]) {
+      d.blocks[i].update()
+    }
 
   }
 

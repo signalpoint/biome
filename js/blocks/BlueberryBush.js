@@ -16,10 +16,6 @@ class BlueberryBush extends Block {
 
   }
 
-  update() {
-
-  }
-
   draw(x, y) {
 
     c.strokeStyle = "rgb(0, 0, 0)"

@@ -16,10 +16,6 @@ class Bedrock extends Block {
 
   }
 
-  update() {
-
-  }
-
   draw(x, y) {
 
     c.beginPath()

@@ -35,6 +35,11 @@ class PlayerMode {
   getNextButton() { return this.getActiveButton().nextSibling }
   getPreviousButton() { return this.getActiveButton().previousSibling }
 
+  getButtonLight(op) { return this.getButton(op).querySelector('.badge') }
+  turnOnButtonLight(op) { this.getButtonLight(op).classList.remove('d-none') }
+  turnOffButtonLight(op) { this.getButtonLight(op).classList.add('d-none') }
+  buttonHasLight(op) { return !this.getButtonLight(op).classList.contains('d-none') }
+
   initButtons() {
 
     let self = this
@@ -51,6 +56,10 @@ class PlayerMode {
 
         self.clearActiveButton()
         self.setActiveButton(op)
+
+        if (self.buttonHasLight(op)) {
+          self.turnOffButtonLight(op)
+        }
 
         let oldPane = self.getActivePane()
         oldPane.classList.remove('active')
@@ -107,8 +116,8 @@ class PlayerMode {
     // building types
     html +=
       '<div class="btn-group" role="group" aria-label="Building types">'
-    for (let i = 0; i < buildingTypes.length; i++) {
-      let buildingType = buildingTypes[i]
+    for (let i = 0; i < dBuildings.getTypes().length; i++) {
+      let buildingType = dBuildings.getTypes()[i]
       html +=
         `<button type="button" class="btn btn-outline-dark btn-lg text-secondary border-secondary" title="${buildingType}" data-type="${buildingType}">
           <i class="${buildingIconsDict[buildingType]}"></i>
@@ -166,14 +175,57 @@ class PlayerMode {
 
   // CANVAS + MOUSE
 
+  canvasMouseMoveListener(e) { }
+
   canvasMouseDownListener(e) {
 
-    let leftClick = e.which == 1
-    let rightClick = e.which == 3
+//    let leftClick = mouse.left.pressed
+//    let rightClick = mouse.right.pressed
+//    let mode = this.getMode()
+//    let delta = d.getMouseDownBlockDelta()
+//    let block = d.blocks[delta]
+//    let building = d.buildings[delta]
+
+  }
+
+  canvasMouseDownHoldListener(e) {
+
+    let block = d.getMouseDownBlock()
+    block.canvasMouseDownHoldListener(e)
+
+    if (mouse.left.pressed) {
+//      console.log('left hold', mouse.left.timer.getElapsedTime())
+
+      if (block.canBeMined()) {
+
+        let axeForce = 12
+        block.hit(axeForce)
+
+      }
+
+    }
+
+//    if (mouse.right.pressed) { console.log('right hold', mouse.right.timer.getElapsedTime()) }
+
+  }
+
+  canvasMouseUpListener(e) {
+
+    // TODO handle action cancel/clear
+    // e.g. if player has a "MoveToBlock" action running and the user moves with WASD, cancel the action
+
+    let leftClick = mouse.left.pressed
+    let rightClick = mouse.right.pressed
     let mode = this.getMode()
-    let delta = d.getMouseDownBlockDelta()
+    let delta = d.getMouseUpBlockDelta()
     let block = d.blocks[delta]
     let building = d.buildings[delta]
+
+//    let timer = mouse.left.timer
+//    let elapsedTime = timer.getElapsedTime()
+//    if (elapsedTime > 1000) { console.log('long') } // long press...
+//    else if (elapsedTime > 500) { console.log('medium') } // medium press...
+//    else { console.log('quick') } // quick press...
 
     // BUILDING ( clicked on a building... )
 
@@ -198,8 +250,10 @@ class PlayerMode {
 
           // An existing block...
 
-          // If they clicked a block under the player...
-          if (player.getBlockDeltasFromPosition().includes(delta)) {
+          // If they clicked a block nearby the player...
+          if (player.getNearbyBlocks().includes(delta)) {
+
+//            console.log('clicked nearby block')
 
             // MINING
 
@@ -208,23 +262,7 @@ class PlayerMode {
               // If the block can be mined and the belt isn't full...
               if (block.canBeMined() && !player.beltIsFull()) {
 
-                // "mine the block" by adding it to the belt
-                player.addBlockToBelt(delta)
-
-                // remove the block from the index
-                d.removeBlockFromIndex(block)
-
-                // place bedrock down in its place
-                dMode.paintNewBlock(delta, 'Bedrock')
-
-                // refresh the belt
-                player.refreshBelt()
-
-                // save the map
-                d.saveCurrentMap()
-
-                // save the player
-                player.save()
+//                player.mineBlock(delta)
 
               }
 
@@ -263,6 +301,20 @@ class PlayerMode {
 
           }
 
+          // If they clicked a block under the player...
+//          else if (player.getBlockDeltasFromPosition().includes(delta)) { }
+
+          else {
+
+            // they clicked on a block that wasn't nearby or under the player...
+
+            // move the player...
+            player.addAction(new ActionGoToBlock({
+              delta: delta
+            }))
+
+          }
+
         }
 
       }
@@ -288,7 +340,8 @@ class PlayerMode {
             if (type) {
 
               let pos = d.getBlockPosFromDelta(delta)
-              let building = new buildingTypesDict[type]({
+              let buildingClass = d.getBuildingClass(type)
+              let building = new buildingClass({
                 delta,
                 type,
                 x: pos.x,
@@ -321,5 +374,7 @@ class PlayerMode {
     }
 
   }
+
+  canvasMouseWheelListener(e) { }
 
 }

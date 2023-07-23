@@ -32,7 +32,7 @@ class Designer {
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
     this.buildings = []
-    this.buildingsIndex = {} // START HERE, implement this
+    this.buildingsIndex = {}
 
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
@@ -139,6 +139,8 @@ class Designer {
     return this.blocksIndex[type] && this.blocksIndex[type].length
   }
 
+  getBlockClass(type) { return dBlocks.getType(type).blockClass }
+
   /**
    * Given a row and column number, this will return the delta of the block that resides there.
    * @param {number} x The row number, starting at 0
@@ -185,9 +187,11 @@ class Designer {
   blockSelected(delta) { return this.getSelectedBlocks().includes(delta) }
 
   getMouseDownBlockDelta() { return this._mouseDownBlockDelta }
-  setMouseDownBlockDelta(delta) { this._mouseDownBlockDelta = delta}
+  setMouseDownBlockDelta(delta) { this._mouseDownBlockDelta = delta }
+  getMouseDownBlock() { return d.blocks[this._mouseDownBlockDelta] }
   getMouseUpBlockDelta() { return this._mouseUpBlockDelta }
-  setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta}
+  setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta }
+  getMouseUpBlock() { return d.blocks[this._mouseUpBlockDelta] }
 
   // buildings
 
@@ -205,6 +209,13 @@ class Designer {
   indexHasBuildingType(type) {
     return this.buildingsIndex[type] && this.buildingsIndex[type].length
   }
+
+  getBuildingClass(type) { return dBuildings.getType(type).buildingClass }
+
+  // items
+
+  getItemTypes() { return dItems.getTypes() }
+  getItemTypeRequirements(type) { return dItems.getRequirements(type) }
 
   // map
 
@@ -324,17 +335,39 @@ class Designer {
 
     }
 
-    d.isPlaying() ? dGame.canvasMouseMoveListener(e) : dMode.canvasMouseMoveListener(e)
+    d.isPlaying() ? playerMode.canvasMouseMoveListener(e) : dMode.canvasMouseMoveListener(e)
 
   }
 
   // mouse down
   canvasMouseDownListener(e) {
 
-    mouse.left.pressed = 1
-
     let pos = getCanvasMouseCoords(e)
     let delta = d.getBlockDelta(pos.x + dCamera.xOffset(), pos.y + dCamera.yOffset())
+
+    this.setMouseDownCoords(pos)
+    this.setMouseDownBlockDelta(delta)
+
+    let block = this.getMouseDownBlock()
+
+    if (e.which == 1) {
+      mouse.left.pressed = 1
+      mouse.left.timer.start()
+      mouse.left.interval = setInterval(
+        d.isPlaying() ? playerMode.canvasMouseDownHoldListener : dMode.canvasMouseDownHoldListener,
+        block ? block.canvasMouseDownInterval : 500,
+        e
+      )
+    }
+    if (e.which == 3) {
+      mouse.right.pressed = 1
+      mouse.right.timer.start()
+      mouse.right.interval = setInterval(
+        d.isPlaying() ? playerMode.canvasMouseDownHoldListener : dMode.canvasMouseDownHoldListener,
+        block ? block.canvasMouseDownInterval : 500,
+        e
+      )
+    }
 
     // debug
 //    let x = pos.x + dCamera.xOffset()
@@ -342,34 +375,39 @@ class Designer {
 //    let blockCoords = d.getBlockCoords(x, y);
 //    console.log(`${blockCoords.x},${blockCoords.y} => ${delta} @ ${x},${y}`)
 
-    // start the timer
-    mouse.left.timer.start()
-
-    this.setMouseDownCoords(pos)
-    this.setMouseDownBlockDelta(delta)
-
-    d.isPlaying() ? dGame.canvasMouseDownListener(e) : dMode.canvasMouseDownListener(e)
+    d.isPlaying() ? playerMode.canvasMouseDownListener(e) : dMode.canvasMouseDownListener(e)
 
   }
 
   // mouse up
   canvasMouseUpListener(e) {
 
-    mouse.left.pressed = 0
+    if (e.which == 1) {
+      mouse.left.timer.stop()
+      clearInterval(mouse.left.interval)
+    }
+    if (e.which == 3) {
+      mouse.right.timer.stop()
+      clearInterval(mouse.right.interval)
+    }
 
     let pos = getCanvasMouseCoords(e)
     let delta = d.getBlockDelta(pos.x + dCamera.xOffset(), pos.y + dCamera.yOffset())
 
-    // stop the timer
-    mouse.left.timer.stop()
-
     this.setMouseUpCoords(pos)
     this.setMouseUpBlockDelta(delta)
 
-    d.isPlaying() ? dGame.canvasMouseUpListener(e) : dMode.canvasMouseUpListener(e)
+    d.isPlaying() ? playerMode.canvasMouseUpListener(e) : dMode.canvasMouseUpListener(e)
 
     // reset the timer
-    mouse.left.timer.reset()
+    if (e.which == 1) {
+      mouse.left.pressed = 0
+      mouse.left.timer.reset()
+    }
+    if (e.which == 3) {
+      mouse.right.pressed = 0
+      mouse.right.timer.reset()
+    }
 
   }
 

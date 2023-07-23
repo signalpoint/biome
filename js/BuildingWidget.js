@@ -63,7 +63,7 @@ class BuildingWidget extends DesignerWidget {
       `<div class="mb-3 border-bottom">${building.getPaneContent(widget.getOp())}</div>` +
 
       // Delete Button
-      `<button id="${deleteBtnId}" type="button" class="btn btn-danger" title="Delete ${title}" data-delta="${delta}">
+      `<button id="${deleteBtnId}" type="button" class="btn btn-danger btn-sm" title="Delete ${title}" data-delta="${delta}">
         <i class="fas fa-trash"></i>
       </button>`
 
@@ -74,30 +74,8 @@ class BuildingWidget extends DesignerWidget {
   // overrides
 
   refresh() {
-
-    let op = this.getOp()
-    let delta = this.delta
-    let deleteBtnId = `deleteBuildingBtn${delta}`
-
-    this.setPaneContent(op, this.getPaneContent(op))
-
-//    setTimeout(function() {
-
-//      // "delete building" btn click handler
-//      document.getElementById(deleteBtnId).addEventListener('click', function(e) {
-//        if (window.confirm("Delete building, are you sure?")) {
-//          d.buildings[delta] = 0
-//          d.saveCurrentMap()
-//          refresh()
-//          widget.hide()
-//          deleteDesignerWidget(getBuildingWidgetId(delta))
-//        }
-//      })
-
-//    })
-
-    this.attachEventListenersAfterRefresh()
-
+    super.refresh()
+    this.getBuilding().attachEventListeners()
   }
 
   // abstracts / interfaces
@@ -110,17 +88,6 @@ class BuildingWidget extends DesignerWidget {
     if (building.isWorkAllowed()) {
 
       let self = this
-
-//      // "add worker" btn click listener
-//      this.getAddWorkerBtn().addEventListener('click', function(e) {
-//
-//        let unemployedVillager = getUnemployedVillager()
-//        if (unemployedVillager) {
-//          building.addWorker(unemployedVillager.id)
-//          self.refresh()
-//        }
-//
-//      })
 
     }
 

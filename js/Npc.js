@@ -167,7 +167,8 @@ class Npc {
   importBelt(data) {
     for (let i = 0; i < data.length; i++) {
       let block = data[i]
-      this._belt.push(new blockTypesDict[block.type]({
+      let blockClass = d.getBlockClass(block.type)
+      this._belt.push(new blockClass({
         delta: null,
         type: block.type,
         solid: block.solid
@@ -183,7 +184,8 @@ class Npc {
 
   addBlockToBelt(delta) {
     let block = d.blocks[delta]
-    this._belt.push(new blockTypesDict[block.type]({
+    let blockClass = d.getBlockClass(block.type)
+    this._belt.push(new blockClass({
       delta: null,
       type: block.type,
       solid: block.solid
@@ -196,6 +198,7 @@ class Npc {
   getAction(index = 0) { return this._actions[index] }
   getActionCount() { return this._actions.length }
   addAction(action) { this.getActions().push(action) }
+  addActions(actions) { this.getActions().push(...actions) }
   hasActions() { return !!this._actions.length }
   hasNoActions() { return !this._actions.length }
   removeAction(index = 0) { return this._actions.splice(index, 1) }

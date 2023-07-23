@@ -23,30 +23,9 @@ class DesignerGame {
 
   }
 
-  canvasMouseMoveListener(e) {
-
-  }
+  canvasMouseMoveListener(e) { }
 
   canvasMouseDownListener(e) {
-
-    let leftClick = e.which == 1
-    let rightClick = e.which == 3
-    let currentPlayerMode = playerMode.getMode()
-
-    // BELT
-    if (currentPlayerMode == 'belt') {
-      console.log('belt it')
-    }
-
-    // BUILD
-    else if (currentPlayerMode == 'build') {
-      console.log('build it')
-    }
-
-    // PAINT
-    else if (currentPlayerMode == 'paint') {
-      console.log('paint it')
-    }
 
     playerMode.canvasMouseDownListener(e)
 
@@ -54,29 +33,7 @@ class DesignerGame {
 
   canvasMouseUpListener(e) {
 
-    let timer = mouse.left.timer
-
-    let elapsedTime = timer.getElapsedTime()
-
-    if (elapsedTime > 1000) { // long press...
-
-//      console.log('long')
-
-    }
-    else if (elapsedTime > 500) { // medium press...
-
-//      console.log('medium')
-
-    }
-    else { // quick press...
-
-//      console.log('quick')
-
-      // move the player...
-
-
-
-    }
+    playerMode.canvasMouseUpListener(e)
 
   }
 
@@ -117,10 +74,11 @@ class DesignerGame {
 
       }
 
-
     }
 
     player.changeActiveBeltButton(index)
+
+    playerMode.canvasMouseWheelListener(e)
 
   }
 

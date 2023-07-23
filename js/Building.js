@@ -66,7 +66,9 @@ class Building {
 
   getPaneContent(op) { return this.renderInventory() } // for use with BuildingWidget panes
 
-  handleVillagerArrival() {}
+  attachEventListeners() {}
+
+  handleVillagerArrival(villager) {}
 
   // methods
 
@@ -86,6 +88,7 @@ class Building {
     }
     return widget
   }
+  refreshWidget() { this.getWidget().refresh() }
 
   // WORKERS
 
@@ -107,7 +110,7 @@ class Building {
   }
 
   // INVENTORY
-  // TODO class Inventory extends ItemCollection
+  // TODO class Inventory extends EntityCollection?
 
   getInventory() { return this._inventory }
   getInventoryItem(index) { return this._inventory[index] }

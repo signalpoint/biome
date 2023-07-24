@@ -1,4 +1,4 @@
-class Item {
+class Item extends Entity {
 
   constructor({
     id,
@@ -7,7 +7,11 @@ class Item {
     height
   }) {
 
-    this.id = id
+    super({
+      id,
+      entityType: 'item'
+    })
+
     this.type = type
     this.width = width
     this.height = height

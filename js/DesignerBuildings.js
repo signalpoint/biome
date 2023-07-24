@@ -4,24 +4,12 @@ class DesignerBuildings {
 
     this._typesDict = {
 
-//let buildingTypesDict = {
-//  'Campground': Campground,
-//  'BuildersWorkshop': BuildersWorkshop,
-//  'LumberCamp': LumberCamp,
-//  'StonecutterCamp': StonecutterCamp
-//}
-//let buildingIconsDict = { // @deprecated?
-//  'Campground': 'fas fa-campground',
-//  'BuildersWorkshop': 'fas fa-toolbox',
-//  'LumberCamp': 'fas fa-tree',
-//  'StonecutterCamp': 'fas fa-gem'
-//}
-
       // Campground
       'Campground': {
         buildingClass: Campground,
         label: 'Campground',
         description: 'An area for campers.',
+        icon: 'fas fa-campground',
         requires: null
       },
 
@@ -30,6 +18,7 @@ class DesignerBuildings {
         buildingClass: BuildersWorkshop,
         label: 'Builders Workshop',
         description: 'A shop for builders. Produces items and buildings.',
+        icon: 'fas fa-toolbox',
         requires: {
           'OakTreeWood': 5
         }
@@ -40,6 +29,7 @@ class DesignerBuildings {
         buildingClass: LumberCamp,
         label: 'Lumber Camp',
         description: 'A camp for woodcutters. Produces wood.',
+        icon: 'fas fa-tree',
         requires: {
           'OakTreeWood': 5
         },
@@ -53,6 +43,7 @@ class DesignerBuildings {
         buildingClass: StonecutterCamp,
         label: 'Stone',
         description: 'A camp for stonecutters. Produces stone.',
+        icon: 'fas fa-gem',
         requires: {
           'OakTreeWood': 5
         },
@@ -72,6 +63,8 @@ class DesignerBuildings {
 
   getTypes() { return this._types }
   getType(type) { return this._typesDict[type] }
+
+  getIcon(type) { return this.getType(type).icon }
 
   getRequirements(type) { return this.getType(type).requires }
 

@@ -12,7 +12,8 @@ class Grass extends Block {
       type,
       selected,
       solid,
-      canvasMouseDownInterval: 210 // essentially the axe attack speed
+//      canvasMouseDownInterval: 210 // essentially the axe attack speed
+      canvasMouseDownInterval: 50 // essentially the axe attack speed
     })
 
   }

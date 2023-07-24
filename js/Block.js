@@ -1,4 +1,4 @@
-class Block {
+class Block extends Entity {
 
   constructor({
     delta,
@@ -8,6 +8,11 @@ class Block {
     health = 100,
     canvasMouseDownInterval = 500
   }) {
+
+    super({
+      id: delta,
+      entityType: 'block'
+    })
 
     this.delta = delta
     this.type = type

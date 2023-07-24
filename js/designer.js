@@ -73,46 +73,6 @@ canvasMouseOffsetY = -2
 
 // END: CONFIGURATION
 
-// BLOCK TYPES (TODO: move this to the Designer namespace)
-
-//let blockTypesDict = {
-//  'Bedrock': Bedrock,
-//  'BlueberryBush': BlueberryBush,
-//  'Border': Border,
-//  'Grass': Grass,
-//  'OakPlank': OakPlank,
-//  'OakTreeLeaves': OakTreeLeaves,
-//  'OakTreeWood': OakTreeWood,
-//  'Sand': Sand,
-//  'Stone': Stone,
-//  'Water': Water
-//}
-//let blockTypes = []
-//for (var type in blockTypesDict) {
-//  if (!blockTypesDict.hasOwnProperty(type)) { continue; }
-//  blockTypes.push(type)
-//}
-
-// BUILDING TYPES (TODO: move this to the Designer namespace)
-
-//let buildingTypesDict = {
-//  'Campground': Campground,
-//  'BuildersWorkshop': BuildersWorkshop,
-//  'LumberCamp': LumberCamp,
-//  'StonecutterCamp': StonecutterCamp
-//}
-//let buildingIconsDict = { // @deprecated?
-//  'Campground': 'fas fa-campground',
-//  'BuildersWorkshop': 'fas fa-toolbox',
-//  'LumberCamp': 'fas fa-tree',
-//  'StonecutterCamp': 'fas fa-gem'
-//}
-//let buildingTypes = []
-//for (var type in buildingTypesDict) {
-//  if (!buildingTypesDict.hasOwnProperty(type)) { continue; }
-//  buildingTypes.push(type)
-//}
-
 // Designer
 
 let d = null
@@ -285,10 +245,10 @@ addEventListener('load', function() {
     x: 576 + 8,
     y: 256 + 4
   })
-  player.addItemToBelt(new Axe({
-    id: 'axe'
-  }))
-  player.setActiveBeltItem(0)
+//  player.addItemToBelt(new Axe({
+//    id: 'axe'
+//  }))
+  player.belt.setActiveItem(0)
   player.load()
   players.push(player)
 

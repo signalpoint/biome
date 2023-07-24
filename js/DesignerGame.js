@@ -18,8 +18,8 @@ class DesignerGame {
   init() {
 
     // init player belt
-    player.initBelt()
-    player.refreshBelt()
+    player.belt.init()
+    player.belt.refresh()
 
   }
 
@@ -41,12 +41,12 @@ class DesignerGame {
 
     // BELT
 
-    let index = player.getActiveBeltButtonIndex()
+    let index = player.belt.getActiveButtonIndex()
 
     // trying to move rightbelt...
     if (e.deltaY > 0) {
 
-      if (index == player.getBeltSize() - 1) {
+      if (index == player.belt.getSize() - 1) {
 
         // all the way right...
 
@@ -76,7 +76,7 @@ class DesignerGame {
 
     }
 
-    player.changeActiveBeltButton(index)
+    player.belt.changeActiveButton(index)
 
     playerMode.canvasMouseWheelListener(e)
 

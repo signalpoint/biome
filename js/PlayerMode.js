@@ -120,7 +120,7 @@ class PlayerMode {
       let buildingType = dBuildings.getTypes()[i]
       html +=
         `<button type="button" class="btn btn-outline-dark btn-lg text-secondary border-secondary" title="${buildingType}" data-type="${buildingType}">
-          <i class="${buildingIconsDict[buildingType]}"></i>
+          <i class="${dBuildings.getIcon(buildingType)}"></i>
         </button>`
     }
     html +=
@@ -260,7 +260,7 @@ class PlayerMode {
             if (leftClick) { // left click...
 
               // If the block can be mined and the belt isn't full...
-              if (block.canBeMined() && !player.beltIsFull()) {
+              if (block.canBeMined() && !player.belt.isFull()) {
 
 //                player.mineBlock(delta)
 
@@ -276,14 +276,14 @@ class PlayerMode {
               if (isBedrock) {
 
                 // If they have an active belt item...
-                let index = player.getActiveBeltButtonIndex()
-                let item = player.getBeltItem(index)
+                let index = player.belt.getActiveButtonIndex()
+                let item = player.belt.get(index)
                 if (item) {
 
                   // place the block from their active belt item
                   dMode.paintBlock(delta, item)
-                  player.deleteBeltItem(index)
-                  player.refreshBelt()
+                  player.belt.remove(block)
+                  player.belt.refresh()
 
                   d.addBlockToIndex(d.blocks[delta])
 

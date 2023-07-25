@@ -131,7 +131,7 @@ class DesignerMode {
 
       let blockType = d.getPaintModeBlockType()
 
-      if (mouse.left.pressed) {
+      if (leftClick) {
 
         // If the block already exists...
         if (existingBlock) {
@@ -183,7 +183,9 @@ class DesignerMode {
   canvasMouseWheelListener(e) { }
 
   paintBlock(delta, block) {
-    block.delta = delta // TODO do we need to update the id too?
+//    console.log(`painting ${block.type} block @ ${delta}`, block)
+    block.delta = delta
+    block.health = 100
     d.blocks[delta] = block
     refresh()
   }

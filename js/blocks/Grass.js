@@ -1,17 +1,21 @@
 class Grass extends Block {
 
   constructor({
+    id = null,
     delta,
-    type,
+    type = 'Grass',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
+      id,
       delta,
       type,
       selected,
       solid,
+      health,
 //      canvasMouseDownInterval: 210 // essentially the axe attack speed
       canvasMouseDownInterval: 50 // essentially the axe attack speed
     })

@@ -1,6 +1,7 @@
 class Block extends Entity {
 
   constructor({
+    id = null,
     delta,
     type,
     selected = 0,
@@ -10,7 +11,7 @@ class Block extends Entity {
   }) {
 
     super({
-      id: delta,
+      id,
       entityType: 'block'
     })
 
@@ -20,8 +21,6 @@ class Block extends Entity {
     this.solid = solid
     this.health = health
     this.canvasMouseDownInterval = canvasMouseDownInterval
-
-    //d.addBlockToIndex(this)
 
   }
 

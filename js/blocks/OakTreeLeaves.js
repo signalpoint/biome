@@ -1,6 +1,7 @@
 class OakTreeLeaves extends Block {
 
   constructor({
+    id = null,
     delta,
     type,
     selected = 0,
@@ -8,6 +9,7 @@ class OakTreeLeaves extends Block {
   }) {
 
     super({
+      id,
       delta,
       type,
       selected,

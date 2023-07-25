@@ -1,7 +1,7 @@
 class Axe extends Item {
 
   constructor({
-    id
+    id = null
   }) {
 
     super({

@@ -2,12 +2,18 @@ class Belt extends EntityCollection {
 
   constructor({
     id,
-    size = 10
+    size = 10,
+    entities = [],
+    typeIndex = {},
+    bundleIndex = {}
   }) {
 
     super({
       id,
-      size
+      size,
+      entities,
+      typeIndex,
+      bundleIndex
     })
 
     this._element = null
@@ -25,30 +31,59 @@ class Belt extends EntityCollection {
 //  getBeltSize() { return this._beltSize }
 
   // TODO
-  exportData() { return this._belt }
+//  exportData() { return this._belt }
 
   // TODO
   importData(data) {
-    for (let i = 0; i < data.length; i++) {
-      let block = data[i]
-      if (!dBlocks.getType(block.type)) {
-        console.log(`Player belt import skipping unknown block type: ${block.type}`)
-        continue
+
+//    console.log('loading player belt', data)
+
+    this.belt = new Belt({
+      id: data._id,
+      size: data._size
+    })
+
+    for (let i = 0; i < data._entities.length; i++) {
+
+      let entity = data._entities[i]
+
+      if (entity.entityType == 'block') {
+
+        if (!dBlocks.getType(entity.type)) {
+          console.log(`Player belt import skipping unknown block type: ${entity.type}`)
+          continue
+        }
+
+        let blockClass = d.getBlockClass(entity.type)
+        this.add(new blockClass({
+          id: entity.id,
+          delta: entity.delta,
+//          type: entity.type,
+          solid: entity.solid,
+          health: entity.health
+        }))
+
       }
-      let blockClass = d.getBlockClass(block.type)
-      this.add('block', new blockClass({
-        delta: null,
-        type: block.type,
-        solid: block.solid
-      }))
+
+      else if (entity.entityType == 'item') {
+        console.log('TODO Belt.importData() - handle items')
+      }
+
     }
+
   }
 
 //  getBeltItem(index) { return this._belt[index] }
 //  deleteBeltItem(index) { this._belt.splice(index, 1) }
 
-  add(block) { super.add('block', block) }
-  remove(block) { super.remove('block', block) }
+  add(entity) {
+    if (entity.isBlock()) { super.add('block', entity) }
+    else if (entity.isItem()) { super.add('item', entity) }
+  }
+  remove(entity) {
+    if (entity.isBlock()) { super.remove('block', entity) }
+    else if (entity.isItem()) { super.remove('item', entity) }
+  }
 
   addBlockToBelt(delta) {
     let block = d.blocks[delta]

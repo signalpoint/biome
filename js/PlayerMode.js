@@ -275,17 +275,28 @@ class PlayerMode {
               // If on bedrock...
               if (isBedrock) {
 
-                // If they have an active belt item...
+                // If they have an active belt entity...
                 let index = player.belt.getActiveButtonIndex()
-                let item = player.belt.get(index)
-                if (item) {
+                let entity = player.belt.get(index)
+                if (entity) {
 
-                  // place the block from their active belt item
-                  dMode.paintBlock(delta, item)
-                  player.belt.remove(block)
-                  player.belt.refresh()
+                  if (entity.isBlock()) {
 
-                  d.addBlockToIndex(d.blocks[delta])
+                    console.log(`placing ${entity.type} block @ ${delta}`)
+
+                    // place the block from their active belt entity
+                    dMode.paintBlock(delta, entity)
+                    player.belt.remove(entity)
+                    player.belt.refresh()
+
+                    d.addBlockToIndex(d.blocks[delta])
+
+                  }
+                  else if (entity.isItem()) {
+
+                    console.log('trying to place an item...')
+
+                  }
 
                   // save the map
                   d.saveCurrentMap()

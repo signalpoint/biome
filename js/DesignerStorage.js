@@ -39,8 +39,10 @@ class DesignerStorage {
 
     console.log('importMapJson', map)
 
+    let id = null
     let type = null
     let solid = null
+    let health = null
 
     d.blocks = []
     d.buildings = []
@@ -53,8 +55,10 @@ class DesignerStorage {
       if (!hasBlock) { d.blocks.push(map.blocks[delta]) }
       else {
 
+        id = map.blocks[delta].i
         type = map.blocks[delta].t
         solid = map.blocks[delta].s
+        health = map.blocks[delta].h
 
         if (!dBlocks.getType(type)) {
           console.log(`unknown block type encountered during map import: ${type}`)
@@ -63,9 +67,11 @@ class DesignerStorage {
 
         let blockClass = d.getBlockClass(type)
         d.blocks[delta] = new blockClass({
+          id,
           delta,
           type,
-          solid
+          solid,
+          health
         })
         d.addBlockToIndex(d.blocks[delta])
 
@@ -110,8 +116,10 @@ class DesignerStorage {
         block = d.blocks[delta]
 
         blocks.push(block ? {
+          i: block.id,
           t: block.type,
-          s: block.solid
+          s: block.solid,
+          h: block.health
         } : 0)
 
         delta++

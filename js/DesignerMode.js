@@ -131,31 +131,35 @@ class DesignerMode {
 
       let blockType = d.getPaintModeBlockType()
 
-      // If the block already exists...
-      if (existingBlock) {
+      if (mouse.left.pressed) {
 
-        // changing block type
-        if (block.type != blockType) {
-//            console.log(`${block.type} => ${blockType}`)
+        // If the block already exists...
+        if (existingBlock) {
+
+          // changing block type
+          if (block.type != blockType) {
+  //            console.log(`${block.type} => ${blockType}`)
+            this.paintNewBlock(delta, blockType)
+          }
+          else { // clicking on same block type...
+
+            //open block modal
+  //            dMode.openBlockModal(delta)
+
+            // update solid value
+            d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
+
+          }
+
+        }
+        else {
+
+          // The block does not exist...
+
+          // create the new block using the current type
           this.paintNewBlock(delta, blockType)
-        }
-        else { // clicking on same block type...
-
-          //open block modal
-//            dMode.openBlockModal(delta)
-
-          // update solid value
-          d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
 
         }
-
-      }
-      else {
-
-        // The block does not exist...
-
-        // create the new block using the current type
-        this.paintNewBlock(delta, blockType)
 
       }
 
@@ -179,6 +183,7 @@ class DesignerMode {
   canvasMouseWheelListener(e) { }
 
   paintBlock(delta, block) {
+    block.delta = delta // TODO do we need to update the id too?
     d.blocks[delta] = block
     refresh()
   }

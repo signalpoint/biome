@@ -457,20 +457,16 @@ class Player {
 //  beltIsFull() { return this.getBelt().length == this.getBeltSize() }
 //  beltIsEmpty() { return !this.getBelt().length }
 //
+
   addBlockToBelt(delta) {
     let block = d.blocks[delta]
-    let blockClass = d.getBlockClass(block.type)
-    this.belt.add(new blockClass({
-      delta: null,
-      type: block.type,
-      solid: block.solid
-    }))
+    this.belt.add(block)
   }
-//
-//  addItemToBelt(item) {
-//    this.getBelt().push(item)
-//    this.addItemToBeltIndex(item)
-//  }
+
+  addItemToBelt(item) {
+    this.belt.add(item)
+  }
+
 //  addItemToBeltIndex(item) {
 //    if (!this._beltIndex[item.type]) { this._beltIndex[item.type] = [] }
 //    this._beltIndex[item.type].push(item.id)

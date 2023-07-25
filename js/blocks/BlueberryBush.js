@@ -3,7 +3,7 @@ class BlueberryBush extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'BlueberryBush',
     selected = 0,
     solid = 0
   }) {

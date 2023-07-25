@@ -3,7 +3,7 @@ class OakPlank extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'OakPlank',
     selected = 0,
     solid = 0
   }) {

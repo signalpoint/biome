@@ -3,7 +3,7 @@ class OakTreeLeaves extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'OakTreeLeaves',
     selected = 0,
     solid = 0
   }) {

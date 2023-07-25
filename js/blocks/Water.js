@@ -3,7 +3,7 @@ class Water extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'Water',
     selected = 0,
     solid = 0
   }) {

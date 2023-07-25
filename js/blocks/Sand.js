@@ -3,7 +3,7 @@ class Sand extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'Sand',
     selected = 0,
     solid = 0
   }) {

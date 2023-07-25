@@ -4,7 +4,7 @@ class OakTreeWood extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'OakTreeWood',
     selected = 0,
     solid = 0,
     canvasMouseDownInterval = 100

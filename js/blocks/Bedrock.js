@@ -3,7 +3,7 @@ class Bedrock extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'Bedrock',
     selected = 0,
     solid = 0
   }) {

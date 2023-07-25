@@ -3,7 +3,7 @@ class Stone extends Block {
   constructor({
     id = null,
     delta,
-    type,
+    type = 'Stone',
     selected = 0,
     solid = 0
   }) {

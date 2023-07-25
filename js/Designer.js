@@ -27,8 +27,10 @@ class Designer {
     this._mouseUpY = null
     this._mouseBlockDelta = null
 
-    this.blocks = []
-    this.blocksIndex = {}
+    this._entityIds = []
+
+    this.blocks = [] // blocks on the map
+    this.blocksIndex = {} // an index for blocks on the map
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
     this.buildings = []
@@ -37,6 +39,20 @@ class Designer {
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
 
+  }
+
+  addEntityId(id) { this._entityIds.push(id) }
+  removeEntityId(id) {
+    let i = this._entityIds.indexOf(id)
+    this._entityIds.splice(i, 1)
+  }
+  getRandomEntityId() {
+    let id = null
+    while (true) {
+      id = (Math.random() + 1).toString(36).substring(7);
+      if (id && !this._entityIds.includes(id)) { break }
+    }
+    return id
   }
 
   // maps
@@ -216,6 +232,7 @@ class Designer {
 
   getItemTypes() { return dItems.getTypes() }
   getItemTypeRequirements(type) { return dItems.getRequirements(type) }
+  getItemClass(type) { return dItems.getType(type).itemClass }
 
   // map
 

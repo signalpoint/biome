@@ -29,6 +29,16 @@ class Designer {
 
     this._entityIds = []
 
+    // TODO
+    // - blocks and buildings should extend Entity
+    // - then the Entity layer should have its own index
+    // - then replace legacy blocks index, buildings index, etc with the entity index
+    // - then we can easily have items and npcs with their own index too!
+    // - imagine how much easier it'll be to import/export | save/load stuff when they are all entities too
+    // - Player should also extend entity
+    // - take Npc.js's "npcs" var out of the global namespace
+    // - enemies can be npcs too
+
     this.blocks = [] // blocks on the map
     this.blocksIndex = {} // an index for blocks on the map
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
@@ -294,6 +304,21 @@ class Designer {
 
   setMouseBlockDelta(delta) { this._mouseBlockDelta = delta }
   getMouseBlockDelta() { return this._mouseBlockDelta }
+
+  getNpcAtMouseUp() {
+    let pos = this.getMouseUpCoords()
+    for (let i = 0; i < npcs.length; i++) {
+      let npc = npcs[i]
+//      console.log(`${npc.name} is @ (${npc.x},${npc.y})`)
+      if (
+        pos.x >= npc.x &&
+        pos.y >= npc.y &&
+        pos.x < npc.x + npc.width &&
+        pos.y < npc.y + npc.height
+      ) { return npc }
+    }
+    return null
+  }
 
   // INIT
 

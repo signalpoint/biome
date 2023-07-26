@@ -23,10 +23,10 @@ class ActionMineBlock extends Action {
     let block = this.getBlock()
 
     // If the block can be mined and the belt isn't full...
-    if (block.canBeMined() && !npc.beltIsFull()) {
+    if (block.canBeMined() && !npc.belt.isFull()) {
 
-      // "mine the block" by adding it to the belt
-      npc.addBlockToBelt(this.delta)
+      // add it to the belt
+      npc.belt.add(block)
 
       // remove the block from the index
       d.removeBlockFromIndex(block)

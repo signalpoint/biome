@@ -316,10 +316,15 @@ function loadDesignerWidgets() {
     else { // widget doesn't exist in DOM...
 
       // building widgets
-      // clone's DOM element template
       if (id.indexOf('buildingWidget') === 0) {
         let delta = id.replace('buildingWidget', '')
         widget = createBuildingWidget(delta)
+      }
+
+      // npc widgets
+      else if (id.indexOf('npcWidget') === 0) {
+        let delta = id.replace('npcWidget', '')
+        widget = createNpcWidget(delta)
       }
 
     }

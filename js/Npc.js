@@ -1,6 +1,6 @@
 let npcs = []
 
-class Npc {
+class Npc extends Entity {
 
   constructor({
     id,
@@ -10,7 +10,10 @@ class Npc {
     color
   }) {
 
-    this.id = id
+    super({
+      id,
+      entityType: 'npc'
+    })
 
     this.name = name
 
@@ -27,9 +30,6 @@ class Npc {
 
     this.maxVelocityX = 5
     this.maxVelocityY = 5
-
-    this._belt = []
-    this._beltSize = 10
 
     this._actions = []
 
@@ -89,6 +89,13 @@ class Npc {
     c.fillRect(x, y, this.width, this.height)
 
   }
+
+  getWidget() {
+    let widget = loadNpcWidget(this.id)
+    if (!widget) { widget = createNpcWidget(this.id) }
+    return widget
+  }
+  refreshWidget() { this.getWidget().refresh() }
 
   isMoving() { return this.isMovingUp() || this.isMovingDown() || this.isMovingLeft() || this.isMovingRight() }
   isMovingUp() { return this.state.moving.up }
@@ -156,40 +163,6 @@ class Npc {
 //      this.state.facing.down = true
 //    }
 
-  }
-
-  // BELT
-
-  getBelt() { return this._belt }
-  getBeltSize() { return this._beltSize }
-
-  exportBelt() { return this._belt }
-  importBelt(data) {
-    for (let i = 0; i < data.length; i++) {
-      let block = data[i]
-      let blockClass = d.getBlockClass(block.type)
-      this._belt.push(new blockClass({
-        delta: null,
-        type: block.type,
-        solid: block.solid
-      }))
-    }
-  }
-
-  getBeltItem(index) { return this._belt[index] }
-  deleteBeltItem(index) { this._belt.splice(index, 1) }
-
-  beltIsFull() { return this.getBelt().length == this.getBeltSize() }
-  beltIsEmpty() { return !this.getBelt().length }
-
-  addBlockToBelt(delta) {
-    let block = d.blocks[delta]
-    let blockClass = d.getBlockClass(block.type)
-    this._belt.push(new blockClass({
-      delta: null,
-      type: block.type,
-      solid: block.solid
-    }))
   }
 
   // ACTIONS

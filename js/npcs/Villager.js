@@ -20,6 +20,12 @@ class Villager extends Npc {
 
     this._employer = null // building delta
 
+    // belt
+    this.belt = new Belt({
+      id: 'belt' + id,
+      size: 10
+    })
+
   }
 
   // methods

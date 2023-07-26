@@ -37,11 +37,12 @@ class LumberCamp extends Building {
   handleVillagerArrival(villager) {
 
     // if the villager brought back any wood...
-    if (!villager.beltIsEmpty()) {
+    if (!villager.belt.isEmpty()) {
 
       // place it in the lumber camp inventory
-      this.addInventory(villager.getBeltItem(0))
-      villager.deleteBeltItem(0)
+      let wood = villager.belt.get(0)
+      this.addInventory(wood)
+      villager.belt.remove(wood)
       this.getWidget().refresh()
 
       // go to the campground

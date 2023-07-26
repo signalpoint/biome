@@ -220,6 +220,7 @@ class PlayerMode {
     let delta = d.getMouseUpBlockDelta()
     let block = d.blocks[delta]
     let building = d.buildings[delta]
+    let npc = d.getNpcAtMouseUp()
 
 //    let timer = mouse.left.timer
 //    let elapsedTime = timer.getElapsedTime()
@@ -234,6 +235,14 @@ class PlayerMode {
       console.log(building)
 
       building.getWidget().show()
+
+    }
+
+    else if (npc) {
+
+      console.log(`clicked on ${npc.name}`)
+
+      npc.getWidget().show()
 
     }
 

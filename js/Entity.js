@@ -9,6 +9,11 @@
 //     Axe
 //     ...
 //
+//   Npc
+//    Villager
+//    Monster
+//    ...
+//
 
 class Entity {
 
@@ -26,5 +31,6 @@ class Entity {
 
   isBlock() { return this.entityType == 'block' }
   isItem() { return this.entityType == 'item' }
+  isNpc() { return this.entityType == 'npc' }
 
 }

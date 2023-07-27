@@ -245,44 +245,42 @@ addEventListener('load', function() {
     x: 576 + 8,
     y: 256 + 4
   })
-//  player.addItemToBelt(new Axe({
-//    id: 'axe'
-//  }))
-  player.belt.setActiveItem(0)
+//  player.belt.add(new Axe({}))
+//  player.belt.setActiveItem(0)
   player.load()
   players.push(player)
 
   // NPCs
 
+  // TODO
+  // - can't get rid of static id values here until we're dynamically saving/loading npcs
+
   let npcLoan = new Villager({
-    id: 'loan',
+    id: 'Loan',
     name: 'Loan',
     x: player.x + 72,
     y: player.y - 28,
     color: 'yellow'
   })
   saveVillager(npcLoan)
-  npcs.push(npcLoan)
 
   let npcAvalina = new Villager({
-    id: 'avalina',
+    id: 'Avalina',
     name: 'Avalina',
     x: player.x + 16,
     y: player.y - 121,
     color: 'pink'
   })
   saveVillager(npcAvalina)
-  npcs.push(npcAvalina)
 
   let npcMelvin = new Villager({
-    id: 'melvin',
+    id: 'Melvin',
     name: 'Melvin',
     x: player.x - 92,
     y: player.y - 92,
     color: 'red'
   })
   saveVillager(npcMelvin)
-  npcs.push(npcMelvin)
 
   // EVENT LISTENERS
 
@@ -552,10 +550,12 @@ function update() {
   }
 
   // npc(s)...
-  for (let i = 0; i < npcs.length; i++) {
-
-    npcs[i].update()
-
+  if (d.hasNpcs()) {
+    let npcs = d.getNpcs()
+    for (let id in npcs) {
+      if (!npcs.hasOwnProperty(id)) { continue }
+      npcs[id].update()
+    }
   }
 
   // block(s)...
@@ -673,8 +673,12 @@ function draw() {
   }
 
   // npc(s)
-  for (let i = 0; i < npcs.length; i++) {
-    npcs[i].draw()
+  if (d.hasNpcs()) {
+    let npcs = d.getNpcs()
+    for (let id in npcs) {
+      if (!npcs.hasOwnProperty(id)) { continue }
+      npcs[id].draw()
+    }
   }
 
 }

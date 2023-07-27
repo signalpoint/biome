@@ -22,6 +22,8 @@ class Block extends Entity {
     this.health = health
     this.canvasMouseDownInterval = canvasMouseDownInterval
 
+    d.addEntityToIndex('block', this)
+
   }
 
   // abstracts

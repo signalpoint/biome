@@ -169,7 +169,7 @@ class PlayerMode {
   // PAINT
 
   renderPaintPane() {
-    let html = 'paint!'
+    let html = 'TODO - move Paint tool here'
     this.getPane('paint').innerHTML = html
   }
 

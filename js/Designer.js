@@ -27,29 +27,42 @@ class Designer {
     this._mouseUpY = null
     this._mouseBlockDelta = null
 
+    // entity index
+
     this._entityIds = []
+    this._entities = {}
+    this._entityBundles = {}
 
     // TODO
-    // - blocks and buildings should extend Entity
-    // - then the Entity layer should have its own index
-    // - then replace legacy blocks index, buildings index, etc with the entity index
-    // - then we can easily have items and npcs with their own index too!
+
+    // - take Npc.js's "npcs" var out of the global namespace and use entity index instead
+    // - the map does need to keep its d.blocks and d.buildings and friends/indexes though; maybe rename them a bit
     // - imagine how much easier it'll be to import/export | save/load stuff when they are all entities too
-    // - Player should also extend entity
-    // - take Npc.js's "npcs" var out of the global namespace
+    // - replace d.blocks[123] holding a full block object to hold just the entity id instead
+    // - replace d.buildings[456] holding a full building object to hold just the entity id instead
+    // - entity collection indexes may be able to be simplified to just hold ids instead of entities,
+    //   and then pull from the new top level entity index
     // - enemies can be npcs too
 
-    this.blocks = [] // blocks on the map
-    this.blocksIndex = {} // an index for blocks on the map
+    // x - Block extend Entity
+    // x - Building extend Entity
+    // x - Player extend entity
+    // x - the Entity layer should have its own index
+
+    this.blocks = [] // blocks on the map, keyed by delta, holds full block object (TODO hold entity id instead)
+    this.blocksIndex = {} // TODO deprecate
+
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
-    this.buildings = []
-    this.buildingsIndex = {}
+    this.buildings = [] // buildings on the map, keyed by delta, holds full building object (TODO hold entity id instead)
+    this.buildingsIndex = {} // TODO deprecate
 
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
 
   }
+
+  // entity ids
 
   addEntityId(id) { this._entityIds.push(id) }
   removeEntityId(id) {
@@ -64,6 +77,106 @@ class Designer {
     }
     return id
   }
+
+  // entity index
+
+  addEntityToIndex(entityType, entity) {
+    if (!this._entities[entityType]) { this._entities[entityType] = {} }
+    this._entities[entityType][entity.id] = entity
+    this._addEntityToBundleIndex(entityType, entity)
+  }
+  removeEntityFromIndex(entityType, entity) { delete this._entities[entityType][entity.id] }
+
+  getEntityFromIndex(entityType, id) { return this._entities[entityType][id] }
+
+  // entity bundle index
+
+  _addEntityToBundleIndex(entityType, entity) {
+    if (!this._entityBundles[entityType]) { this._entityBundles[entityType] = {} }
+    if (!this._entityBundles[entityType][entity.type]) { this._entityBundles[entityType][entity.type] = [] }
+    this._entityBundles[entityType][entity.type].push(entity.id)
+  }
+  _removeEntityFromBundleIndex(entityType, entity) {
+    let i = this._entityBundles[entityType][entity.type].indexOf(entity.id)
+    this._entityBundles[entityType][entity.type].splice(i, 1)
+  }
+
+  getEntityBundleIndexFromType(entityType) { return this._entityBundles[entityType] }
+
+  // entity proxies
+
+  _hasEntityType(entityType) {
+    let bundleIndex = this.getEntityBundleIndexFromType(entityType)
+    if (bundleIndex) {
+      for (let type in bundleIndex) {
+        if (!bundleIndex.hasOwnProperty(type)) { continue }
+        if (bundleIndex[type].length) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  hasBlocks() { return this._hasEntityType('block') }
+  hasBuildings() { return this._hasEntityType('building') }
+  hasItems() { return this._hasEntityType('item') }
+  hasNpcs() { return this._hasEntityType('npc') }
+
+  getBlock(id) { return d.getEntityFromIndex('block', id) }
+  getBuilding(id) { return d.getEntityFromIndex('building', id) }
+  getItem(id) { return d.getEntityFromIndex('item', id) }
+  getNpc(id) { return d.getEntityFromIndex('npc', id) }
+
+  getBlocks() { return this._entities.block }
+  getBuildings() { return this._entities.building }
+  getItems() { return this._entities.item }
+  getNpcs() { return this._entities.npc }
+
+  getBlockIdsByType(type) { return this._entityBundles['block'][type] }
+  getBuildingIdsByType(type) { return this._entityBundles['building'][type] }
+  getItemIdsByType(type) { return this._entityBundles['item'][type] }
+  getNpcIdsByType(type) { return this._entityBundles['npc'][type] }
+
+  getBlocksByType(type) {
+    let blocks = []
+    let ids = this.getBlockIdsByType(type)
+    for (let i = 0; i < ids.length; i++) {
+      blocks.push(d.getBlock(ids[i]))
+    }
+    return blocks
+  }
+  getBuildingsByType(type) {
+    let buildings = []
+    let ids = this.getBuildingIdsByType(type)
+    for (let i = 0; i < ids.length; i++) {
+      buildings.push(d.getBuilding(ids[i]))
+    }
+    return buildings
+  }
+  getItemsByType(type) {
+    let items = []
+    let ids = this.getItemIdsByType(type)
+    for (let i = 0; i < ids.length; i++) {
+      items.push(d.getItem(ids[i]))
+    }
+    return items
+  }
+  getNpcsByType(type) {
+    let npcs = []
+    let ids = this.getNpcIdsByType(type)
+    for (let i = 0; i < ids.length; i++) {
+      npcs.push(d.getNpc(ids[i]))
+    }
+    return npcs
+  }
+
+  hasVillagers() {
+    return this._entityBundles.npc &&
+      this._entityBundles.npc.villager &&this._entityBundles.npc.villager.length
+  }
+  getVillagers() { return this.getNpcsByType('villager') }
+  getVillagersCount() { return this._entityBundles.npc.villager.length }
 
   // maps
 
@@ -306,16 +419,20 @@ class Designer {
   getMouseBlockDelta() { return this._mouseBlockDelta }
 
   getNpcAtMouseUp() {
-    let pos = this.getMouseUpCoords()
-    for (let i = 0; i < npcs.length; i++) {
-      let npc = npcs[i]
-//      console.log(`${npc.name} is @ (${npc.x},${npc.y})`)
-      if (
-        pos.x >= npc.x &&
-        pos.y >= npc.y &&
-        pos.x < npc.x + npc.width &&
-        pos.y < npc.y + npc.height
-      ) { return npc }
+    if (d.hasNpcs()) {
+      let pos = this.getMouseUpCoords()
+      let npcs = d.getNpcs()
+      for (let id in npcs) {
+        if (!npcs.hasOwnProperty(id)) { continue }
+        let npc = npcs[id]
+//        console.log(`${npc.name} is @ (${npc.x},${npc.y})`)
+        if (
+          pos.x >= npc.x &&
+          pos.y >= npc.y &&
+          pos.x < npc.x + npc.width &&
+          pos.y < npc.y + npc.height
+        ) { return npc }
+      }
     }
     return null
   }

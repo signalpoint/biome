@@ -43,7 +43,9 @@ class LumberCamp extends Building {
       let wood = villager.belt.get(0)
       this.addInventory(wood)
       villager.belt.remove(wood)
-      this.getWidget().refresh()
+      this.refreshWidget()
+
+      villager.refreshWidget()
 
       // go to the campground
       let campground = player.getCampground()

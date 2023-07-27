@@ -28,13 +28,6 @@ class Player {
       size: 10
     })
 
-    this._belt = []
-    this._beltIndex = {}
-    this._beltSize = 10
-    this._beltElement = null
-    this._beltButtons = null
-    this._beltActiveItem = 0
-
     this._actions = []
 
     this.state = {

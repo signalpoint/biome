@@ -37,12 +37,16 @@ class StonecutterCamp extends Building {
   handleVillagerArrival(villager) {
 
     // if the villager brought back any stone...
-    if (!villager.beltIsEmpty()) {
+    if (!villager.belt.isEmpty()) {
 
       // place it in the camp inventory
-      this.addInventory(villager.getBeltItem(0))
-      villager.deleteBeltItem(0)
+      let stone = villager.belt.get(0)
+      this.addInventory(stone)
+      villager.belt.remove(stone)
       this.getWidget().refresh()
+      this.refreshWidget()
+
+      villager.refreshWidget()
 
       // go to the campground
       let campground = player.getCampground()

@@ -1,10 +1,11 @@
 class Item extends Entity {
 
   constructor({
-    id,
+    id = null,
     type,
     width,
-    height
+    height,
+    health = 100
   }) {
 
     super({
@@ -15,6 +16,9 @@ class Item extends Entity {
     this.type = type
     this.width = width
     this.height = height
+    this.health = health
+
+    d.addEntityToIndex('item', this)
 
   }
 
@@ -23,8 +27,6 @@ class Item extends Entity {
   draw() {}
 
   // methods
-
-
 
   getRequirements() {
 

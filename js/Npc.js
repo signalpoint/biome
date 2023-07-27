@@ -1,9 +1,8 @@
-let npcs = []
-
 class Npc extends Entity {
 
   constructor({
-    id,
+    id = null,
+    type, // e.g. villager, ...
     name,
     x,
     y,
@@ -14,6 +13,8 @@ class Npc extends Entity {
       id,
       entityType: 'npc'
     })
+
+    this.type = type
 
     this.name = name
 

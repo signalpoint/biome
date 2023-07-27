@@ -39,6 +39,8 @@ class ActionMineBlock extends Action {
 
       npc.finishAction()
 
+      npc.refreshWidget()
+
     }
     else {
       console.log('npc failed to mine block')

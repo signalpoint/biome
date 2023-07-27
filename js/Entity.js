@@ -19,7 +19,7 @@ class Entity {
 
   constructor({
     id = null,
-    entityType
+    entityType // TODO to avoid confusion, consider renaming this since child classes are using the word "type"
   }) {
 
     this.id = !id ? d.getRandomEntityId() : id
@@ -30,6 +30,7 @@ class Entity {
   }
 
   isBlock() { return this.entityType == 'block' }
+  isBuilding() { return this.entityType == 'building' }
   isItem() { return this.entityType == 'item' }
   isNpc() { return this.entityType == 'npc' }
 

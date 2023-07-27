@@ -3,7 +3,8 @@ let _villagers = {}
 class Villager extends Npc {
 
   constructor({
-    id,
+    id = null,
+    type = 'villager',
     name,
     x,
     y,
@@ -12,6 +13,7 @@ class Villager extends Npc {
 
     super({
       id,
+      type,
       name,
       x,
       y,
@@ -25,6 +27,8 @@ class Villager extends Npc {
       id: 'belt' + id,
       size: 10
     })
+
+    d.addEntityToIndex('npc', this)
 
   }
 

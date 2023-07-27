@@ -1,8 +1,9 @@
-class Building {
+class Building extends Entity {
 
   constructor({
+    id = null,
+    type, // e.g. LumberCamp, ...
     delta,
-    type,
     x,
     y,
     width,
@@ -14,8 +15,14 @@ class Building {
     maxWorkers = 0
   }) {
 
-    this.delta = delta
+    super({
+      id,
+      entityType: 'building'
+    })
+
     this.type = type
+
+    this.delta = delta
 
     this.x = x
     this.y = y
@@ -35,7 +42,9 @@ class Building {
     this._inventory = []
     this._inventoryIndex = {}
 
-    d.addBuildingToIndex(this)
+    d.addBuildingToIndex(this) // TODO deprecate
+
+    d.addEntityToIndex('building', this)
 
   }
 

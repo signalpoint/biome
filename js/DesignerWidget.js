@@ -304,6 +304,8 @@ function loadDesignerWidgets() {
 
     if (!input.hasOwnProperty(id)) { continue }
 
+//    console.log(id)
+
     let data = input[id]
     let widget = null
 
@@ -314,6 +316,8 @@ function loadDesignerWidgets() {
       widget.save()
     }
     else { // widget doesn't exist in DOM...
+
+      // TODO if children of a DesignerWidget had a "type", this would be easier to maintain here
 
       // building widgets
       if (id.indexOf('buildingWidget') === 0) {

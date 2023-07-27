@@ -53,7 +53,9 @@ class BuildingWidget extends DesignerWidget {
       // Worker Count / Add Worker
       (maxWorkers ? `<div class="mb-3">
         <span class="me-2">Workers: ${building.getWorkerCount()} / ${maxWorkers}</span>
-        <button class="btn btn-secondary btn-sm" data-op="addWorker"><i class="fas fa-plus"></i></button>
+        <button class="btn btn-outline-secondary btn-sm" title="Add Worker"data-op="addWorker">
+          <i class="fas fa-plus"></i>
+        </button>
       </div>` : '') +
 
       // Worker List
@@ -63,7 +65,7 @@ class BuildingWidget extends DesignerWidget {
       `<div class="mb-3 border-bottom">${building.getPaneContent(widget.getOp())}</div>` +
 
       // Delete Button
-      `<button id="${deleteBtnId}" type="button" class="btn btn-danger btn-sm" title="Delete ${title}" data-delta="${delta}">
+      `<button id="${deleteBtnId}" type="button" class="btn btn-outline-danger btn-sm" title="Delete ${title}" data-delta="${delta}">
         <i class="fas fa-trash"></i>
       </button>`
 

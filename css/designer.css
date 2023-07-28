@@ -24,7 +24,10 @@
 .top-83 { top: 83% !important; }
 .top-84 { top: 84% !important; }
 .top-85 { top: 85% !important; }
+.top-88 { top: 88% !important; }
+.top-89 { top: 89% !important; }
 .top-90 { top: 90% !important; }
+.top-94 { top: 94% !important; }
 .top-95 { top: 95% !important; }
 
 
@@ -38,6 +41,12 @@
  * PLAYER MODE
  */
 
+#playerModeElement {
+  z-index: 2;
+}
 #playerModeElement .badge {
   z-index: 2; /* keeps badge above btn-group:hover border*/
+}
+#playerModePanes {
+  z-index: 1;
 }

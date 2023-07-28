@@ -38,6 +38,15 @@ class DesignerMenu {
 
         break;
 
+      case 'view:grid':
+
+        let span = getAnchorFromEvent(e).querySelector('span')
+        d.setGrid(!d.getGrid())
+        span.innerHTML = d.getGrid() ? 'Hide Grid' : 'Show Grid'
+        refresh()
+
+        break;
+
     }
 
   }

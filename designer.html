@@ -172,6 +172,9 @@
           </ul>
         </div>
 
+        <!-- MOUSE COORDINATES -->
+        <span id="canvasMouseCoords" class="badge">0,0</span>
+
         <!-- Player Icon -->
         <button type="button" id="playerBtn" class="designer-widget-btn btn btn-dark" data-designer-widget="playerWidget" title="Player">
           <i class="fas fa-user"></i>
@@ -640,32 +643,19 @@
 
     <footer class="navbar navbar-dark fixed-bottom bg-dark flex-md-nowrap p-0 shadow text-light">
 
-      <div class="ps-3">
-
-        <!-- MOUSE COORDINATES -->
-        <span id="canvasMouseCoords" class="badge">0,0</span>
-
-      </div>
-
       <!-- PLAYBACK -->
 
-      <div class="pe-3">
+      <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
 
-        <h4 class="visually-hidden">Playback</h4>
+        <!-- Pause -->
+        <button type="button" class="btn btn-sm btn-dark active" data-playback="pause" title="Pause (SPACE)">
+          <i class="fas fa-pause"></i>
+        </button>
 
-        <div id="playbackBtns" class="btn-group" role="group" aria-label="Playback">
-
-          <!-- Pause -->
-          <button type="button" class="btn btn-dark active" data-playback="pause" title="Pause (SPACE)">
-            <i class="fas fa-pause"></i>
-          </button>
-
-          <!-- Play -->
-          <button type="button" class="btn btn-dark" data-playback="play" title="Play (SPACE)">
-            <i class="fas fa-play"></i>
-          </button>
-
-        </div>
+        <!-- Play -->
+        <button type="button" class="btn btn-sm btn-dark" data-playback="play" title="Play (SPACE)">
+          <i class="fas fa-play"></i>
+        </button>
 
       </div>
 

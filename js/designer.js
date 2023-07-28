@@ -131,7 +131,6 @@ let playerMoveLeftBtn = document.querySelector('#playerMoveLeftBtn')
 let playerMoveRightBtn = document.querySelector('#playerMoveRightBtn')
 
 let blockSizeInput = document.querySelector('#blockSize')
-let showGridInput = document.querySelector('#showGrid')
 
 let mapWidthInput = document.querySelector('#mapWidth')
 let mapHeightInput = document.querySelector('#mapHeight')
@@ -229,7 +228,7 @@ addEventListener('load', function() {
   d.setBlockSize(parseInt(blockSizeInput.value))
 
   // set grid
-  d.setGrid(showGridInput.checked)
+  d.setGrid(true)
 
   // set map dimensions
   d.setMapWidth(parseInt(mapWidthInput.value))
@@ -341,12 +340,6 @@ addEventListener('load', function() {
   // map height number
   mapHeightInput.addEventListener('change', function() {
     d.setMapHeight(parseInt(this.value))
-  })
-
-  // show grid
-  showGridInput.addEventListener('change', function() {
-    d.setGrid(this.checked)
-    refresh()
   })
 
   // canvas mousemove
@@ -724,4 +717,10 @@ function getBtnFromEvent(e) {
   let btn = e.target
   while (btn && btn.tagName != 'BUTTON') { btn = btn.parentNode }
   return btn.tagName == 'BUTTON' ? btn : null
+}
+
+function getAnchorFromEvent(e) {
+  let anchor = e.target
+  while (anchor && anchor.tagName != 'A') { anchor = anchor.parentNode }
+  return anchor.tagName == 'A' ? anchor : null
 }

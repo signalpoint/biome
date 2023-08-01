@@ -52,10 +52,7 @@ class DesignerStorage {
       let hasBlock = !!map.blocks[delta]
       let hasBuilding = !!map.buildings[delta]
 
-      if (!hasBlock) {
-        let block = map.blocks[delta]
-        d.blocks.push(block.id)
-      }
+      if (!hasBlock) { d.blocks.push(0) }
       else {
 
         id = map.blocks[delta].i

@@ -134,8 +134,7 @@ class DesignerMode {
     let blockClass = d.getBlockClass(type)
     let block = new blockClass({
       delta,
-      type,
-      solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
+      type
     })
     d.blocks[delta] = block.id
     refresh()

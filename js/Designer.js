@@ -323,22 +323,6 @@ class Designer {
 
   // buildings
 
-  // TODO get rid of these legacy building index functions now that we have the entity index
-  addBuildingToIndex(building) {
-    if (!this.buildingsIndex[building.type]) { this.buildingsIndex[building.type] = [] }
-    this.buildingsIndex[building.type].push(building.delta)
-  }
-  removeBuildingFromIndex(building) {
-    let index = this.buildingsIndex[building.type].indexOf(building.delta)
-    this.buildingsIndex[building.type].splice(index, 1)
-  }
-  getBuildingFromIndexByType(type) {
-    return this.buildings[this.buildingsIndex[type][0]]
-  }
-  indexHasBuildingType(type) {
-    return this.buildingsIndex[type] && this.buildingsIndex[type].length
-  }
-
   getBuildingClass(type) { return dBuildings.getType(type).buildingClass }
 
   // items

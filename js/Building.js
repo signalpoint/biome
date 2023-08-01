@@ -42,8 +42,6 @@ class Building extends Entity {
     this._inventory = []
     this._inventoryIndex = {}
 
-    d.addBuildingToIndex(this) // TODO deprecate
-
     d.addEntityToIndex('building', this)
 
   }

@@ -198,11 +198,13 @@ class DesignerStorage {
 
       for (let x = 0; x < d.getMapWidth(); x += d.getBlockSize()) {
 
-        building = d.buildings[delta]
-
-        buildings.push(building ? {
-          t: building.type
-        } : 0)
+        if (d.buildings[delta]) {
+          building = d.building(delta)
+          buildings.push({
+            t: building.type
+          })
+        }
+        else { buildings.push(0) }
 
         delta++
 

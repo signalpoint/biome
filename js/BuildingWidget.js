@@ -17,7 +17,7 @@ class BuildingWidget extends DesignerWidget {
 
   // methods
 
-  getBuilding() { return d.buildings[this.delta] }
+  getBuilding() { return d.building(this.delta) }
   getAddWorkerBtn() { return this.getElement().querySelector('button[data-op="addWorker"]') }
   getRemoveWorkerBtns() { return this.getElement().querySelectorAll('button[data-op="removeWorker"]') }
 
@@ -105,6 +105,7 @@ class BuildingWidget extends DesignerWidget {
     document.getElementById(deleteBtnId).addEventListener('click', function(e) {
       if (window.confirm("Delete building, are you sure?")) {
         d.buildings[delta] = 0
+        d.removeEntityFromIndex('building', building)
         d.saveCurrentMap()
         refresh()
         widget.hide()

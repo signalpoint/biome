@@ -288,13 +288,13 @@ class Player {
 
   mineBlock(delta) {
 
+    // TODO if the player's belt is full, the block is probably lost in the abyss; it needs to float on the map to
+    // be picked up
+
     // "mine the block" by adding it to the belt
     if (!player.belt.isFull()) {
       player.addBlockToBelt(delta)
     }
-
-    // remove the block from the index
-    d.removeBlockFromIndex(d.block(delta))
 
     // place bedrock down in its place
     dMode.paintNewBlock(delta, 'Bedrock')
@@ -453,6 +453,7 @@ class Player {
 
   addBlockToBelt(delta) {
     let block = d.block(delta)
+    block.delta = null
     this.belt.add(block)
   }
 

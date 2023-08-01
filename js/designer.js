@@ -118,7 +118,6 @@ let pauseBtn = playbackBtnsContainer.querySelector('button[data-playback="pause"
 let playBtn = playbackBtnsContainer.querySelector('button[data-playback="play"]')
 
 let paintModeBlockTypeSelect = null
-let paintModeBlockSolidCheckbox = null
 
 let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')

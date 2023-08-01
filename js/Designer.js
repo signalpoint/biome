@@ -583,6 +583,7 @@ class Designer {
 
   // CANVAS CONTEXT
 
+  // TODO rename to mine() ? yes! we're already using "mine" concept elsewhere
   dig(block, x, y) {
 
     c.globalAlpha = (100 - block.health) * .01

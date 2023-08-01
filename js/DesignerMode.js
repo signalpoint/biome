@@ -116,8 +116,6 @@ class DesignerMode {
         html += '</ul>'
       }
 
-
-
       // Update the pane
       widget.setPaneContent(
         mode,
@@ -142,7 +140,8 @@ class DesignerMode {
 
           // changing block type
           if (block.type != blockType) {
-  //            console.log(`${block.type} => ${blockType}`)
+//            console.log(`${block.type} => ${blockType}`)
+            d.removeEntityFromIndex('block', block)
             this.paintNewBlock(delta, blockType)
           }
           else { // clicking on same block type...
@@ -202,7 +201,6 @@ class DesignerMode {
       solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
     })
     d.blocks[delta] = block.id
-    d.addBlockToIndex(block)
     refresh()
   }
 

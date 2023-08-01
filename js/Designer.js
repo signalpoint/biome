@@ -518,7 +518,7 @@ class Designer {
       mouse.left.timer.start()
       mouse.left.interval = setInterval(
         d.isPlaying() ? playerMode.canvasMouseDownHoldListener : dMode.canvasMouseDownHoldListener,
-        block ? block.canvasMouseDownInterval : 500,
+        block ? block.hardness : BLOCK_DEFAULT_HARDNESS, // hardness => interval in ms
         e
       )
     }
@@ -527,7 +527,7 @@ class Designer {
       mouse.right.timer.start()
       mouse.right.interval = setInterval(
         d.isPlaying() ? playerMode.canvasMouseDownHoldListener : dMode.canvasMouseDownHoldListener,
-        block ? block.canvasMouseDownInterval : 500,
+        block ? block.hardness : BLOCK_DEFAULT_HARDNESS, // hardness => interval in ms
         e
       )
     }
@@ -592,6 +592,17 @@ class Designer {
     d.isPlaying() ? dGame.canvasMouseWheelListener(e) : dMode.canvasMouseWheelListener(e)
 
     return false
+
+  }
+
+  // CANVAS CONTEXT
+
+  dig(block, x, y) {
+
+    c.globalAlpha = (100 - block.health) * .01
+    c.fillStyle = 'black'
+    c.fillRect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
+    c.globalAlpha = 1.0;
 
   }
 

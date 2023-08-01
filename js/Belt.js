@@ -86,7 +86,7 @@ class Belt extends EntityCollection {
   }
 
   addBlockToBelt(delta) {
-    let block = d.blocks[delta]
+    let block = d.block(delta)
     let blockClass = d.getBlockClass(block.type)
     this._belt.push(new blockClass({
       delta: null,

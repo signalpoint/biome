@@ -35,7 +35,7 @@ class Designer {
 
     // TODO
 
-    // - take Npc.js's "npcs" var out of the global namespace and use entity index instead
+    // x - take Npc.js's "npcs" var out of the global namespace and use entity index instead
     // - the map does need to keep its d.blocks and d.buildings and friends/indexes though; maybe rename them a bit
     // - imagine how much easier it'll be to import/export | save/load stuff when they are all entities too
     // - replace d.blocks[123] holding a full block object to hold just the entity id instead
@@ -43,6 +43,7 @@ class Designer {
     // - entity collection indexes may be able to be simplified to just hold ids instead of entities,
     //   and then pull from the new top level entity index
     // - enemies can be npcs too
+    // - a single browser should be able to have different profiles for different players
 
     // x - Block extend Entity
     // x - Building extend Entity
@@ -117,6 +118,9 @@ class Designer {
     }
     return false
   }
+
+  block(delta) { return this.getBlock(d.blocks[delta]) }
+  building(delta) { return this.getBuilding(d.buildings[delta]) }
 
   hasBlocks() { return this._hasEntityType('block') }
   hasBuildings() { return this._hasEntityType('building') }
@@ -310,7 +314,7 @@ class Designer {
     let selectedBlocks = this.getSelectedBlocks()
     for (let i = 0; i < selectedBlocks.length; i++) {
       let delta = selectedBlocks[i]
-      d.blocks[delta].selected = false
+      d.block(delta).selected = false
     }
     this._selectedBlocks = []
   }
@@ -327,10 +331,10 @@ class Designer {
 
   getMouseDownBlockDelta() { return this._mouseDownBlockDelta }
   setMouseDownBlockDelta(delta) { this._mouseDownBlockDelta = delta }
-  getMouseDownBlock() { return d.blocks[this._mouseDownBlockDelta] }
+  getMouseDownBlock() { return d.blocks[this._mouseDownBlockDelta] ? d.block(this._mouseDownBlockDelta) : null }
   getMouseUpBlockDelta() { return this._mouseUpBlockDelta }
   setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta }
-  getMouseUpBlock() { return d.blocks[this._mouseUpBlockDelta] }
+  getMouseUpBlock() { return d.blocks[this._mouseUpBlockDelta] ? d.block(this._mouseUpBlockDelta) : null }
 
   // buildings
 

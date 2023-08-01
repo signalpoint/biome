@@ -24,13 +24,16 @@ class DesignerMode {
       if (mode == 'toolbar:select') {
 
       }
+
+      // PAINT
+
       else if (mode == 'toolbar:paint') {
 
         let coords = getCanvasMouseCoordsWithCameraOffset(e)
         let delta = d.getBlockDelta(coords.x, coords.y)
         let type = d.getPaintModeBlockType()
         let existingBlock = d.blocks[delta] !== 0
-        let block = existingBlock ? d.blocks[delta] : null
+        let block = existingBlock ? d.block(delta) : null
 
         if (existingBlock) {
           if (type != block.type) {
@@ -57,7 +60,7 @@ class DesignerMode {
     let delta = d.getMouseDownBlockDelta()
 
     let existingBlock = d.blocks[delta] !== 0
-    let block = existingBlock ? d.blocks[delta] : null
+    let block = existingBlock ? d.block(delta) : null // TODO there is already a helper function that makes this available
 
     // SELECT
     if (mode == 'toolbar:select') {
@@ -69,7 +72,8 @@ class DesignerMode {
 
         if (d.getSelectedBlocks().length) { // at least one block is selected...
 
-          if (d.blocks[d.getSelectedBlocks()[0]].delta == delta) { // clicked on selected block...
+          let selectedDelta = d.getSelectedBlocks()[0]
+          if (d.block(selectedDelta).delta == delta) { // clicked on selected block...
 
             dMode.openBlockModal(delta)
 
@@ -100,7 +104,7 @@ class DesignerMode {
         html += '<ul class="list-group">'
         for (var i = 0; i < selectedBlocks.length; i++) {
           let selectedBlockDelta = selectedBlocks[i]
-          let selectedBlock = d.blocks[selectedBlockDelta]
+          let selectedBlock = d.block(selectedBlockDelta)
           html +=
             `<li class="list-group-item d-flex justify-content-between align-items-start">
               <div class="ms-2 me-auto">
@@ -147,7 +151,7 @@ class DesignerMode {
   //            dMode.openBlockModal(delta)
 
             // update solid value
-            d.blocks[delta].solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
+            d.block(delta).solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
 
           }
 
@@ -186,24 +190,25 @@ class DesignerMode {
 //    console.log(`painting ${block.type} block @ ${delta}`, block)
     block.delta = delta
     block.health = 100
-    d.blocks[delta] = block
+    d.blocks[delta] = block.id
     refresh()
   }
 
   paintNewBlock(delta, type) {
     let blockClass = d.getBlockClass(type)
-    d.blocks[delta] = new blockClass({
+    let block = new blockClass({
       delta,
       type,
       solid: paintModeBlockSolidCheckbox.checked ? 1 : 0
     })
-    d.addBlockToIndex(d.blocks[delta])
+    d.blocks[delta] = block.id
+    d.addBlockToIndex(block)
     refresh()
   }
 
   openBlockModal(delta) {
 
-    let block = d.blocks[delta]
+    let block = d.block(delta)
 //    console.log(delta, block)
 
     let body =

@@ -52,7 +52,10 @@ class DesignerStorage {
       let hasBlock = !!map.blocks[delta]
       let hasBuilding = !!map.buildings[delta]
 
-      if (!hasBlock) { d.blocks.push(map.blocks[delta]) }
+      if (!hasBlock) {
+        let block = map.blocks[delta]
+        d.blocks.push(block.id)
+      }
       else {
 
         id = map.blocks[delta].i
@@ -66,19 +69,21 @@ class DesignerStorage {
         }
 
         let blockClass = d.getBlockClass(type)
-        d.blocks[delta] = new blockClass({
+        let block = new blockClass({
           id,
           delta,
           type,
           solid,
           health
         })
-        d.addBlockToIndex(d.blocks[delta])
+        d.blocks[delta] = block.id
+        d.addBlockToIndex(block)
 
       }
 
       if (!hasBuilding) {
-        d.buildings.push(map.buildings[delta])
+        let building = map.buildings[delta]
+        d.buildings.push(building.id)
       }
       else {
 
@@ -86,12 +91,13 @@ class DesignerStorage {
 
         let pos = d.getBlockPosFromDelta(delta)
         let buildingClass = d.getBuildingClass(type)
-        d.buildings[delta] = new buildingClass({
+        let building = new buildingClass({
           delta,
           type,
           x: pos.x,
           y: pos.y
         })
+        d.buildings[delta] = building.id
 
       }
 
@@ -101,11 +107,62 @@ class DesignerStorage {
 
   }
 
+  // entities
+
+  exportEntitiesJson() {
+
+    let out = {}
+
+    for (let entityType in d._entities) {
+
+      if (!d._entities.hasOwnProperty(entityType)) { continue }
+
+      out[entityType] = {}
+
+      for (let id in d._entities[entityType]) {
+
+        let entity = d._entities[entityType][id]
+
+        if (entityType == 'block') {
+          out[entityType][id] = {
+            t: entity.type,
+            s: entity.solid,
+            h: entity.health
+          }
+        }
+
+        else if (entityType == 'building') {
+          out[entityType][id] = {
+            t: entity.type
+          }
+        }
+
+        else if (entityType == 'item') {
+          out[entityType][id] = {
+            t: entity.type,
+            h: entity.health
+          }
+        }
+
+        else if (entityType == 'npc') {
+          out[entityType][id] = {
+            n: entity.name
+          }
+        }
+
+      }
+    }
+
+    return out
+
+  }
+
   // blocks
 
   exportBlocksJson() {
 
     let blocks = []
+    let blockId = null
     let block = null
     let delta = 0
 
@@ -113,14 +170,18 @@ class DesignerStorage {
 
       for (let x = 0; x < d.getMapWidth(); x += d.getBlockSize()) {
 
-        block = d.blocks[delta]
+        blockId = d.blocks[delta]
 
-        blocks.push(block ? {
-          i: block.id,
-          t: block.type,
-          s: block.solid,
-          h: block.health
-        } : 0)
+        if (blockId) {
+          block = d.getBlock(blockId)
+          blocks.push({
+            i: block.id,
+            t: block.type,
+            s: block.solid,
+            h: block.health
+          })
+        }
+        else { blocks.push(0) }
 
         delta++
 

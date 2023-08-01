@@ -14,7 +14,7 @@ class ActionMineBlock extends Action {
 
   // methods
 
-  getBlock() { return d.blocks[this.delta] }
+  getBlock() { return d.block(this.delta) }
 
   // abstracts / interfaces
 

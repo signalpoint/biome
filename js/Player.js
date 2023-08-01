@@ -111,15 +111,15 @@ class Player {
     let leftDestination = this.x - Math.abs(this.vX)
     let rightDestination = this.x + this.width + Math.abs(this.vX)
 
-    let blockAboveTopLeft = d.blocks[d.getBlockDelta(this.x, upwardDestination)]
-    let blockAboveTopRight = d.blocks[d.getBlockDelta(this.x + this.width, upwardDestination)]
-    let blockBelowBottomLeft = d.blocks[d.getBlockDelta(this.x, downwardDestination)]
-    let blockBelowBottomRight = d.blocks[d.getBlockDelta(this.x + this.width, downwardDestination)]
+    let blockAboveTopLeft = d.block(d.getBlockDelta(this.x, upwardDestination))
+    let blockAboveTopRight = d.block(d.getBlockDelta(this.x + this.width, upwardDestination))
+    let blockBelowBottomLeft = d.block(d.getBlockDelta(this.x, downwardDestination))
+    let blockBelowBottomRight = d.block(d.getBlockDelta(this.x + this.width, downwardDestination))
 
-    let blockBeforeTopLeft = d.blocks[d.getBlockDelta(leftDestination, this.y)]
-    let blockAfterTopRight = d.blocks[d.getBlockDelta(rightDestination, this.y)]
-    let blockBeforeBottomLeft = d.blocks[d.getBlockDelta(leftDestination, this.y + this.height)]
-    let blockAfterBottomRight = d.blocks[d.getBlockDelta(rightDestination, this.y + this.height)]
+    let blockBeforeTopLeft = d.block(d.getBlockDelta(leftDestination, this.y))
+    let blockAfterTopRight = d.block(d.getBlockDelta(rightDestination, this.y))
+    let blockBeforeBottomLeft = d.block(d.getBlockDelta(leftDestination, this.y + this.height))
+    let blockAfterBottomRight = d.block(d.getBlockDelta(rightDestination, this.y + this.height))
 
     let canMoveUp = blockAboveTopLeft && !blockAboveTopLeft.solid && blockAboveTopRight && !blockAboveTopRight.solid
     let canMoveDown = blockBelowBottomLeft && !blockBelowBottomLeft.solid && blockBelowBottomRight && !blockBelowBottomRight.solid
@@ -294,7 +294,7 @@ class Player {
     }
 
     // remove the block from the index
-    d.removeBlockFromIndex(d.blocks[delta])
+    d.removeBlockFromIndex(d.block(delta))
 
     // place bedrock down in its place
     dMode.paintNewBlock(delta, 'Bedrock')
@@ -452,7 +452,7 @@ class Player {
 //
 
   addBlockToBelt(delta) {
-    let block = d.blocks[delta]
+    let block = d.block(delta)
     this.belt.add(block)
   }
 

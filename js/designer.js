@@ -254,32 +254,32 @@ addEventListener('load', function() {
   // TODO
   // - can't get rid of static id values here until we're dynamically saving/loading npcs
 
-  let npcLoan = new Villager({
-    id: 'Loan',
-    name: 'Loan',
-    x: player.x + 72,
-    y: player.y - 28,
-    color: 'yellow'
-  })
-  saveVillager(npcLoan)
-
-  let npcAvalina = new Villager({
-    id: 'Avalina',
-    name: 'Avalina',
-    x: player.x + 16,
-    y: player.y - 121,
-    color: 'pink'
-  })
-  saveVillager(npcAvalina)
-
-  let npcMelvin = new Villager({
-    id: 'Melvin',
-    name: 'Melvin',
-    x: player.x - 92,
-    y: player.y - 92,
-    color: 'red'
-  })
-  saveVillager(npcMelvin)
+//  let npcLoan = new Villager({
+//    id: 'Loan',
+//    name: 'Loan',
+//    x: player.x + 72,
+//    y: player.y - 28,
+//    color: 'yellow'
+//  })
+//  saveVillager(npcLoan)
+//
+//  let npcAvalina = new Villager({
+//    id: 'Avalina',
+//    name: 'Avalina',
+//    x: player.x + 16,
+//    y: player.y - 121,
+//    color: 'pink'
+//  })
+//  saveVillager(npcAvalina)
+//
+//  let npcMelvin = new Villager({
+//    id: 'Melvin',
+//    name: 'Melvin',
+//    x: player.x - 92,
+//    y: player.y - 92,
+//    color: 'red'
+//  })
+//  saveVillager(npcMelvin)
 
   // EVENT LISTENERS
 
@@ -527,11 +527,13 @@ function update() {
     // player + block
 
     let playerBlockDeltas = players[i].getBlockDeltasFromPosition()
+    let id = null
     let block = null
     if (playerBlockDeltas.length) {
       for (let j = 0; j < playerBlockDeltas.length; j++) {
-        block = d.blocks[playerBlockDeltas[j]]
-        if (!block) { continue }
+        blockId = d.blocks[playerBlockDeltas[j]]
+        if (!blockId) { continue }
+        block = d.getBlock(blockId)
         block.handleCollisionWithPlayer(players[i])
       }
     }
@@ -555,7 +557,7 @@ function update() {
   for (let i = 0; i < d.blocks.length; i++) {
 
     if (d.blocks[i]) {
-      d.blocks[i].update()
+      d.block(i).update()
     }
 
   }
@@ -564,7 +566,7 @@ function update() {
   for (let i = 0; i < d.buildings.length; i++) {
 
     if (d.buildings[i]) {
-      d.buildings[i].update()
+      d.building(i).update()
     }
 
   }
@@ -582,7 +584,7 @@ function draw() {
   let endX = startX + d.blocksPerScreenRow()
   let endY = startY + d.blocksPerScreenCol()
 
-  let blockDelta = null
+  let delta = null
   let block = null
   let building = null
 
@@ -595,16 +597,15 @@ function draw() {
 
     for (var x = startX; x < endX; x++) {
 
-      blockDelta = d.getBlockDeltaFromPos(x, y)
-
-      block = d.blocks[blockDelta]
-      building = d.buildings[blockDelta]
+      delta = d.getBlockDeltaFromPos(x, y)
 
       // debug
-//      console.log(`${x},${y} => ` + blockDelta)
+//      console.log(`${x},${y} => ` + delta)
 
       // If the block exists...
-      if (block) {
+      if (d.blocks[delta]) {
+
+        block = d.block(delta)
 
         block.draw(xCameraDelta, yCameraDelta)
 
@@ -622,7 +623,7 @@ function draw() {
       }
 
       // block mouse hover effect
-      if (d.getMouseBlockDelta() == blockDelta) {
+      if (d.getMouseBlockDelta() == delta) {
         c.beginPath()
         c.strokeStyle = 'rgba(0,0,0,1)';
         c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize());
@@ -630,7 +631,9 @@ function draw() {
       }
 
       // If the building exists...
-      if (building) {
+      if (d.buildings[delta]) {
+
+        building = d.building(delta)
 
         building.draw(xCameraDelta, yCameraDelta)
 

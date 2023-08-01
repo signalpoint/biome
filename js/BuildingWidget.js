@@ -171,7 +171,7 @@ function createBuildingWidget(delta) {
   widget.save()
   widget.init()
 
-  let building = d.buildings[delta]
+  let building = d.building(delta)
   let title = building.type
 
   widget.setTitle(title)

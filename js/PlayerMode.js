@@ -218,8 +218,6 @@ class PlayerMode {
     let rightClick = mouse.right.pressed
     let mode = this.getMode()
     let delta = d.getMouseUpBlockDelta()
-    let block = d.blocks[delta]
-    let building = d.buildings[delta]
     let npc = d.getNpcAtMouseUp()
 
 //    let timer = mouse.left.timer
@@ -230,11 +228,10 @@ class PlayerMode {
 
     // BUILDING ( clicked on a building... )
 
-    if (building) {
+    if (d.buildings[delta]) {
 
-      console.log(building)
 
-      building.getWidget().show()
+      d.building(delta).getWidget().show()
 
     }
 
@@ -249,6 +246,8 @@ class PlayerMode {
     // BLOCK ( clicked on a block... )
 
     else {
+
+      let block = d.block(delta)
 
       let isBedrock = block && block.isBedrock()
 
@@ -298,7 +297,7 @@ class PlayerMode {
                     player.belt.remove(entity)
                     player.belt.refresh()
 
-                    d.addBlockToIndex(d.blocks[delta])
+                    d.addBlockToIndex(d.block(delta))
 
                   }
                   else if (entity.isItem()) {
@@ -369,7 +368,7 @@ class PlayerMode {
               })
 
               // place the building
-              d.buildings[delta] = building
+              d.buildings[delta] = building.id
 
               // open the building widget
               building.getWidget().show()

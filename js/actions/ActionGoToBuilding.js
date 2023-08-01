@@ -14,7 +14,7 @@ class ActionGoToBuilding extends Action {
 
   // methods
 
-  getBuilding() { return d.buildings[this.delta] }
+  getBuilding() { return d.building(this.delta) }
 
   // abstracts / interfaces
 

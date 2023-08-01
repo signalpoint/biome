@@ -74,7 +74,6 @@ class DesignerStorage {
           health
         })
         d.blocks[delta] = block.id
-        d.addBlockToIndex(block)
 
       }
 

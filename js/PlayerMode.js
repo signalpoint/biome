@@ -191,24 +191,16 @@ class PlayerMode {
 
     this.getPane('paint').innerHTML =
 
-      // Block: type
-      `<!-- -->
-      <div class="mb-3">
-        <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
-        <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
-      </div>` +
-
-      // Block: solid
+      // block type
       `<div class="mb-3">
-        <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
-        <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
+        <label for="paintModeBlockTypeSelect" class="form-label visually-hidden">Block type</label>
+        <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
       </div>`
 
   }
   initPaintPane() {
 
     paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
-    paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
 
     // paint mode: block type options
     for (var i = 0; i < dBlocks.getTypes().length; i++) {
@@ -303,9 +295,6 @@ class PlayerMode {
 
             //open block modal
   //            dMode.openBlockModal(delta)
-
-            // update solid value
-            d.block(delta).solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
 
           }
 

@@ -5,7 +5,8 @@ class Water extends Block {
     delta,
     type = 'Water',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
@@ -13,18 +14,13 @@ class Water extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health,
+      hardness: 1
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#90e0ef'
-    c.fill()
-
-  }
+  fillStyle() { return '#90e0ef' }
 
 }

@@ -5,7 +5,8 @@ class Border extends Block {
     delta,
     type = 'Border',
     selected = 0,
-    solid = 1
+    solid = 1,
+    health = 100
   }) {
 
     super({
@@ -13,7 +14,8 @@ class Border extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health
     })
 
   }

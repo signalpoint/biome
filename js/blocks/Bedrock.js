@@ -5,7 +5,8 @@ class Bedrock extends Block {
     delta,
     type = 'Bedrock',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
@@ -13,18 +14,12 @@ class Bedrock extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = this.solid ? '#111' : '#222'
-    c.fill()
-
-  }
+  fillStyle() { return this.solid ? '#111' : '#222' }
 
 }

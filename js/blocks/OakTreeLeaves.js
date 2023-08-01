@@ -5,7 +5,8 @@ class OakTreeLeaves extends Block {
     delta,
     type = 'OakTreeLeaves',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
@@ -13,18 +14,13 @@ class OakTreeLeaves extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health,
+      hardness: 25
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = this.solid ? '#1b4332' : '#2d6a4f'
-    c.fill()
-
-  }
+  fillStyle() { return this.solid ? '#1b4332' : '#2d6a4f' }
 
 }

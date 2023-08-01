@@ -5,7 +5,8 @@ class Sand extends Block {
     delta,
     type = 'Sand',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
@@ -13,18 +14,12 @@ class Sand extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = '#ffe6a7'
-    c.fill()
-
-  }
+  fillStyle() { return this.solid ? '#cc9f69' : '#ffe6a7' }
 
 }

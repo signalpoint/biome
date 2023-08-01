@@ -5,7 +5,8 @@ class Stone extends Block {
     delta,
     type = 'Stone',
     selected = 0,
-    solid = 0
+    solid = 0,
+    health = 100
   }) {
 
     super({
@@ -13,18 +14,13 @@ class Stone extends Block {
       delta,
       type,
       selected,
-      solid
+      solid,
+      health,
+      hardness: 2000
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = this.solid ? '#6c757d' : '#adb5bd'
-    c.fill()
-
-  }
+  fillStyle() { return this.solid ? '#6c757d' : '#adb5bd' }
 
 }

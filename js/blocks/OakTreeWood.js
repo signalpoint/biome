@@ -7,7 +7,7 @@ class OakTreeWood extends Block {
     type = 'OakTreeWood',
     selected = 0,
     solid = 0,
-    canvasMouseDownInterval = 100
+    health = 100
   }) {
 
     super({
@@ -16,18 +16,12 @@ class OakTreeWood extends Block {
       type,
       selected,
       solid,
-      canvasMouseDownInterval
+      health,
+      hardness: 1000
     })
 
   }
 
-  draw(x, y) {
-
-    c.beginPath()
-    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.fillStyle = this.solid ? '#582f0e' : '#7f4f24'
-    c.fill()
-
-  }
+  fillStyle() { return this.solid ? '#582f0e' : '#7f4f24' }
 
 }

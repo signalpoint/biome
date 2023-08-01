@@ -267,21 +267,6 @@ class Designer {
     return this.getBlockDeltaFromPos(coords.x, coords.y)
   }
 
-  addBlockToIndex(block) {
-    if (!this.blocksIndex[block.type]) { this.blocksIndex[block.type] = [] }
-    this.blocksIndex[block.type].push(block.delta)
-  }
-  removeBlockFromIndex(block) {
-    let index = this.blocksIndex[block.type].indexOf(block.delta)
-    this.blocksIndex[block.type].splice(index, 1)
-  }
-  getBlockFromIndexByType(type) {
-    return this.blocks[this.blocksIndex[type][0]]
-  }
-  indexHasBlockType(type) {
-    return this.blocksIndex[type] && this.blocksIndex[type].length
-  }
-
   getBlockClass(type) { return dBlocks.getType(type).blockClass }
 
   /**
@@ -321,11 +306,11 @@ class Designer {
 
   selectBlock(delta) {
     this.getSelectedBlocks().push(delta)
-    this.blocks[delta].select()
+    d.block(delta).select()
   }
   deselectBlock(delta) {
     this.getSelectedBlocks().splice(this.getSelectedBlocks().indexOf(delta), 1)
-    this.blocks[delta].deselect()
+    d.block(delta).deselect()
   }
   blockSelected(delta) { return this.getSelectedBlocks().includes(delta) }
 
@@ -338,6 +323,7 @@ class Designer {
 
   // buildings
 
+  // TODO get rid of these legacy building index functions now that we have the entity index
   addBuildingToIndex(building) {
     if (!this.buildingsIndex[building.type]) { this.buildingsIndex[building.type] = [] }
     this.buildingsIndex[building.type].push(building.delta)

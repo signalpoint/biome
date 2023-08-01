@@ -78,10 +78,7 @@ class DesignerStorage {
 
       }
 
-      if (!hasBuilding) {
-        let building = map.buildings[delta]
-        d.buildings.push(building.id)
-      }
+      if (!hasBuilding) { d.buildings.push(0) }
       else {
 
         type = map.buildings[delta].t

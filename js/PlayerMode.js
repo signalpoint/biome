@@ -183,8 +183,8 @@ class PlayerMode {
 //    let rightClick = mouse.right.pressed
 //    let mode = this.getMode()
 //    let delta = d.getMouseDownBlockDelta()
-//    let block = d.blocks[delta]
-//    let building = d.buildings[delta]
+//    let block = d.block(delta)
+//    let building = d.building(delta)
 
   }
 
@@ -229,7 +229,6 @@ class PlayerMode {
     // BUILDING ( clicked on a building... )
 
     if (d.buildings[delta]) {
-
 
       d.building(delta).getWidget().show()
 

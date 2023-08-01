@@ -315,13 +315,6 @@
             </a>
           </li>
 
-          <!-- Paint -->
-          <li class="nav-item">
-            <a class="nav-link" href="#" title="Paint" data-op="toolbar:paint">
-              <i class="fas fa-brush"></i>
-            </a>
-          </li>
-
           <!-- Map -->
           <li class="nav-item">
             <a class="nav-link" href="#" title="Map" data-op="toolbar:map">
@@ -344,27 +337,6 @@
           <div class="active" data-op="toolbar:select">
             <fieldset class="border border-secondary mb-3 p-3">
               <legend class="fs-5 user-select-none">Select<span class="badge bg-secondary float-end"></span></legend>
-            </fieldset>
-          </div>
-
-          <!-- PAINT -->
-          <div class="d-none" data-op="toolbar:paint">
-            <fieldset class="border border-secondary mb-3 p-3">
-
-              <legend class="fs-5 user-select-none">Paint</legend>
-
-              <!-- Block: type-->
-              <div class="mb-3">
-                <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
-                <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
-              </div>
-
-              <!-- Block: solid -->
-              <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
-                <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
-              </div>
-
             </fieldset>
           </div>
 
@@ -556,15 +528,15 @@
       <div id="playerModePanes" class="position-absolute top-89 start-50 translate-middle bg-dark text-light">
 
         <!-- BELT -->
-        <div id="playerBeltElement" class="player-mode-pane btn-group active" role="group" aria-label="Belt" data-op="belt">
+        <div id="playerBeltElement" class="player-mode-pane btn-group active" role="group" aria-label="Belt" data-op="belt" data-top="89">
           <!-- @see PlayerMode.initButtons() -->
         </div>
 
         <!-- BUILD -->
-        <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="build"></div>
+        <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="build" data-top="89"></div>
 
         <!-- PAINT -->
-        <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="paint"></div>
+        <div id="playerPaintElement" class="player-mode-pane d-none p-3" data-op="paint" data-top="83"></div>
 
       </div>
 

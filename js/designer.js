@@ -117,8 +117,8 @@ let playbackBtns = playbackBtnsContainer.querySelectorAll('button')
 let pauseBtn = playbackBtnsContainer.querySelector('button[data-playback="pause"]')
 let playBtn = playbackBtnsContainer.querySelector('button[data-playback="play"]')
 
-let paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
-let paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
+let paintModeBlockTypeSelect = null
+let paintModeBlockSolidCheckbox = null
 
 let cameraMoveUpBtn = document.querySelector('#cameraMoveUpBtn')
 let cameraMoveDownBtn = document.querySelector('#cameraMoveDownBtn')
@@ -189,16 +189,6 @@ addEventListener('load', function() {
 
   // set the active pane for the mode
 //  dMode.setActivePane(selectModePane)
-
-  // paint mode: block type
-  for (var i = 0; i < dBlocks.getTypes().length; i++) {
-    var option = document.createElement('option');
-    let type = dBlocks.getTypes()[i]
-    option.value = type;
-    option.innerHTML = type;
-    paintModeBlockTypeSelect.appendChild(option);
-  }
-  d.setPaintModeBlockType(paintModeBlockTypeSelect.options[0].value)
 
   // set screen resolution
 
@@ -300,11 +290,6 @@ addEventListener('load', function() {
       dPlayback.btnOnclickListener(this)
     })
   }
-
-  // paint mode: block type
-  paintModeBlockTypeSelect.addEventListener('change', function() {
-    d.setPaintModeBlockType(this.value)
-  })
 
   // camera: movement
   cameraMoveUpBtn.addEventListener('click', function() { dCamera.move('up') })

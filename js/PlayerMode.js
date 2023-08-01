@@ -54,22 +54,39 @@ class PlayerMode {
 
         let op = btn.getAttribute('data-op')
 
+        // start the game if it's paused
+        if (d.isPaused()) {
+          dPlayback.play()
+        }
+
+        // clear old active button and set new
         self.clearActiveButton()
         self.setActiveButton(op)
 
+        // if the button is has a light, turn it off
         if (self.buttonHasLight(op)) {
           self.turnOffButtonLight(op)
         }
 
+        // remove active from old pane and hide it
         let oldPane = self.getActivePane()
         oldPane.classList.remove('active')
         oldPane.classList.add('d-none')
 
+        // add active to new pane and show it
         let newPane = self.getPane(op)
         newPane.classList.add('active')
         newPane.classList.remove('d-none')
 
+        // update the mode
         self.setMode(op)
+
+        // remove old bs5 position class and add new one
+        let oldTop = oldPane.getAttribute('data-top')
+        let newTop = newPane.getAttribute('data-top')
+        let container = self.getPanesContainer()
+        container.classList.remove('top-' + oldTop)
+        container.classList.add('top-' + newTop)
 
         if (op == 'belt') {
           // no render needed; html resides in designer.html
@@ -82,6 +99,7 @@ class PlayerMode {
         }
         else if (op == 'paint') {
           self.renderPaintPane()
+          self.initPaintPane()
         }
 
       })
@@ -90,6 +108,7 @@ class PlayerMode {
 
   }
 
+  getPanesContainer() { return document.querySelector('#playerModePanes') }
   getPane(op) { return document.querySelector('#playerModePanes .player-mode-pane[data-op="' + op + '"]') }
   getActivePane() { return document.querySelector('#playerModePanes .player-mode-pane.active') }
 
@@ -169,37 +188,175 @@ class PlayerMode {
   // PAINT
 
   renderPaintPane() {
-    let html = 'TODO - move Paint tool here'
-    this.getPane('paint').innerHTML = html
+
+    this.getPane('paint').innerHTML =
+
+      // Block: type
+      `<!-- -->
+      <div class="mb-3">
+        <label for="paintModeBlockTypeSelect" class="form-label">Block type</label>
+        <select id="paintModeBlockTypeSelect" class="form-select" aria-label="Block type options"></select>
+      </div>` +
+
+      // Block: solid
+      `<div class="mb-3">
+        <input class="form-check-input" type="checkbox" value="" id="paintModeBlockSolidCheckbox">
+        <label class="form-check-label" for="paintModeBlockSolidCheckbox">Solid</label>
+      </div>`
+
+  }
+  initPaintPane() {
+
+    paintModeBlockTypeSelect = document.querySelector('#paintModeBlockTypeSelect')
+    paintModeBlockSolidCheckbox = document.querySelector('#paintModeBlockSolidCheckbox')
+
+    // paint mode: block type options
+    for (var i = 0; i < dBlocks.getTypes().length; i++) {
+      var option = document.createElement('option');
+      let type = dBlocks.getTypes()[i]
+      option.value = type;
+      option.innerHTML = type;
+      paintModeBlockTypeSelect.appendChild(option);
+    }
+    d.setPaintModeBlockType(paintModeBlockTypeSelect.options[0].value)
+
+    // paint mode: block type option change listener
+    paintModeBlockTypeSelect.addEventListener('change', function() {
+      d.setPaintModeBlockType(this.value)
+    })
+
   }
 
   // CANVAS + MOUSE
 
-  canvasMouseMoveListener(e) { }
+  canvasMouseMoveListener(e) {
+
+    let leftClick = mouse.left.pressed
+    let rightClick = mouse.right.pressed
+    let mode = this.getMode()
+    let delta = d.getMouseDownBlockDelta()
+
+    let existingBlock = d.blocks[delta] !== 0
+    let existingBuilding = d.buildings[delta] !== 0
+
+    let block = existingBlock ? d.block(delta) : null
+    let building = existingBuilding ? d.building(delta) : null
+
+    if (mouse.left.pressed) { // dragging...
+
+      // PAINT
+
+      if (mode == 'paint') {
+
+        let coords = getCanvasMouseCoordsWithCameraOffset(e)
+        let delta = d.getBlockDelta(coords.x, coords.y)
+        let type = d.getPaintModeBlockType()
+        let existingBlock = d.blocks[delta] !== 0
+        let block = existingBlock ? d.block(delta) : null
+
+        if (existingBlock) {
+          if (type != block.type) {
+            dMode.paintNewBlock(delta, type)
+          }
+        }
+        else {
+          dMode.paintNewBlock(delta, type)
+        }
+
+      }
+
+    }
+
+  }
 
   canvasMouseDownListener(e) {
 
-//    let leftClick = mouse.left.pressed
-//    let rightClick = mouse.right.pressed
-//    let mode = this.getMode()
-//    let delta = d.getMouseDownBlockDelta()
-//    let block = d.block(delta)
-//    let building = d.building(delta)
+    let leftClick = mouse.left.pressed
+    let rightClick = mouse.right.pressed
+    let mode = this.getMode()
+    let delta = d.getMouseDownBlockDelta()
+
+    let existingBlock = d.blocks[delta] !== 0
+    let existingBuilding = d.buildings[delta] !== 0
+
+    let block = existingBlock ? d.block(delta) : null
+    let building = existingBuilding ? d.building(delta) : null
+
+    // PAINT
+
+    if (mode == 'paint') {
+
+      let blockType = d.getPaintModeBlockType()
+
+      if (leftClick) {
+
+        // If the block already exists...
+        if (existingBlock) {
+
+          // changing block type
+          if (block.type != blockType) {
+//            console.log(`${block.type} => ${blockType}`)
+            d.removeEntityFromIndex('block', block)
+            dMode.paintNewBlock(delta, blockType)
+          }
+          else { // clicking on same block type...
+
+            //open block modal
+  //            dMode.openBlockModal(delta)
+
+            // update solid value
+            d.block(delta).solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
+
+          }
+
+        }
+        else {
+
+          // The block does not exist...
+
+          // create the new block using the current type
+          dMode.paintNewBlock(delta, blockType)
+
+        }
+
+      }
+
+    }
 
   }
 
   canvasMouseDownHoldListener(e) {
 
-    let block = d.getMouseDownBlock()
-    block.canvasMouseDownHoldListener(e)
+    // NOTE, "this" isn't playerMode since this is running in an interval
+    // we may be able to specify "this" for the interval to ease development here
 
-    if (mouse.left.pressed) {
+    let leftClick = mouse.left.pressed
+    let rightClick = mouse.right.pressed
+    let mode = playerMode.getMode()
+    let delta = d.getMouseDownBlockDelta()
+
+    let existingBlock = d.blocks[delta] !== 0
+    let existingBuilding = d.buildings[delta] !== 0
+
+    let block = existingBlock ? d.block(delta) : null
+    let building = existingBuilding ? d.building(delta) : null
+
+    if (block) {
+      block.canvasMouseDownHoldListener(e)
+    }
+
+    if (leftClick) {
+
 //      console.log('left hold', mouse.left.timer.getElapsedTime())
 
-      if (block.canBeMined()) {
+      if (mode == 'belt') {
 
-        let axeForce = 12
-        block.hit(axeForce)
+        if (block.canBeMined()) {
+
+          let axeForce = 12
+          block.hit(axeForce)
+
+        }
 
       }
 

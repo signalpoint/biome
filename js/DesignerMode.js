@@ -25,27 +25,6 @@ class DesignerMode {
 
       }
 
-      // PAINT
-
-      else if (mode == 'toolbar:paint') {
-
-        let coords = getCanvasMouseCoordsWithCameraOffset(e)
-        let delta = d.getBlockDelta(coords.x, coords.y)
-        let type = d.getPaintModeBlockType()
-        let existingBlock = d.blocks[delta] !== 0
-        let block = existingBlock ? d.block(delta) : null
-
-        if (existingBlock) {
-          if (type != block.type) {
-            this.paintNewBlock(delta, type)
-          }
-        }
-        else {
-          this.paintNewBlock(delta, type)
-        }
-
-      }
-
     }
 
   }
@@ -128,52 +107,10 @@ class DesignerMode {
 
     }
 
-    // PAINT
-    else if (mode == 'toolbar:paint') {
-
-      let blockType = d.getPaintModeBlockType()
-
-      if (leftClick) {
-
-        // If the block already exists...
-        if (existingBlock) {
-
-          // changing block type
-          if (block.type != blockType) {
-//            console.log(`${block.type} => ${blockType}`)
-            d.removeEntityFromIndex('block', block)
-            this.paintNewBlock(delta, blockType)
-          }
-          else { // clicking on same block type...
-
-            //open block modal
-  //            dMode.openBlockModal(delta)
-
-            // update solid value
-            d.block(delta).solid = paintModeBlockSolidCheckbox.checked ? 1 : 0
-
-          }
-
-        }
-        else {
-
-          // The block does not exist...
-
-          // create the new block using the current type
-          this.paintNewBlock(delta, blockType)
-
-        }
-
-      }
-
-    }
-
     // CAMERA
     else if (mode == 'toolbar:camera') {
 
     }
-
-//    playerMode.canvasMouseDownListener(e)
 
   }
 

@@ -297,8 +297,6 @@ class PlayerMode {
                     player.belt.remove(entity)
                     player.belt.refresh()
 
-                    d.addBlockToIndex(d.block(delta))
-
                   }
                   else if (entity.isItem()) {
 

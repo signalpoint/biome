@@ -7,7 +7,7 @@ class Block extends Entity {
     selected = 0,
     solid = 0,
     health = 100,
-    canvasMouseDownInterval = 500
+    hardness = 100
   }) {
 
     super({
@@ -20,7 +20,7 @@ class Block extends Entity {
     this.selected = selected
     this.solid = solid
     this.health = health
-    this.canvasMouseDownInterval = canvasMouseDownInterval
+    this.hardness = hardness
 
     d.addEntityToIndex('block', this)
 
@@ -37,7 +37,18 @@ class Block extends Entity {
 
   }
 
-  draw(x, y) {}
+  draw(x, y) {
+
+    c.beginPath()
+    c.rect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
+    c.fillStyle = this.fillStyle()
+    c.fill()
+
+    if (this.health < 100) {
+      d.dig(this, x, y)
+    }
+
+  }
 
   hit(force) {
 //    console.log(`block: ${this.health} - ${force}`)

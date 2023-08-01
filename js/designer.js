@@ -3,6 +3,8 @@
 let canvas = null
 let c = null
 
+let BLOCK_DEFAULT_HARDNESS = 100
+
 // TODO we should put our globals in the "d" namespace, e.g. d.keys, d.mouse, etc
 
 // KEYS

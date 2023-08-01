@@ -5,7 +5,6 @@ class BlueberryBush extends Block {
     delta,
     type = 'BlueberryBush',
     selected = 0,
-    solid = 0,
     health = 100
   }) {
 
@@ -14,7 +13,7 @@ class BlueberryBush extends Block {
       delta,
       type,
       selected,
-      solid,
+      solid: 1,
       health,
       hardness: 150
     })

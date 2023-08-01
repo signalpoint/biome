@@ -5,7 +5,6 @@ class OakTreeLeaves extends Block {
     delta,
     type = 'OakTreeLeaves',
     selected = 0,
-    solid = 0,
     health = 100
   }) {
 
@@ -14,7 +13,6 @@ class OakTreeLeaves extends Block {
       delta,
       type,
       selected,
-      solid,
       health,
       hardness: 25
     })

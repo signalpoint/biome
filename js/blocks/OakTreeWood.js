@@ -6,7 +6,6 @@ class OakTreeWood extends Block {
     delta,
     type = 'OakTreeWood',
     selected = 0,
-    solid = 0,
     health = 100
   }) {
 
@@ -15,13 +14,13 @@ class OakTreeWood extends Block {
       delta,
       type,
       selected,
-      solid,
+      solid: 1,
       health,
       hardness: 1000
     })
 
   }
 
-  fillStyle() { return this.solid ? '#582f0e' : '#7f4f24' }
+  fillStyle() { return '#582f0e' }
 
 }

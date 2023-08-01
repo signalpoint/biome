@@ -41,7 +41,6 @@ class DesignerStorage {
 
     let id = null
     let type = null
-    let solid = null
     let health = null
 
     d.blocks = []
@@ -57,7 +56,6 @@ class DesignerStorage {
 
         id = map.blocks[delta].i
         type = map.blocks[delta].t
-        solid = map.blocks[delta].s
         health = map.blocks[delta].h
 
         if (!dBlocks.getType(type)) {
@@ -70,7 +68,6 @@ class DesignerStorage {
           id,
           delta,
           type,
-          solid,
           health
         })
         d.blocks[delta] = block.id
@@ -119,7 +116,6 @@ class DesignerStorage {
         if (entityType == 'block') {
           out[entityType][id] = {
             t: entity.type,
-            s: entity.solid,
             h: entity.health
           }
         }
@@ -170,7 +166,6 @@ class DesignerStorage {
           blocks.push({
             i: block.id,
             t: block.type,
-            s: block.solid,
             h: block.health
           })
         }

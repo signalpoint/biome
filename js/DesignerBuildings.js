@@ -1,6 +1,10 @@
-class DesignerBuildings {
+class DesignerBuildings extends EntityDict {
 
   constructor() {
+
+    super({
+
+    })
 
     this._typesDict = {
 
@@ -61,11 +65,6 @@ class DesignerBuildings {
 
   }
 
-  getTypes() { return this._types }
-  getType(type) { return this._typesDict[type] }
-
   getIcon(type) { return this.getType(type).icon }
-
-  getRequirements(type) { return this.getType(type).requires }
 
 }

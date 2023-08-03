@@ -52,3 +52,23 @@
 #playerModePanes {
   z-index: 1;
 }
+
+/**
+ * CRAFTING
+ */
+
+#playerToolsElement .nav-tabs {
+  border-bottom-color: #666;
+}
+#playerToolsElement .nav-tabs a.active {
+  color: #ccc;
+  background-color: #222;
+  border-color: #666;
+}
+#playerToolsElement .nav-tabs .nav-link {
+  color: #ddd;
+}
+#playerToolsElement .nav-tabs .nav-link:hover {
+  border-color: #666;
+  cursor: pointer;
+}

@@ -18,6 +18,6 @@ class Sand extends Block {
 
   }
 
-  fillStyle() { return this.solid ? '#cc9f69' : '#ffe6a7' }
+  fillStyle() { return '#ffe6a7' }
 
 }

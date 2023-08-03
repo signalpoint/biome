@@ -19,6 +19,6 @@ class Grass extends Block {
 
   }
 
-  fillStyle() { return this.solid ? '#1a7431' : '#25a244' }
+  fillStyle() { return '#25a244' }
 
 }

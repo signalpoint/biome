@@ -19,6 +19,6 @@ class OakTreeLeaves extends Block {
 
   }
 
-  fillStyle() { return this.solid ? '#1b4332' : '#2d6a4f' }
+  fillStyle() { return '#2d6a4f' }
 
 }

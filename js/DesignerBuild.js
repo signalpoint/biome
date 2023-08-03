@@ -7,32 +7,34 @@ class DesignerBuild {
 
   }
 
+  getToolsElement() { return document.getElementById('playerToolsElement') }
+
   getEntityType() { return this._entityType }
   setEntityType(entityType) { this._entityType = entityType }
 
   getType() { return this._type }
   setType(type) { this._type = type }
 
+  // nav
+
   getNav() { return document.querySelector('#dBuildNav') }
   getNavBtns() { return this.getNav().querySelectorAll('a.nav-link') }
   getActiveNavBtn() { return this.getNav().querySelector('a.active') }
 
-  // TODO these need to be abstracted out to the entity level so we can do blocks, items, buildings, etc...
+  // entity list
 
-  getToolsElement() { return document.getElementById('playerToolsElement') }
-  getToolButtons() { return this.getToolsElement().querySelectorAll('.tools-list button') }
-  getToolBuildButton() { return this.getToolsElement().querySelector('.tool-parts button') }
-  enableToolBuildButton() { this.getToolBuildButton().classList.remove('disabled') }
-  disableToolBuildButton() { this.getToolBuildButton().classList.add('disabled') }
-  getToolType() { return this._toolType }
-  setToolType(type) { this._toolType = type }
+  getEntityListPane() { return this.getToolsElement().querySelector('.entity-list') }
+  getEntityListBtns() { return this.getToolsElement().querySelectorAll('.entity-list button') }
+  getEntityListBtn(type) { return this.getEntityListPane().querySelector(`button[data-type="${type}"]`) }
+  getActiveEntityListBtn() { return this.getEntityListPane().querySelector('button.active') }
 
-  getToolsListPane() { return this.getToolsElement().querySelector('.tools-list') }
+  // entity parts + build btn
 
-  getToolPartsPane() { return this.getToolsElement().querySelector('.tool-parts') }
-  showToolPartsPane() { this.getToolPartsPane().classList.remove('d-none') }
-  hideToolPartsPane() { this.getToolPartsPane().classList.add('d-none') }
-  clearToolPartsPane() { this.getToolPartsPane().innerHTML = '' }
+  getEntityPartsPane() { return this.getToolsElement().querySelector('.entity-parts') }
+  clearEntityPartsPane() { this.getEntityPartsPane().innerHTML = '' }
+  getEntityBuildBtn() { return this.getToolsElement().querySelector('.entity-parts button') }
+  enableEntityBuildBtn() { this.getEntityBuildBtn().classList.remove('disabled') }
+  disableEntityBuildBtn() { this.getEntityBuildBtn().classList.add('disabled') }
 
   // ...
 
@@ -71,8 +73,8 @@ class DesignerBuild {
 `</ul>
 
 <div class="row">
-  <div class="col-6 tools-list overflow-scroll"></div>
-  <div class="col-6 tool-parts"></div>
+  <div class="col-6 entity-list overflow-scroll"></div>
+  <div class="col-6 entity-parts"></div>
 </div>`
 
   }
@@ -85,8 +87,8 @@ class DesignerBuild {
     toolsElement.style.width = `${d.getScreenWidth() * .66}px`
     toolsElement.style.height = `${d.getScreenHeight() * .66}px`
 
-    let toolsListPane = this.getToolsListPane()
-    toolsListPane.style.height = `${d.getScreenHeight() * .5}px`
+    let entityListPane = this.getEntityListPane()
+    entityListPane.style.height = `${d.getScreenHeight() * .5}px`
 
     // for each nav button...
     let navBtns = this.getNavBtns()
@@ -115,7 +117,7 @@ class DesignerBuild {
   }
 
   refresh() {
-    this.clearToolPartsPane()
+    this.clearEntityPartsPane()
     this.renderEntityList()
     this.initEntityList()
   }
@@ -141,18 +143,20 @@ class DesignerBuild {
       items.push(
 `<div class="card bg-dark text-light w-100 mb-1">
   <div class="card-body">
-    <h4 class="card-title">
-      ${item.label}
+    <div class="clearfix">
+      <h4 class="card-title float-start">
+        ${item.label}
+      </h4>
       <button class="btn btn-lg btn-outline-secondary text-light float-end ms-1" data-type="${type}" title="${item.description}">
         <i class="fas fa-arrow-right"></i>
       </button>
-    </h5>
+    </div>
   </div>
 </div>`
       )
     }
 
-    this.getToolsListPane().innerHTML = items.join('')
+    this.getEntityListPane().innerHTML = items.join('')
 
   }
 
@@ -161,7 +165,7 @@ class DesignerBuild {
     let self = this
 
     // for each item button...
-    let btns = this.getToolButtons()
+    let btns = this.getEntityListBtns()
     for (let i = 0; i < btns.length; i++) {
 
       // click listener
@@ -170,10 +174,24 @@ class DesignerBuild {
         let btn = getBtnFromEvent(e)
         let type = btn.getAttribute('data-type')
 
+        // swap active classes
+        let activeBtn = self.getActiveEntityListBtn()
+        if (activeBtn) { activeBtn.classList.remove('active') }
+        btn.classList.add('active')
+
         self.setType(type)
 
         self.renderEntityPane()
         self.initEntityPane()
+
+      })
+
+      // sibling h4 click listener
+      btns[i].previousElementSibling.addEventListener('click', function(e) {
+
+        // simulate click on button
+        let btn = e.target.nextElementSibling
+        btn.click()
 
       })
 
@@ -190,12 +208,12 @@ class DesignerBuild {
     let dict = d.getEntityDict(entityType)
     let definition = dict.getType(type)
 
-    console.log('________')
-    console.log('entityType', entityType)
-    console.log('type', type)
-    console.log('dict', dict)
-    console.log('definition', definition)
-    console.log('________')
+//    console.log('________')
+//    console.log('entityType', entityType)
+//    console.log('type', type)
+//    console.log('dict', dict)
+//    console.log('definition', definition)
+//    console.log('________')
 
     // entity requirements
 
@@ -214,14 +232,14 @@ class DesignerBuild {
       requirementEntityType = requirementEntityTypes[i]
       let requirementDict = d.getEntityDict(requirementEntityType)
 
-      console.log('requirementEntityType', requirementEntityType)
-      console.log('requirementDict', requirementDict)
+//      console.log('requirementEntityType', requirementEntityType)
+//      console.log('requirementDict', requirementDict)
 
       let _requirements = null
       if (requirementEntityType == 'block') { _requirements = dict.getBlockRequirements(type) }
       else if (requirementEntityType == 'item') { _requirements = dict.getItemRequirements(type) }
-      console.log('_requirements', _requirements)
-      console.log('----')
+//      console.log('_requirements', _requirements)
+//      console.log('----')
 
       // entity requiremenents list...
 
@@ -230,13 +248,13 @@ class DesignerBuild {
         for (let requirementType in _requirements) {
           if (!_requirements.hasOwnProperty(requirementType)) { continue }
 
-          console.log('requirementType', requirementType)
+//          console.log('requirementType', requirementType)
 
           let requirementDefinition = requirementDict.getType(requirementType)
           let qty = _requirements[requirementType]
 
-          console.log('requirementDefinition', requirementDefinition)
-          console.log('qty', qty)
+//          console.log('requirementDefinition', requirementDefinition)
+//          console.log('qty', qty)
 
           let playerQty = 0
           let color = 'danger'
@@ -258,8 +276,8 @@ class DesignerBuild {
             requirementsMet = false
           }
 
-          console.log('playerQty', playerQty)
-          console.log('.......')
+//          console.log('playerQty', playerQty)
+//          console.log('.......')
 
           requirements.push(
             `<li class="list-group-item list-group-item-${color}">
@@ -275,7 +293,7 @@ class DesignerBuild {
     }
     let hasRequirements = !!requirements.length
 
-    this.getToolPartsPane().innerHTML =
+    this.getEntityPartsPane().innerHTML =
 
       `<div class="mb-1">` +
 
@@ -303,9 +321,9 @@ class DesignerBuild {
     let entityType = this.getEntityType()
     let type = this.getType()
 
-    let buildBtn = this.getToolBuildButton()
+    let buildBtn = this.getEntityBuildBtn()
     buildBtn.addEventListener('click', function() {
-      self.disableToolBuildButton()
+      self.disableEntityBuildBtn()
       console.log(`build a ${type}`)
 
       player.belt.add(d.create(entityType, type))

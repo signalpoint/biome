@@ -44,6 +44,9 @@ class Designer {
     //   and then pull from the new top level entity index
     // - enemies can be npcs too
     // - a single browser should be able to have different profiles for different players
+    // - once you place a building down, the grid seems to get thicker/darken
+    // - the belt should just contain references to certain items in an entity collection (aka the inventory),
+    //     that way the player can hold more than what is in the belt, and we can easily manage in/out entities
 
     // x - Block extend Entity
     // x - Building extend Entity
@@ -117,6 +120,30 @@ class Designer {
       }
     }
     return false
+  }
+
+  create(entityType, bundle) {
+    if (entityType == 'block') {
+      let blockClass = d.getBlockClass(bundle)
+      let block = new blockClass({
+        delta: null
+      })
+      return block
+    }
+    else if (entityType == 'item') { console.log('TODO') }
+    else if (entityType == 'building') { console.log('TODO') }
+
+  }
+
+  getEntityDict(entityType) {
+    if (entityType == 'block') { return dBlocks }
+    else if (entityType == 'item') { return dItems }
+    else if (entityType == 'building') { return dBuildings }
+    return null
+  }
+
+  isCraftable(entityDict) {
+    return typeof entityDict.craftable !== 'undefined' ? entityDict.craftable : true // assumes entity is craftable
   }
 
   block(delta) { return this.getBlock(d.blocks[delta]) }

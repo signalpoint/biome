@@ -22,12 +22,17 @@
     <script type="text/javascript" src="js/DesignerPlayer.js"></script>
     <script type="text/javascript" src="js/DesignerCamera.js"></script>
     <script type="text/javascript" src="js/DesignerStorage.js"></script>
-    <script type="text/javascript" src="js/DesignerBlocks.js"></script>
-    <script type="text/javascript" src="js/DesignerBuildings.js"></script>
-    <script type="text/javascript" src="js/DesignerItems.js"></script>
 
     <script type="text/javascript" src="js/Entity.js"></script>
     <script type="text/javascript" src="js/EntityCollection.js"></script>
+
+    <script type="text/javascript" src="js/EntityDict.js"></script>
+
+    <script type="text/javascript" src="js/DesignerBlocks.js"></script>
+    <script type="text/javascript" src="js/DesignerItems.js"></script>
+    <script type="text/javascript" src="js/DesignerBuildings.js"></script>
+
+    <script type="text/javascript" src="js/DesignerBuild.js"></script>
 
     <script type="text/javascript" src="js/Belt.js"></script>
 
@@ -37,6 +42,7 @@
     <script type="text/javascript" src="js/blocks/Border.js"></script>
     <script type="text/javascript" src="js/blocks/Grass.js"></script>
     <script type="text/javascript" src="js/blocks/OakTreeWood.js"></script>
+    <script type="text/javascript" src="js/blocks/OakPlank.js"></script>
     <script type="text/javascript" src="js/blocks/OakTreeLeaves.js"></script>
     <script type="text/javascript" src="js/blocks/Sand.js"></script>
     <script type="text/javascript" src="js/blocks/Stone.js"></script>
@@ -51,6 +57,8 @@
 
     <script type="text/javascript" src="js/Item.js"></script>
     <script type="text/javascript" src="js/items/Axe.js"></script>
+    <script type="text/javascript" src="js/items/WoodAxe.js"></script>
+    <script type="text/javascript" src="js/items/StoneAxe.js"></script>
 
     <script type="text/javascript" src="js/Player.js"></script>
     <script type="text/javascript" src="js/PlayerMode.js"></script>
@@ -508,7 +516,13 @@
 
         <!-- Belt -->
         <button type="button" class="btn btn-outline-dark btn-lg text-secondary active" data-op="belt" title="Belt">
-          <i class="fas fa-dice-d6"></i>
+          <i class="fas fa-grip-horizontal"></i>
+          <span class="d-none position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success fs-6">!</span>
+        </button>
+
+        <!-- Tools -->
+        <button type="button" class="btn btn-outline-dark btn-lg text-secondary" data-op="tools" title="Tools">
+          <i class="fas fa-toolbox"></i>
           <span class="d-none position-absolute top-0 start-50 translate-middle badge rounded-pill bg-success fs-6">!</span>
         </button>
 
@@ -525,12 +539,15 @@
         </button>
 
       </div>
-      <div id="playerModePanes" class="position-absolute top-89 start-50 translate-middle bg-dark text-light">
+      <div id="playerModePanes" class="position-absolute top-88 start-50 translate-middle bg-dark text-light">
 
-        <!-- BELT -->
-        <div id="playerBeltElement" class="player-mode-pane btn-group active" role="group" aria-label="Belt" data-op="belt" data-top="88">
+        <!-- BELT (data-top must equal parent top-# )-->
+        <div id="playerBeltElement" class="player-mode-pane btn-group active" data-op="belt" data-top="88" role="group" aria-label="Belt">
           <!-- @see PlayerMode.initButtons() -->
         </div>
+
+        <!-- TOOLS -->
+        <div id="playerToolsElement" class="player-mode-pane d-none p-3 overflow-hidden" data-op="tools" data-top="50"></div>
 
         <!-- BUILD -->
         <div id="playerBuildElement" class="player-mode-pane d-none p-3" data-op="build" data-top="88"></div>

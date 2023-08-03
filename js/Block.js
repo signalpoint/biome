@@ -2,7 +2,7 @@ class Block extends Entity {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type,
     selected = 0,
     solid = 0,

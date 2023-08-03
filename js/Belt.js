@@ -58,8 +58,6 @@ class Belt extends EntityCollection {
         this.add(new blockClass({
           id: entity.id,
           delta: entity.delta,
-//          type: entity.type,
-          solid: entity.solid,
           health: entity.health
         }))
 
@@ -73,9 +71,6 @@ class Belt extends EntityCollection {
 
   }
 
-//  getBeltItem(index) { return this._belt[index] }
-//  deleteBeltItem(index) { this._belt.splice(index, 1) }
-
   add(entity) {
     if (entity.isBlock()) { super.add('block', entity) }
     else if (entity.isItem()) { super.add('item', entity) }
@@ -83,35 +78,6 @@ class Belt extends EntityCollection {
   remove(entity) {
     if (entity.isBlock()) { super.remove('block', entity) }
     else if (entity.isItem()) { super.remove('item', entity) }
-  }
-
-  addBlockToBelt(delta) {
-    let block = d.block(delta)
-    let blockClass = d.getBlockClass(block.type)
-    this._belt.push(new blockClass({
-      delta: null,
-      type: block.type,
-      solid: block.solid
-    }))
-  }
-
-  addItemToBelt(item) {
-    this.getBelt().push(item)
-    this.addItemToBeltIndex(item)
-  }
-  addItemToBeltIndex(item) {
-    if (!this._beltIndex[item.type]) { this._beltIndex[item.type] = [] }
-    this._beltIndex[item.type].push(item.id)
-  }
-  removeItemFromBeltIndex(item) {
-    let index = this._beltIndex[item.type].indexOf(item.id)
-    this._beltIndex[item.type].splice(index, 1)
-  }
-  getItemFromBeltIndexByType(type) {
-    return this.item.s[this._beltIndex[type][0]]
-  }
-  beltIndexHasItemType(type) {
-    return this._beltIndex[type] && this._beltIndex[type].length
   }
 
   getElement() {

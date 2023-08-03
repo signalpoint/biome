@@ -72,3 +72,6 @@
   border-color: #666;
   cursor: pointer;
 }
+#playerToolsElement .entity-list .card-title:hover {
+  cursor: pointer;
+}

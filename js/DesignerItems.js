@@ -1,17 +1,35 @@
-class DesignerItems {
+class DesignerItems extends EntityDict {
 
   constructor() {
+
+    super({
+
+    })
 
     this._typesDict = {
 
       // AXE
-      'Axe': {
-        itemClass: Axe,
-        label: 'Axe',
-        description: 'A wooden axe with a stone blade.',
+      'WoodAxe': {
+        itemClass: WoodAxe,
+        label: 'Wood Axe',
+        description: 'An axe with a wooden blade.',
         requires: {
-          'OakTreeWood': 1,
-          'Stone': 1
+          blocks: {
+            'OakPlank': 2
+          }
+        }
+      },
+
+      // AXE
+      'StoneAxe': {
+        itemClass: StoneAxe,
+        label: 'Stone Axe',
+        description: 'An axe with a stone blade.',
+        requires: {
+          blocks: {
+            'OakPlank': 2,
+            'Stone': 1
+          }
         }
       }
 
@@ -22,15 +40,6 @@ class DesignerItems {
       this._types.push(type)
     }
 
-  }
-
-  getTypes() { return this._types }
-  getType(type) { return this._typesDict[type] }
-
-  getRequirements(type) { return this.getType(type).requires }
-
-  getPickupLocation(type) {
-    
   }
 
 }

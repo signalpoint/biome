@@ -88,6 +88,7 @@ let dStorage = null
 let dBlocks = null
 let dBuildings = null
 let dItems = null
+let dBuild = null
 
 let playerMode = null
 
@@ -177,6 +178,9 @@ addEventListener('load', function() {
   dBuildings = new DesignerBuildings()
 
   dItems = new DesignerItems()
+
+  dBuild = new DesignerBuild()
+  dBuild.setEntityType('block')
 
   playerMode = new PlayerMode()
 

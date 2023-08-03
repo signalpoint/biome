@@ -1,6 +1,10 @@
-class DesignerBlocks {
+class DesignerBlocks extends EntityDict {
 
   constructor() {
+
+    super({
+
+    })
 
     this._typesDict = {
 
@@ -8,35 +12,55 @@ class DesignerBlocks {
       'Bedrock': {
         blockClass: Bedrock,
         label: 'Bedrock',
-        description: '...'
+        description: '...',
+        craftable: 0
       },
 
       // BlueberryBush
       'BlueberryBush': {
         blockClass: BlueberryBush,
         label: 'Blueberry Bush',
-        description: '...'
+        description: '...',
+        craftable: 0
       },
 
       // Border
       'Border': {
         blockClass: Border,
         label: 'Border',
-        description: '...'
+        description: '...',
+        craftable: 0
       },
 
       // Grass
       'Grass': {
         blockClass: Grass,
         label: 'Grass',
-        description: '...'
+        description: '...',
+        craftable: 0
+      },
+
+      // OakPlank
+      'OakPlank': {
+        blockClass: OakPlank,
+        label: 'Oak Plank',
+        description: 'Made from oak logs, and great for crafting many things.',
+        storedAt: [
+          'LumberCamp'
+        ],
+        requires: {
+          blocks: {
+            'OakTreeWood': 1
+          }
+        }
       },
 
       // OakTreeLeaves
       'OakTreeLeaves': {
         blockClass: OakTreeLeaves,
         label: 'Oak Tree Leaves',
-        description: '...'
+        description: '...',
+        craftable: 0
       },
 
       // OakTreeWood
@@ -44,16 +68,23 @@ class DesignerBlocks {
         blockClass: OakTreeWood,
         label: 'Oak Tree Wood',
         description: '...',
+        craftable: 0,
         storedAt: [
           'LumberCamp'
-        ]
+        ],
+        produces: {
+          blocks: {
+            'OakPlank': 4
+          }
+        }
       },
 
       // Sand
       'Sand': {
         blockClass: Sand,
         label: 'Sand',
-        description: '...'
+        description: '...',
+        craftable: 0
       },
 
       // Stone
@@ -61,6 +92,7 @@ class DesignerBlocks {
         blockClass: Stone,
         label: 'Stone',
         description: '...',
+        craftable: 0,
         storedAt: [
           'StonecutterCamp'
         ]
@@ -70,7 +102,8 @@ class DesignerBlocks {
       'Water': {
         blockClass: Water,
         label: 'Water',
-        description: '...'
+        description: '...',
+        craftable: 0
       }
 
     }
@@ -81,16 +114,5 @@ class DesignerBlocks {
     }
 
   }
-
-  getTypes() { return this._types }
-  getType(type) { return this._typesDict[type] }
-
-  getStorageLocations(type) { return this.getType(type).storedAt }
-  getStorageBuildingType(type) { return this.getStorageLocations(type)[0] }
-  getStorageBuilding(type) {
-    let buildingType = this.getStorageBuildingType(type)
-    return d.getBuildingFromIndexByType(buildingType)
-  }
-  storageBuildingExists(type) { return d.indexHasBuildingType(type) }
 
 }

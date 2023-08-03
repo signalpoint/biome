@@ -5,6 +5,7 @@ class PlayerMode {
     this._mode = 'belt'
 
     this._buildType = null
+    this._toolType = null
 
     this.initButtons()
 
@@ -91,6 +92,12 @@ class PlayerMode {
         if (op == 'belt') {
           // no render needed; html resides in designer.html
         }
+        else if (op == 'tools') {
+          if (newPane.innerHTML == '') {
+            dBuild.render()
+            dBuild.init()
+          }
+        }
         else if (op == 'build') {
           if (newPane.innerHTML == '') {
             self.renderBuildPane()
@@ -111,6 +118,10 @@ class PlayerMode {
   getPanesContainer() { return document.querySelector('#playerModePanes') }
   getPane(op) { return document.querySelector('#playerModePanes .player-mode-pane[data-op="' + op + '"]') }
   getActivePane() { return document.querySelector('#playerModePanes .player-mode-pane.active') }
+
+  // TOOLS
+
+  // ... moved to DesignerCraft
 
   // BUILD
 

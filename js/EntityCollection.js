@@ -47,7 +47,6 @@ class EntityCollection {
     this._entities.push(entity)
     this._addToTypeIndex(type, entity, i)
     this._addToBundleIndex(type, entity, i)
-//    this._addToIdIndex(type, entity)
   }
   remove(type, entity) {
     let i = this._typeIndex[type][entity.id]
@@ -55,7 +54,6 @@ class EntityCollection {
     this._entities.splice(i, 1)
     this._removeFromTypeIndex(type, entity)
     this._removeFromBundleIndex(type, entity)
-//    this._removeFromIdIndex(type, entity)
   }
 
   _addToTypeIndex(type, entity, i) {
@@ -74,13 +72,18 @@ class EntityCollection {
     this._bundleIndex[type][entity.type].splice(i, 1)
   }
 
-//  _addToIdIndex(type, entity) {
-//    if (!this._idIndex[type]) { this._idIndex[type] = [] }
-//    this._idIndex[type].push(entity.id)
-//  }
-//  _removeFromIdIndex(type, entity) {
-//    let i = this._idIndex[type].indexOf(entity.id)
-//    this._idIndex[type].splice(i, 1)
-//  }
+  has(entityType, bundle) {
+    return !!(
+      this._bundleIndex[entityType] &&
+      this._bundleIndex[entityType][bundle] &&
+      this._bundleIndex[entityType][bundle].length
+    )
+  }
+  hasBlock(bundle) { return this.has('block', bundle) }
+  hasItem(bundle) { return this.has('item', bundle) }
+
+  qty(entityType, bundle) { return this._bundleIndex[entityType][bundle].length }
+  blockQty(bundle) { return this.qty('block', bundle) }
+  itemQty(bundle) { return this.qty('item', bundle) }
 
 }

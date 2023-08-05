@@ -14,7 +14,7 @@ class DesignerItems extends EntityDict {
         label: 'Wood Axe',
         description: 'An axe with a wooden blade.',
         requires: {
-          blocks: {
+          block: {
             'OakPlank': 2
           }
         }
@@ -26,7 +26,7 @@ class DesignerItems extends EntityDict {
         label: 'Stone Axe',
         description: 'An axe with a stone blade.',
         requires: {
-          blocks: {
+          block: {
             'OakPlank': 2,
             'Stone': 1
           }

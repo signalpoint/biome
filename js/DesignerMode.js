@@ -123,6 +123,7 @@ class DesignerMode {
 
   paintBlock(delta, block) {
 //    console.log(`painting ${block.type} block @ ${delta}`, block)
+    d.destroy(d.block(delta))
     block.delta = delta
     block.health = 100
     d.blocks[delta] = block.id

@@ -28,6 +28,7 @@ class Item extends Entity {
 
   // methods
 
+  // TODO abstract and move up to Entity?
   getRequirements() {
 
     return dItems.getRequirements(this.constructor.name)

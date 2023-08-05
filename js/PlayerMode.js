@@ -92,6 +92,12 @@ class PlayerMode {
         if (op == 'belt') {
           // no render needed; html resides in designer.html
         }
+        else if (op == 'inventory') {
+          if (newPane.innerHTML == '') {
+            dInventory.render()
+            dInventory.init()
+          }
+        }
         else if (op == 'tools') {
           if (newPane.innerHTML == '') {
             dBuild.render()
@@ -234,16 +240,10 @@ class PlayerMode {
 
   canvasMouseMoveListener(e) {
 
-    let leftClick = mouse.left.pressed
-    let rightClick = mouse.right.pressed
+//    let leftClick = mouse.left.pressed
+//    let rightClick = mouse.right.pressed
+//    let delta = d.getMouseBlockDelta()
     let mode = this.getMode()
-    let delta = d.getMouseDownBlockDelta()
-
-    let existingBlock = d.blocks[delta] !== 0
-    let existingBuilding = d.buildings[delta] !== 0
-
-    let block = existingBlock ? d.block(delta) : null
-    let building = existingBuilding ? d.building(delta) : null
 
     if (mouse.left.pressed) { // dragging...
 
@@ -426,7 +426,7 @@ class PlayerMode {
               // If the block can be mined and the belt isn't full...
               if (block.canBeMined() && !player.belt.isFull()) {
 
-//                player.mineBlock(delta)
+                // @see player.mineBlock()
 
               }
 
@@ -440,17 +440,17 @@ class PlayerMode {
               if (isBedrock) {
 
                 // If they have an active belt entity...
-                let index = player.belt.getActiveButtonIndex()
-                let entity = player.belt.get(index)
+                let i = player.belt.getActiveButtonIndex()
+                let entity = player.inventory.see(i)
                 if (entity) {
 
                   if (entity.isBlock()) {
 
-                    console.log(`placing ${entity.type} block @ ${delta}`)
+//                    console.log(`placing ${entity.type} block @ ${delta}`)
 
                     // place the block from their active belt entity
                     dMode.paintBlock(delta, entity)
-                    player.belt.remove(entity)
+                    player.inventory.pop(i)
                     player.belt.refresh()
 
                   }
@@ -542,7 +542,11 @@ class PlayerMode {
       }
 
       // PAINT
-      else if (mode == 'paint') { console.log('PAINT') }
+      else if (mode == 'paint') {
+
+        // TODO move the "painting" code here
+
+      }
 
     }
 

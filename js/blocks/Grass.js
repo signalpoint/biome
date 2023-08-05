@@ -2,7 +2,7 @@ class Grass extends Block {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type = 'Grass',
     selected = 0,
     health = 100

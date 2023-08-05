@@ -2,7 +2,7 @@ class Border extends Block {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type = 'Border',
     selected = 0,
     health = 100

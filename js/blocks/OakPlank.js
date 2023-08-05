@@ -2,7 +2,7 @@ class OakPlank extends Block {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type = 'OakPlank',
     selected = 0,
     health = 100

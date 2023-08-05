@@ -3,7 +3,7 @@ class OakTreeWood extends Block {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type = 'OakTreeWood',
     selected = 0,
     health = 100
@@ -16,7 +16,8 @@ class OakTreeWood extends Block {
       selected,
       solid: 1,
       health,
-      hardness: 1000
+//      hardness: 1000
+      hardness: 100
     })
 
   }

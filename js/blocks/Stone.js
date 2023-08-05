@@ -2,7 +2,7 @@ class Stone extends Block {
 
   constructor({
     id = null,
-    delta,
+    delta = null,
     type = 'Stone',
     selected = 0,
     health = 100

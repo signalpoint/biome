@@ -1,12 +1,13 @@
 class Axe extends Item {
 
   constructor({
-    id = null
+    id = null,
+    type
   }) {
 
     super({
       id,
-      type: 'Axe',
+      type,
       width: 6,
       height: 24
     })

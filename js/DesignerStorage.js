@@ -25,8 +25,7 @@ class DesignerStorage {
       blockSize: d.getBlockSize(),
       mapWidth: d.getMapWidth(),
       mapHeight: d.getMapHeight(),
-      blocks: this.exportBlocksJson(),
-      buildings: this.exportBuildingsJson()
+      entities: d._entities
     }
 
   }
@@ -39,175 +38,38 @@ class DesignerStorage {
 
     console.log('importMapJson', map)
 
-    let id = null
-    let type = null
-    let health = null
+    // import entities...
+    if (map.entities) {
 
-    d.blocks = []
-    d.buildings = []
+      // for each entity type...
+      for (let entityType in map.entities) {
+        if (!map.entities.hasOwnProperty(entityType)) { continue }
 
-    for (let delta = 0; delta < map.blocks.length; delta++) {
+        // for each entity...
+        for (let id in map.entities[entityType]) {
+          if (!map.entities[entityType].hasOwnProperty(id)) { continue }
 
-      let hasBlock = !!map.blocks[delta]
-      let hasBuilding = !!map.buildings[delta]
+          let entity = map.entities[entityType][id]
+          switch (entityType) {
+            case 'block':
+              let blockClass = d.getBlockClass(entity.type)
+              let block = new blockClass(entity)
+              if (block.delta) {
+                d.blocks[block.delta] = block.id
+              }
+              break;
+            default:
+              console.log(`TODO support ${entityType} in importMapJson()`)
+              break;
+          }
 
-      if (!hasBlock) { d.blocks.push(0) }
-      else {
-
-        id = map.blocks[delta].i
-        type = map.blocks[delta].t
-        health = map.blocks[delta].h
-
-        if (!dBlocks.getType(type)) {
-          console.log(`unknown block type encountered during map import: ${type}`)
-          continue
         }
-
-        let blockClass = d.getBlockClass(type)
-        let block = new blockClass({
-          id,
-          delta,
-          type,
-          health
-        })
-        d.blocks[delta] = block.id
-
-      }
-
-      if (!hasBuilding) { d.buildings.push(0) }
-      else {
-
-        type = map.buildings[delta].t
-
-        let pos = d.getBlockPosFromDelta(delta)
-        let buildingClass = d.getBuildingClass(type)
-        let building = new buildingClass({
-          delta,
-          type,
-          x: pos.x,
-          y: pos.y
-        })
-        d.buildings[delta] = building.id
 
       }
 
     }
 
     refresh()
-
-  }
-
-  // entities
-
-  exportEntitiesJson() {
-
-    let out = {}
-
-    for (let entityType in d._entities) {
-
-      if (!d._entities.hasOwnProperty(entityType)) { continue }
-
-      out[entityType] = {}
-
-      for (let id in d._entities[entityType]) {
-
-        let entity = d._entities[entityType][id]
-
-        if (entityType == 'block') {
-          out[entityType][id] = {
-            t: entity.type,
-            h: entity.health
-          }
-        }
-
-        else if (entityType == 'building') {
-          out[entityType][id] = {
-            t: entity.type
-          }
-        }
-
-        else if (entityType == 'item') {
-          out[entityType][id] = {
-            t: entity.type,
-            h: entity.health
-          }
-        }
-
-        else if (entityType == 'npc') {
-          out[entityType][id] = {
-            n: entity.name
-          }
-        }
-
-      }
-    }
-
-    return out
-
-  }
-
-  // blocks
-
-  exportBlocksJson() {
-
-    let blocks = []
-    let blockId = null
-    let block = null
-    let delta = 0
-
-    for (let y = 0; y < d.getMapHeight(); y += d.getBlockSize()) {
-
-      for (let x = 0; x < d.getMapWidth(); x += d.getBlockSize()) {
-
-        blockId = d.blocks[delta]
-
-        if (blockId) {
-          block = d.getBlock(blockId)
-          blocks.push({
-            i: block.id,
-            t: block.type,
-            h: block.health
-          })
-        }
-        else { blocks.push(0) }
-
-        delta++
-
-      }
-
-    }
-
-    return blocks
-
-  }
-
-  // buildings
-
-  exportBuildingsJson() {
-
-    let buildings = []
-    let building = null
-    let delta = 0
-
-    for (let y = 0; y < d.getMapHeight(); y += d.getBlockSize()) {
-
-      for (let x = 0; x < d.getMapWidth(); x += d.getBlockSize()) {
-
-        if (d.buildings[delta]) {
-          building = d.building(delta)
-          buildings.push({
-            t: building.type
-          })
-        }
-        else { buildings.push(0) }
-
-        delta++
-
-      }
-
-    }
-
-    return buildings
 
   }
 

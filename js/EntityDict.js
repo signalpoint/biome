@@ -22,11 +22,11 @@ class EntityDict {
   }
   getBlockRequirements(type) {
     let requirements = this.getRequirements(type)
-    return requirements && requirements.blocks ? requirements.blocks : null
+    return requirements && requirements.block ? requirements.block : null
   }
   getItemRequirements(type) {
     let requirements = this.getRequirements(type)
-    return requirements && requirements.items ? requirements.items : null
+    return requirements && requirements.item ? requirements.item : null
   }
 
   getStorageLocations(type) { return this.getType(type).storedAt }
@@ -39,6 +39,11 @@ class EntityDict {
 
   getPickupLocation(type) {
 
+  }
+
+  getOutputQty(type) {
+    let def = d.getType(type)
+    return def.output ? def.output : 1
   }
 
 }

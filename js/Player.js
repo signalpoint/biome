@@ -30,7 +30,6 @@ class Player {
 
     this.belt = new Belt({
       id: 'playerBeltElement',
-//      size: 10
       inventory: this.inventory
     })
 
@@ -64,7 +63,6 @@ class Player {
       name: this.name,
       x: this.x,
       y: this.y,
-//      belt: this.belt.exportData(),
       inventory: this.inventory.exportData()
     })
   }
@@ -75,7 +73,6 @@ class Player {
       this.name = data.name
       this.x = data.x
       this.y = data.y
-//      if (data.belt) { this.belt.importData(data.belt) }
       if (data.inventory) { this.inventory.importData(data.inventory) }
     }
   }
@@ -344,11 +341,7 @@ class Player {
     player.belt.refresh()
     dInventory.refresh()
 
-    // save the map
-    d.saveCurrentMap()
-
-    // save the player
-    player.save()
+    d.save()
 
   }
 

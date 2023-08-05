@@ -58,8 +58,12 @@ class DesignerStorage {
                 d.blocks[block.delta] = block.id
               }
               break;
+            case 'item':
+              let itemClass = d.getItemClass(entity.type)
+              let item = new itemClass(entity)
+              break;
             default:
-              console.log(`TODO support ${entityType} in importMapJson()`)
+              console.log(`---- TODO support ${entityType} in importMapJson()`)
               break;
           }
 

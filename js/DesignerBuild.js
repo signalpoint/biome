@@ -15,6 +15,8 @@ class DesignerBuild {
   getType() { return this._type }
   setType(type) { this._type = type }
 
+  getCloseBtn() { return document.getElementById('dBuildCloseBtn') }
+
   // nav
 
   getNav() { return document.querySelector('#dBuildNav') }
@@ -44,7 +46,7 @@ class DesignerBuild {
 
 `<div class="clearfix mb-1">
   <h3 class="float-start">Crafting</h3>
-  <button class="btn btn-dark text-light float-end"><i class="fas fa-times"></i></button>
+  <button id="dBuildCloseBtn" class="btn btn-dark text-light float-end"><i class="fas fa-times"></i></button>
 </div>
 
 <ul id="dBuildNav" class="nav nav-tabs mb-3">` +
@@ -72,10 +74,12 @@ class DesignerBuild {
 
 `</ul>
 
-<div class="row">
+<div class="row border-bottom border-secondary pb-3 mb-3">
   <div class="col-6 entity-list overflow-scroll"></div>
   <div class="col-6 entity-parts"></div>
-</div>`
+</div>` +
+
+    `<div id="playerInventoryElement"></div>`
 
   }
 
@@ -85,10 +89,10 @@ class DesignerBuild {
 
     let toolsElement = this.getToolsElement()
     toolsElement.style.width = `${d.getScreenWidth() * .66}px`
-    toolsElement.style.height = `${d.getScreenHeight() * .66}px`
+    toolsElement.style.height = `${d.getScreenHeight() * .85}px`
 
     let entityListPane = this.getEntityListPane()
-    entityListPane.style.height = `${d.getScreenHeight() * .5}px`
+    entityListPane.style.height = `${d.getScreenHeight() * .35}px`
 
     // for each nav button...
     let navBtns = this.getNavBtns()
@@ -112,14 +116,23 @@ class DesignerBuild {
 
     }
 
+    // close btn
+    this.getCloseBtn().addEventListener('click', (e) => {
+      self.refresh()
+      playerMode.switchToPane('belt')
+    })
+
+
+    dInventory.init()
+
     this.refresh()
+    dInventory.refresh()
 
   }
 
   refresh() {
     this.clearEntityPartsPane()
-    this.renderEntityList()
-    this.initEntityList()
+    this.refreshEntityList()
   }
 
   // ENTITY LIST
@@ -199,7 +212,12 @@ class DesignerBuild {
 
   }
 
-  // ENTITY PANE
+  refreshEntityList() {
+    this.renderEntityList()
+    this.initEntityList()
+  }
+
+  // ENTITY PANE (entity parts pane)
 
   renderEntityPane() {
 
@@ -259,9 +277,9 @@ class DesignerBuild {
           let playerQty = 0
           let color = 'danger'
 
-          if (player.belt.has(requirementEntityType, requirementType)) { // has some of the entity...
+          if (player.inventory.has(requirementEntityType, requirementType)) { // has some of the entity...
 
-            playerQty = player.belt.qty(requirementEntityType, requirementType)
+            playerQty = player.inventory.qty(requirementEntityType, requirementType)
 
             if (playerQty >= qty) { // has enough of the entity...
               color = 'success'
@@ -297,7 +315,10 @@ class DesignerBuild {
 
       `<div class="mb-1">` +
 
-        `<span class="fs-4">${definition.label}</span>` +
+        `<span class="fs-4">
+          ${definition.label}
+          ${definition.output && definition.output > 1 ? ` (x${definition.output})` : ''}
+        </span>` +
 
         // build btn
         `<button class="btn btn-${requirementsMet ? 'primary' : 'secondary'} float-end ${requirementsMet ? '' : 'disabled'}" title="Build ${definition.label}">
@@ -318,19 +339,72 @@ class DesignerBuild {
   initEntityPane() {
 
     let self = this
-    let entityType = this.getEntityType()
-    let type = this.getType()
+
+    // BUILD / CRAFT
 
     let buildBtn = this.getEntityBuildBtn()
     buildBtn.addEventListener('click', function() {
-      self.disableEntityBuildBtn()
-      console.log(`build a ${type}`)
 
-      player.belt.add(d.create(entityType, type))
+      let targetEntityType = self.getEntityType()
+      let targetType = self.getType()
+
+      // disable build btn
+      self.disableEntityBuildBtn()
+
+      // remove required entities from belt...
+
+      let requirements = d.getEntityRequirements(targetEntityType, targetType)
+
+      // entity types...
+      for (let entityType in requirements) {
+        if (!requirements.hasOwnProperty(entityType)) { continue }
+
+        // bundles...
+        for (let type in requirements[entityType]) {
+          if (!requirements[entityType].hasOwnProperty(type)) { continue }
+
+          // qty...
+
+          let qty = requirements[entityType][type]
+          console.log(`remove ${qty} ${type}`)
+
+          for (let i = 0; i < qty; i++) {
+
+            // find slot in inventory
+            let slot = player.inventory.findExistingSlot(entityType, type)
+
+            // remove entity from inventory
+            let entity = player.inventory.pop(slot)
+
+            // destroy from world
+            d.destroy(entity)
+
+          }
+
+        }
+
+      }
+
+      // create the new entity(ies) and add it to the player inventory...
+
+      let qty = d.outputQty(targetEntityType, targetType)
+      for (let i = 0; i < qty; i++) {
+        player.inventory.add(d.create(targetEntityType, targetType))
+      }
+
+      dInventory.refresh()
+
       player.belt.refresh()
+
+      d.save()
 
     })
 
+  }
+
+  refreshEntityPane() {
+    this.renderEntityPane()
+    this.initEntityPane()
   }
 
 }

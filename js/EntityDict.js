@@ -13,6 +13,9 @@ class EntityDict {
   getTypes() { return this._types }
   getType(type) { return this._typesDict[type] }
 
+  // requirements
+  // @see d.* for other requirement helpers
+
   getRequirements(type) {
     let requirements = this.getType(type).requires
     return requirements ? requirements : null

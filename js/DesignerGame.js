@@ -4,17 +4,6 @@ class DesignerGame {
 
   }
 
-//  save() {
-//    dStorage.save('dGame', {
-//    })
-//  }
-//
-//  load() {
-//    let g = dStorage.load('dGame')
-//    if (g) {
-//    }
-//  }
-
   init() {
 
     // init player belt
@@ -46,7 +35,7 @@ class DesignerGame {
     // trying to move rightbelt...
     if (e.deltaY > 0) {
 
-      if (index == player.belt.getSize() - 1) {
+      if (index == BELT_SIZE - 1) {
 
         // all the way right...
 

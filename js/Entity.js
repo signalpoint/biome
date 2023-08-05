@@ -30,8 +30,8 @@ class Entity {
   }
 
   isBlock() { return this.entityType == 'block' }
-  isBuilding() { return this.entityType == 'building' }
   isItem() { return this.entityType == 'item' }
+  isBuilding() { return this.entityType == 'building' }
   isNpc() { return this.entityType == 'npc' }
 
 }

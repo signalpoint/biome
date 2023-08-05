@@ -8,7 +8,7 @@ class DesignerItems extends EntityDict {
 
     this._typesDict = {
 
-      // AXE
+      // WOOD AXE
       'WoodAxe': {
         itemClass: WoodAxe,
         label: 'Wood Axe',
@@ -20,11 +20,36 @@ class DesignerItems extends EntityDict {
         }
       },
 
-      // AXE
+      // STONE AXE
       'StoneAxe': {
         itemClass: StoneAxe,
         label: 'Stone Axe',
         description: 'An axe with a stone blade.',
+        requires: {
+          block: {
+            'OakPlank': 2,
+            'Stone': 1
+          }
+        }
+      },
+
+      // WOOD PICK AXE
+      'WoodPickAxe': {
+        itemClass: WoodPickAxe,
+        label: 'Wood PickAxe',
+        description: 'A pickaxe with a wooden blade.',
+        requires: {
+          block: {
+            'OakPlank': 2
+          }
+        }
+      },
+
+      // STONE PICK AXE
+      'StonePickAxe': {
+        itemClass: StonePickAxe,
+        label: 'Stone PickAxe',
+        description: 'A pickaxe with a stone blade.',
         requires: {
           block: {
             'OakPlank': 2,

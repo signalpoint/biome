@@ -1,20 +1,12 @@
-class Belt extends EntityCollection {
+class Belt {
 
   constructor({
     id,
-    size = 10,
-    entities = [],
-    typeIndex = {},
-    bundleIndex = {}
+    inventory
   }) {
 
-    super({
-      id,
-      size,
-      entities,
-      typeIndex,
-      bundleIndex
-    })
+    this.id = id
+    this.inventory = inventory
 
     this._element = null
     this._buttons = null
@@ -22,66 +14,8 @@ class Belt extends EntityCollection {
 
   }
 
-  //---------------------------------
-
-  // TODO turn this into Belt.js
-
-//  getBelt() { return this._belt }
-//  getBeltIndex() { return this._beltIndex }
-//  getBeltSize() { return this._beltSize }
-
-  // TODO
-//  exportData() { return this._belt }
-
-  // TODO
-  importData(data) {
-
-//    console.log('loading player belt', data)
-
-    this.belt = new Belt({
-      id: data._id,
-      size: data._size
-    })
-
-    for (let i = 0; i < data._entities.length; i++) {
-
-      let entity = data._entities[i]
-
-      if (entity.entityType == 'block') {
-
-        if (!dBlocks.getType(entity.type)) {
-          console.log(`Player belt import skipping unknown block type: ${entity.type}`)
-          continue
-        }
-
-        let blockClass = d.getBlockClass(entity.type)
-        this.add(new blockClass({
-          id: entity.id,
-          delta: entity.delta,
-          health: entity.health
-        }))
-
-      }
-
-      else if (entity.entityType == 'item') {
-        console.log('TODO Belt.importData() - handle items')
-      }
-
-    }
-
-  }
-
-  add(entity) {
-    if (entity.isBlock()) { super.add('block', entity) }
-    else if (entity.isItem()) { super.add('item', entity) }
-  }
-  remove(entity) {
-    if (entity.isBlock()) { super.remove('block', entity) }
-    else if (entity.isItem()) { super.remove('item', entity) }
-  }
-
   getElement() {
-    if (!this._element) { this._element = document.getElementById(this.getId()) }
+    if (!this._element) { this._element = document.getElementById(this.id) }
     return this._element
   }
   getButtons() {
@@ -110,7 +44,7 @@ class Belt extends EntityCollection {
 
   init() {
 
-    for (let i = 0; i < this.getSize(); i++) {
+    for (let i = 0; i < BELT_SIZE; i++) {
 
       let active = i == 0
 
@@ -164,11 +98,24 @@ class Belt extends EntityCollection {
   }
 
   refresh() {
-    for (let i = 0; i < this.getSize(); i++) {
-      let block = this.get(i)
-      this.getButton(i).innerHTML = block ?
-        block.type : '<i class="fas fa-circle-notch"></i>'
+
+    let inventory = this.inventory
+
+    for (let i = 0; i < BELT_SIZE; i++) {
+
+      let html = ''
+
+      let slot = inventory.get(i)
+      if (slot) {
+        let def = inventory.getDefinition(i)
+        html = `${def.label}<span class="badge bg-primary float-end">${slot.length}</span>`
+      }
+      else { html = '<i class="fas fa-circle-notch"></i>' }
+
+      this.getButton(i).innerHTML = html
+
     }
+
   }
 
 }

@@ -47,6 +47,7 @@ class Designer {
     // - once you place a building down, the grid seems to get thicker/darken
     // - the belt should just contain references to certain items in an entity collection (aka the inventory),
     //     that way the player can hold more than what is in the belt, and we can easily manage in/out entities
+    // - the map could be shaded out at first, and as you explore, the blocks begin to draw/alpha themselves
 
     // x - Block extend Entity
     // x - Building extend Entity
@@ -135,11 +136,18 @@ class Designer {
 
   }
 
+
   getEntityDict(entityType) {
     if (entityType == 'block') { return dBlocks }
     else if (entityType == 'item') { return dItems }
     else if (entityType == 'building') { return dBuildings }
     return null
+  }
+  getEntityDefinition(entityType, type) {
+    return this.getEntityDict(entityType).getType(type)
+  }
+  getEntityRequirements(entityType, type) {
+    return this.getEntityDefinition(entityType, type).requires
   }
 
   isCraftable(entityDict) {
@@ -149,15 +157,18 @@ class Designer {
   block(delta) { return this.getBlock(d.blocks[delta]) }
   building(delta) { return this.getBuilding(d.buildings[delta]) }
 
+  hasBlock(delta) { return !!d.blocks[delta] }
+
   hasBlocks() { return this._hasEntityType('block') }
   hasBuildings() { return this._hasEntityType('building') }
   hasItems() { return this._hasEntityType('item') }
   hasNpcs() { return this._hasEntityType('npc') }
 
-  getBlock(id) { return d.getEntityFromIndex('block', id) }
-  getBuilding(id) { return d.getEntityFromIndex('building', id) }
-  getItem(id) { return d.getEntityFromIndex('item', id) }
-  getNpc(id) { return d.getEntityFromIndex('npc', id) }
+  getEntity(entityType, id) { return d.getEntityFromIndex(entityType, id) }
+  getBlock(id) { return d.getEntity('block', id) }
+  getBuilding(id) { return d.getEntity('building', id) }
+  getItem(id) { return d.getEntity('item', id) }
+  getNpc(id) { return d.getEntity('npc', id) }
 
   getBlocks() { return this._entities.block }
   getBuildings() { return this._entities.building }
@@ -442,26 +453,23 @@ class Designer {
 
   init() {
 
-    // open the last map, if available...
+    // start with an empty map...
 
-    let lastMapOpened = dStorage.load('LastMapOpened')
-    if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
-    else {
+    for (let y = 0; y < this.getMapHeight(); y += this.getBlockSize()) {
 
-      // start with an empty map...
+      for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
 
-      for (let y = 0; y < this.getMapHeight(); y += this.getBlockSize()) {
-
-        for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
-
-          this.blocks.push(0)
-          this.buildings.push(0)
-
-        }
+        this.blocks.push(0)
+        this.buildings.push(0)
 
       }
 
     }
+
+    // open the last map, if available...
+
+    let lastMapOpened = dStorage.load('LastMapOpened')
+    if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
 
     dMode.init()
     dGame.init()
@@ -488,10 +496,7 @@ class Designer {
 
     if (blockDelta != d.getMouseBlockDelta()) {
 
-      // track which block delta the mouse is over
       d.setMouseBlockDelta(blockDelta)
-
-//      refresh()
 
     }
 

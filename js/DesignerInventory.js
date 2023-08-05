@@ -17,8 +17,8 @@ class DesignerInventory {
       let slot = player.inventory.get(i)
 
       let html =
-        `<div class="card bg-dark text-light mb-1 me-1" style="width: 4rem; height: 4rem">
-          <div class="card-body">`
+
+        `<li class="nav-item px-1">`
 
       if (slot) {
 
@@ -26,10 +26,10 @@ class DesignerInventory {
 
         html +=
 
-          `<h4 class="card-title">
+          `<a class="nav-link px-2 text-secondary">
             <span class="badge bg-primary float-start me-2">${player.inventory.getSlotQty(i)}</span>
             ${def.label}
-          </h4>`
+          </a>`
 
       }
 
@@ -37,14 +37,13 @@ class DesignerInventory {
 
         html +=
 
-          `&nbsp;`
+          `<i class="far fa-square fa-4x text-secondary"></i>`
 
       }
 
       html +=
 
-          `</div>
-        </div>`
+        `</li>`
 
       return html
 
@@ -70,7 +69,7 @@ class DesignerInventory {
 
         html +=
 
-`<div class="row mx-1">`
+`<div class="row"><div class="col-12 text-center"><ul class="nav justify-content-center">`
 
       }
 
@@ -80,7 +79,7 @@ class DesignerInventory {
 
         html +=
 
-`</div>`
+`</ul></div></div>`
 
       }
 
@@ -92,10 +91,13 @@ class DesignerInventory {
 
     }
 
-    playerMode.getPane('inventory').innerHTML =
-
-      slots.join('') + '<hr class="mb-3" />' +
-      '<div class="row mx-1">' + quick.join('') + '</div>'
+    let el = document.querySelector('#playerInventoryElement')
+    if (el) {
+      el.innerHTML =
+        slots.join('') +
+        '<hr class="mb-3" />' +
+        '<div class="row"><div class="col-12 text-center"><ul class="nav justify-content-center">' + quick.join('') + '</ul></div></div>'
+    }
 
   }
 

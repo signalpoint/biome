@@ -49,10 +49,11 @@ class DesignerBlocks extends EntityDict {
           'LumberCamp'
         ],
         requires: {
-          blocks: {
+          block: {
             'OakTreeWood': 1
           }
-        }
+        },
+        output: 4
       },
 
       // OakTreeLeaves
@@ -71,12 +72,7 @@ class DesignerBlocks extends EntityDict {
         craftable: 0,
         storedAt: [
           'LumberCamp'
-        ],
-        produces: {
-          blocks: {
-            'OakPlank': 4
-          }
-        }
+        ]
       },
 
       // Sand

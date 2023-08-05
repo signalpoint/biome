@@ -23,9 +23,15 @@ class Player {
     this.maxVelocityX = 5
     this.maxVelocityY = 5
 
+    this.inventory = new Inventory({
+      id: 'playerInventory',
+      size: 40 // 10 quick access, 30 storage - @see DesignerInventory
+    })
+
     this.belt = new Belt({
       id: 'playerBeltElement',
-      size: 10
+//      size: 10
+      inventory: this.inventory
     })
 
     this._actions = []
@@ -58,7 +64,8 @@ class Player {
       name: this.name,
       x: this.x,
       y: this.y,
-      belt: this.belt.exportData()
+//      belt: this.belt.exportData(),
+      inventory: this.inventory.exportData()
     })
   }
 
@@ -68,9 +75,8 @@ class Player {
       this.name = data.name
       this.x = data.x
       this.y = data.y
-      if (data.belt) {
-        this.belt.importData(data.belt)
-      }
+//      if (data.belt) { this.belt.importData(data.belt) }
+      if (data.inventory) { this.inventory.importData(data.inventory) }
     }
   }
 
@@ -111,15 +117,25 @@ class Player {
     let leftDestination = this.x - Math.abs(this.vX)
     let rightDestination = this.x + this.width + Math.abs(this.vX)
 
-    let blockAboveTopLeft = d.block(d.getBlockDelta(this.x, upwardDestination))
-    let blockAboveTopRight = d.block(d.getBlockDelta(this.x + this.width, upwardDestination))
-    let blockBelowBottomLeft = d.block(d.getBlockDelta(this.x, downwardDestination))
-    let blockBelowBottomRight = d.block(d.getBlockDelta(this.x + this.width, downwardDestination))
+    let blockAboveTopLeftDelta = d.getBlockDelta(this.x, upwardDestination)
+    let blockAboveTopRightDelta = d.getBlockDelta(this.x + this.width, upwardDestination)
+    let blockBelowBottomLeftDelta = d.getBlockDelta(this.x, downwardDestination)
+    let blockBelowBottomRightDelta = d.getBlockDelta(this.x + this.width, downwardDestination)
 
-    let blockBeforeTopLeft = d.block(d.getBlockDelta(leftDestination, this.y))
-    let blockAfterTopRight = d.block(d.getBlockDelta(rightDestination, this.y))
-    let blockBeforeBottomLeft = d.block(d.getBlockDelta(leftDestination, this.y + this.height))
-    let blockAfterBottomRight = d.block(d.getBlockDelta(rightDestination, this.y + this.height))
+    let blockAboveTopLeft = d.hasBlock(blockAboveTopLeftDelta) ? d.block(blockAboveTopLeftDelta) : null
+    let blockAboveTopRight = d.hasBlock(blockAboveTopRightDelta) ? d.block(blockAboveTopRightDelta) : null
+    let blockBelowBottomLeft = d.hasBlock(blockBelowBottomLeftDelta) ? d.block(blockBelowBottomLeftDelta) : null
+    let blockBelowBottomRight = d.hasBlock(blockBelowBottomRightDelta) ? d.block(blockBelowBottomRightDelta) : null
+
+    let blockBeforeTopLeftDelta = d.getBlockDelta(leftDestination, this.y)
+    let blockAfterTopRightDelta = d.getBlockDelta(rightDestination, this.y)
+    let blockBeforeBottomLeftDelta = d.getBlockDelta(leftDestination, this.y + this.height)
+    let blockAfterBottomRightDelta = d.getBlockDelta(rightDestination, this.y + this.height)
+
+    let blockBeforeTopLeft = d.hasBlock(blockBeforeTopLeftDelta) ? d.block(blockBeforeTopLeftDelta) : null
+    let blockAfterTopRight = d.hasBlock(blockAfterTopRightDelta) ? d.block(blockAfterTopRightDelta) : null
+    let blockBeforeBottomLeft = d.hasBlock(blockBeforeBottomLeftDelta) ? d.block(blockBeforeBottomLeftDelta) : null
+    let blockAfterBottomRight = d.hasBlock(blockAfterBottomRightDelta) ? d.block(blockAfterBottomRightDelta) : null
 
     let canMoveUp = blockAboveTopLeft && !blockAboveTopLeft.solid && blockAboveTopRight && !blockAboveTopRight.solid
     let canMoveDown = blockBelowBottomLeft && !blockBelowBottomLeft.solid && blockBelowBottomRight && !blockBelowBottomRight.solid
@@ -234,8 +250,14 @@ class Player {
     }
 
     // item
-    let item = this.belt.get(this.belt.getActiveButtonIndex())
-    if (item) { item.draw(x, y, this) }
+    let i = this.belt.getActiveButtonIndex()
+    let slot = this.inventory.get(i)
+    if (slot) {// && slot.length
+      let entity = this.inventory.getEntityType(i) == 'block' ?
+        d.getBlock(slot[0]) :
+        d.getItem(slot[0])
+      entity.draw(x, y, this)
+    }
 
   }
 
@@ -288,19 +310,39 @@ class Player {
 
   mineBlock(delta) {
 
-    // TODO if the player's belt is full, the block is probably lost in the abyss; it needs to float on the map to
-    // be picked up
+    // "mine the block" by adding it to the inventory...
 
-    // "mine the block" by adding it to the belt
-    if (!player.belt.isFull()) {
-      player.addBlockToBelt(delta)
+    let inventory = player.inventory
+    let block = d.block(delta)
+
+    // If any slot is already holding this kind of entity and it has an opening, add the enity id it.
+    let existingSlotWithOpening = inventory.findExistingSlotWithOpening('block', block.type)
+    if (existingSlotWithOpening !== null) { inventory.addToExistingSlot(existingSlotWithOpening, block) }
+    else {
+
+      // There weren't any existing slots with openings...
+
+      // If there is an empty slot available, use it.
+      let emptySlot = inventory.findEmptySlot()
+      if (emptySlot !== null) { inventory.addToEmptySlot(emptySlot, block) }
+      else {
+
+        // There weren't any empty slots available...
+
+        // TODO The block is probably lost in the abyss; it needs to float on the map to be picked up
+
+        console.log('mineBlock() - no empty slots avilable')
+
+      }
+
     }
 
     // place bedrock down in its place
     dMode.paintNewBlock(delta, 'Bedrock')
 
-    // refresh the belt
+    // refresh the belt and inventory
     player.belt.refresh()
+    dInventory.refresh()
 
     // save the map
     d.saveCurrentMap()
@@ -454,11 +496,11 @@ class Player {
   addBlockToBelt(delta) {
     let block = d.block(delta)
     block.delta = null
-    this.belt.add(block)
+    this.inventory.add(block)
   }
 
   addItemToBelt(item) {
-    this.belt.add(item)
+    this.inventory.add(item)
   }
 
 //  addItemToBeltIndex(item) {

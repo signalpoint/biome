@@ -96,7 +96,7 @@ class EntityCollection {
 
 //    console.log(`adding ${entity.type} ${entityType} ${entity.id}...`)
 
-    // If any slot is already holding this kind of entity and it has an opening, add the enity id it.
+    // If any slot is already holding this kind of entity and it has an opening, add the enity id to it.
     let existingSlotWithOpening = this.findExistingSlotWithOpening(entityType, entity.type)
     if (existingSlotWithOpening !== null) { this.addToExistingSlot(existingSlotWithOpening, entity) }
     else {
@@ -116,6 +116,14 @@ class EntityCollection {
 
     }
 
+  }
+
+  remove(entity) {
+    let i = this.findEntity(entity)
+    let slot = this.get(slot)
+    let j = slot.indexOf(entity.id)
+    slot.splice(j, 1)
+    if (!slot.length) { this.clearSlot(i) }
   }
 
   addToEmptySlot(i, entity) {
@@ -165,6 +173,11 @@ class EntityCollection {
     return existingSlots.length ? existingSlots : null
   }
 
+  findExistingSlot(entityType, bundle) {
+    let existingSlots = this.findExistingSlots(entityType, bundle)
+    return existingSlots ? existingSlots[0] : null
+  }
+
   findExistingSlotWithOpening(entityType, bundle) {
     let existingSlots = this.findExistingSlots(entityType, bundle)
     if (existingSlots) {
@@ -172,6 +185,25 @@ class EntityCollection {
       for (let i = 0; i < existingSlots.length; i++) {
         existingSlot = existingSlots[i]
         if (this.getSlotQty(existingSlot) < this.getSlotMaxQty(existingSlot)) {
+          return i
+        }
+      }
+    }
+    return null
+  }
+
+  /**
+   * Given an an entity, this will return the slot number where it is located or null if it isn't present.
+   * @param {type} entity
+   * @returns {unresolved}
+   */
+  findEntity(entity) {
+    let existingSlots = this.findExistingSlots(entity.entityType, entity.type)
+    if (existingSlots) {
+      let existingSlot = null
+      for (let i = 0; i < existingSlots.length; i++) {
+        existingSlot = existingSlots[i]
+        if (existingSlot.indexOf(entity.id) !== -1) {
           return i
         }
       }
@@ -205,49 +237,28 @@ class EntityCollection {
   pop(i) {
     let entityType = this.getEntityType(i)
     let id = this._slots[i].pop()
-    if (!this._slots[i].length) {
-      this._slots[i] = 0
-      this._slotsIndex[i] = 0
-    }
+    if (!this._slots[i].length) { this.clearSlot(i) }
     return d.getEntity(entityType, id)
   }
 
-  remove(type, entity) {
-    let i = this._typeIndex[type][entity.id]
-    console.log(`removing ${entity.type} ${type} ${entity.id} from ${i}...`)
-    this._entities.splice(i, 1)
-    this._removeFromTypeIndex(type, entity)
-    this._removeFromBundleIndex(type, entity)
-  }
-
-  _addToTypeIndex(type, entity, i) {
-    if (!this._typeIndex[type]) { this._typeIndex[type] = {} }
-    this._typeIndex[type][entity.id] = i
-  }
-  _removeFromTypeIndex(type, entity) { delete this._typeIndex[type][entity.id] }
-
-  _addToBundleIndex(type, entity) {
-    if (!this._bundleIndex[type]) { this._bundleIndex[type] = {} }
-    if (!this._bundleIndex[type][entity.type]) { this._bundleIndex[type][entity.type] = [] }
-    this._bundleIndex[type][entity.type].push(entity.id)
-  }
-  _removeFromBundleIndex(type, entity) {
-    let i = this._bundleIndex[type][entity.type].indexOf(entity.id)
-    this._bundleIndex[type][entity.type].splice(i, 1)
+  clearSlot(i) {
+    this._slots[i] = 0
+    this._slotsIndex[i] = 0
   }
 
   has(entityType, bundle) {
-    return !!(
-      this._bundleIndex[entityType] &&
-      this._bundleIndex[entityType][bundle] &&
-      this._bundleIndex[entityType][bundle].length
-    )
+    return !!this.findExistingSlots(entityType, bundle)
   }
-  hasBlock(bundle) { return this.has('block', bundle) }
-  hasItem(bundle) { return this.has('item', bundle) }
 
-  qty(entityType, bundle) { return this._bundleIndex[entityType][bundle].length }
-  blockQty(bundle) { return this.qty('block', bundle) }
-  itemQty(bundle) { return this.qty('item', bundle) }
+  qty(entityType, bundle) {
+    let qty = 0
+    let existingSlots = this.findExistingSlots(entityType, bundle)
+    if (existingSlots) {
+      for (let i = 0; i < existingSlots.length; i++) {
+        qty += this.get(existingSlots[i]).length
+      }
+    }
+    return qty
+  }
 
 }

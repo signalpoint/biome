@@ -105,7 +105,7 @@ class BuildingWidget extends DesignerWidget {
     document.getElementById(deleteBtnId).addEventListener('click', function(e) {
       if (window.confirm("Delete building, are you sure?")) {
         d.buildings[delta] = 0
-        d.removeEntityFromIndex('building', building)
+        d.removeEntityFromIndex(building)
         d.saveCurrentMap()
         refresh()
         widget.hide()

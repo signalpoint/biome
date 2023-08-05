@@ -21,6 +21,7 @@
  * BS5 UTILITIES
  */
 
+.top-75 { top: 75% !important; }
 .top-83 { top: 83% !important; }
 .top-84 { top: 84% !important; }
 .top-85 { top: 85% !important; }
@@ -31,7 +32,6 @@
 .top-90 { top: 90% !important; }
 .top-94 { top: 94% !important; }
 .top-95 { top: 95% !important; }
-
 
 #playerModeElement .active,
 #playerBeltElement .active,
@@ -51,6 +51,17 @@
 }
 #playerModePanes {
   z-index: 1;
+}
+
+/**
+ * INVENTORY
+ */
+
+#playerInventoryElement .card-title {
+  font-size: .6rem;
+}
+#playerInventoryElement .card-title .badge {
+  font-size: 1rem;
 }
 
 /**

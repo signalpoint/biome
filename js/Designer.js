@@ -27,10 +27,43 @@ class Designer {
     this._mouseUpY = null
     this._mouseBlockDelta = null
 
-    // entity index
+    // ENTITY INDEX
 
+    // entity ids...
+    // [
+    //   'abc123',
+    //   'def456',
+    //   'xyz789'
+    // ]
     this._entityIds = []
+
+    // entities...
+    // {
+    //   block: {
+    //     abc123: { type: 'Grass', ... }
+    //   },
+    //   item: {
+    //     def456: { type: 'WoodAxe', ... }
+    //   },
+    //   building: {
+    //     xyz789: { type: 'LumberCamp', ... }
+    //   },
+    //   ...
+    // }
     this._entities = {}
+
+    // bundles...
+    // {
+    //   block: {
+    //     Grass: [ 'abc123' ]
+    //   },
+    //   item: {
+    //     WoodAxe: [ 'def456' ]
+    //   },
+    //   building: {
+    //     LumberCamp: [ 'xyz789' ]
+    //   },
+    // }
     this._entityBundles = {}
 
     // TODO
@@ -48,22 +81,33 @@ class Designer {
     // - the belt should just contain references to certain items in an entity collection (aka the inventory),
     //     that way the player can hold more than what is in the belt, and we can easily manage in/out entities
     // - the map could be shaded out at first, and as you explore, the blocks begin to draw/alpha themselves
+    // - the concept of a roof would be neat, where it is transparent when you're under it, but opaque when outside of it
 
     // x - Block extend Entity
     // x - Building extend Entity
     // x - Player extend entity
     // x - the Entity layer should have its own index
 
-    this.blocks = [] // blocks on the map, keyed by delta, holds full block object (TODO hold entity id instead)
+    this.blocks = [] // blocks on the map, keyed by delta, holds full block object
     this.blocksIndex = {} // TODO deprecate
 
     this._selectedBlocks = [] // a collection of selected blocks (their delta value)
 
-    this.buildings = [] // buildings on the map, keyed by delta, holds full building object (TODO hold entity id instead)
+    this.buildings = [] // buildings on the map, keyed by delta, holds full building object
     this.buildingsIndex = {} // TODO deprecate
 
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
+
+  }
+
+  save() {
+
+    // save the map
+    this.saveCurrentMap()
+
+    // save the player
+    player.save()
 
   }
 
@@ -90,7 +134,10 @@ class Designer {
     this._entities[entityType][entity.id] = entity
     this._addEntityToBundleIndex(entityType, entity)
   }
-  removeEntityFromIndex(entityType, entity) { delete this._entities[entityType][entity.id] }
+  removeEntityFromIndex(entity) {
+    delete this._entities[entity.entityType][entity.id]
+    this._removeEntityFromBundleIndex(entity.entityType, entity)
+  }
 
   getEntityFromIndex(entityType, id) { return this._entities[entityType][id] }
 
@@ -127,15 +174,22 @@ class Designer {
     if (entityType == 'block') {
       let blockClass = d.getBlockClass(bundle)
       let block = new blockClass({
-        delta: null
+//        delta: null
       })
       return block
     }
-    else if (entityType == 'item') { console.log('TODO') }
-    else if (entityType == 'building') { console.log('TODO') }
-
+    else if (entityType == 'item') {
+      let itemClass = d.getItemClass(bundle)
+      let item = new itemClass({})
+      return item
+    }
+    else if (entityType == 'building') { console.log('TODO create() building') }
   }
 
+  destroy(entity) {
+    this.removeEntityId(entity.id)
+    this.removeEntityFromIndex(entity)
+  }
 
   getEntityDict(entityType) {
     if (entityType == 'block') { return dBlocks }
@@ -152,6 +206,11 @@ class Designer {
 
   isCraftable(entityDict) {
     return typeof entityDict.craftable !== 'undefined' ? entityDict.craftable : true // assumes entity is craftable
+  }
+
+  outputQty(entityType, type) {
+    let def = d.getEntityDefinition(entityType, type)
+    return def.output ? def.output : 1
   }
 
   block(delta) { return this.getBlock(d.blocks[delta]) }

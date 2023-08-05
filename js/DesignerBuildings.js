@@ -24,7 +24,9 @@ class DesignerBuildings extends EntityDict {
         description: 'A shop for builders. Produces items and buildings.',
         icon: 'fas fa-toolbox',
         requires: {
-          'OakTreeWood': 5
+          block: {
+            'OakTreeWood': 5
+          }
         }
       },
 
@@ -35,10 +37,14 @@ class DesignerBuildings extends EntityDict {
         description: 'A camp for woodcutters. Produces wood.',
         icon: 'fas fa-tree',
         requires: {
-          'OakTreeWood': 5
+          block: {
+            'OakTreeWood': 5
+          }
         },
         storage: {
-          'OakTreeWood': 50
+          block: {
+            'OakTreeWood': 50
+          }
         }
       },
 
@@ -49,10 +55,14 @@ class DesignerBuildings extends EntityDict {
         description: 'A camp for stonecutters. Produces stone.',
         icon: 'fas fa-gem',
         requires: {
-          'OakTreeWood': 5
+          block: {
+            'OakTreeWood': 5
+          }
         },
         storage: {
-          'Stone': 50
+          block: {
+            'Stone': 50
+          }
         }
       }
 

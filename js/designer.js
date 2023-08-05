@@ -4,6 +4,7 @@ let canvas = null
 let c = null
 
 let BLOCK_DEFAULT_HARDNESS = 100
+let BELT_SIZE = 10
 
 // TODO we should put our globals in the "d" namespace, e.g. d.keys, d.mouse, etc
 
@@ -83,6 +84,7 @@ let dMenu = null
 let dPlayback = null
 let dMode = null
 let dPlayer = null
+let dInventory = null
 let dCamera = null
 let dStorage = null
 let dBlocks = null
@@ -169,6 +171,8 @@ addEventListener('load', function() {
   dMode = new DesignerMode()
 
   dPlayer = new DesignerPlayer()
+
+  dInventory = new DesignerInventory()
 
   dCamera = new DesignerCamera()
   dCamera.load()

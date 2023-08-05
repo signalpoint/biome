@@ -48,6 +48,8 @@ class PlayerMode {
     for (let i = 0; i < this.getButtonsCount(); i++) {
 
       let btn = this.getButtonByIndex(i)
+
+      // click listener
       btn.addEventListener('click', function(e) {
 
         btn = e.target
@@ -60,60 +62,7 @@ class PlayerMode {
           dPlayback.play()
         }
 
-        // clear old active button and set new
-        self.clearActiveButton()
-        self.setActiveButton(op)
-
-        // if the button is has a light, turn it off
-        if (self.buttonHasLight(op)) {
-          self.turnOffButtonLight(op)
-        }
-
-        // remove active from old pane and hide it
-        let oldPane = self.getActivePane()
-        oldPane.classList.remove('active')
-        oldPane.classList.add('d-none')
-
-        // add active to new pane and show it
-        let newPane = self.getPane(op)
-        newPane.classList.add('active')
-        newPane.classList.remove('d-none')
-
-        // update the mode
-        self.setMode(op)
-
-        // remove old bs5 position class and add new one
-        let oldTop = oldPane.getAttribute('data-top')
-        let newTop = newPane.getAttribute('data-top')
-        let container = self.getPanesContainer()
-        container.classList.remove('top-' + oldTop)
-        container.classList.add('top-' + newTop)
-
-        if (op == 'belt') {
-          // no render needed; html resides in designer.html
-        }
-        else if (op == 'inventory') {
-          if (newPane.innerHTML == '') {
-            dInventory.render()
-            dInventory.init()
-          }
-        }
-        else if (op == 'tools') {
-          if (newPane.innerHTML == '') {
-            dBuild.render()
-            dBuild.init()
-          }
-        }
-        else if (op == 'build') {
-          if (newPane.innerHTML == '') {
-            self.renderBuildPane()
-            self.initBuildPane()
-          }
-        }
-        else if (op == 'paint') {
-          self.renderPaintPane()
-          self.initPaintPane()
-        }
+        self.switchToPane(op)
 
       })
 
@@ -124,6 +73,59 @@ class PlayerMode {
   getPanesContainer() { return document.querySelector('#playerModePanes') }
   getPane(op) { return document.querySelector('#playerModePanes .player-mode-pane[data-op="' + op + '"]') }
   getActivePane() { return document.querySelector('#playerModePanes .player-mode-pane.active') }
+
+  switchToPane(op) {
+
+    // clear old active button and set new
+    this.clearActiveButton()
+    this.setActiveButton(op)
+
+    // if the button is has a light, turn it off
+    if (this.buttonHasLight(op)) {
+      this.turnOffButtonLight(op)
+    }
+
+    // remove active from old pane and hide it
+    let oldPane = this.getActivePane()
+    oldPane.classList.remove('active')
+    oldPane.classList.add('d-none')
+
+    // add active to new pane and show it
+    let newPane = this.getPane(op)
+    newPane.classList.add('active')
+    newPane.classList.remove('d-none')
+
+    // update the mode
+    this.setMode(op)
+
+    // remove old bs5 top position class and add new one
+    let oldTop = oldPane.getAttribute('data-top')
+    let newTop = newPane.getAttribute('data-top')
+    let container = this.getPanesContainer()
+    container.classList.remove('top-' + oldTop)
+    container.classList.add('top-' + newTop)
+
+    if (op == 'belt') {
+      // no render needed; html resides in designer.html
+    }
+    else if (op == 'tools') {
+      if (newPane.innerHTML == '') {
+        dBuild.render()
+        dBuild.init()
+      }
+    }
+    else if (op == 'build') {
+      if (newPane.innerHTML == '') {
+        this.renderBuildPane()
+        this.initBuildPane()
+      }
+    }
+    else if (op == 'paint') {
+      this.renderPaintPane()
+      this.initPaintPane()
+    }
+
+  }
 
   // TOOLS
 
@@ -299,7 +301,7 @@ class PlayerMode {
           // changing block type
           if (block.type != blockType) {
 //            console.log(`${block.type} => ${blockType}`)
-            d.removeEntityFromIndex('block', block)
+            d.removeEntityFromIndex(block)
             dMode.paintNewBlock(delta, blockType)
           }
           else { // clicking on same block type...

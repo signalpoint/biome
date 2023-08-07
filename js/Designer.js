@@ -96,9 +96,24 @@ class Designer {
     this.buildings = [] // buildings on the map, keyed by delta, holds full building object
     this.buildingsIndex = {} // TODO deprecate
 
+    this._toasts = {}
+
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
 
+  }
+
+  addToast(id) { this.setToast(id, new bootstrap.Toast(document.getElementById(id))) }
+  getToast(id) { return this._toasts[id] }
+  setToast(id, toast) { this._toasts[id] = toast }
+
+  toast(id) {
+    let toast = this.getToast(id)
+    if (!toast) {
+      this.addToast(id)
+      toast = this.getToast(id)
+    }
+    toast.show()
   }
 
   save() {

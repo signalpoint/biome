@@ -33,6 +33,12 @@ class Player {
       inventory: this.inventory
     })
 
+    this._unlocked = {
+      block: [],
+      item: [],
+      building: []
+    }
+
     this._actions = []
 
     this.state = {
@@ -456,35 +462,6 @@ class Player {
   }
 
   // BELT
-  // TODO turn this into Belt.js
-
-//  getBelt() { return this._belt }
-//  getBeltIndex() { return this._beltIndex }
-//  getBeltSize() { return this._beltSize }
-//
-//  exportBelt() { return this._belt }
-//  importBelt(data) {
-//    for (let i = 0; i < data.length; i++) {
-//      let block = data[i]
-//      if (!dBlocks.getType(block.type)) {
-//        console.log(`Player belt import skipping unknown block type: ${block.type}`)
-//        continue
-//      }
-//      let blockClass = d.getBlockClass(block.type)
-//      this._belt.push(new blockClass({
-//        delta: null,
-//        type: block.type,
-//        solid: block.solid
-//      }))
-//    }
-//  }
-//
-//  getBeltItem(index) { return this._belt[index] }
-//  deleteBeltItem(index) { this._belt.splice(index, 1) }
-//
-//  beltIsFull() { return this.getBelt().length == this.getBeltSize() }
-//  beltIsEmpty() { return !this.getBelt().length }
-//
 
   addBlockToBelt(delta) {
     let block = d.block(delta)
@@ -496,111 +473,10 @@ class Player {
     this.inventory.add(item)
   }
 
-//  addItemToBeltIndex(item) {
-//    if (!this._beltIndex[item.type]) { this._beltIndex[item.type] = [] }
-//    this._beltIndex[item.type].push(item.id)
-//  }
-//  removeItemFromBeltIndex(item) {
-//    let index = this._beltIndex[item.type].indexOf(item.id)
-//    this._beltIndex[item.type].splice(index, 1)
-//  }
-//  getItemFromBeltIndexByType(type) {
-//    return this.item.s[this._beltIndex[type][0]]
-//  }
-//  beltIndexHasItemType(type) {
-//    return this._beltIndex[type] && this._beltIndex[type].length
-//  }
-//
-//  getBeltElement() {
-//    if (!this._beltElement) { this._beltElement = document.getElementById('playerBeltElement') }
-//    return this._beltElement
-//  }
-//  getBeltButtons() {
-//    if (!this._beltButtons) { this._beltButtons = this.getBeltElement().querySelectorAll('button') }
-//    return this._beltButtons
-//  }
-//  getBeltButton(index) { return this.getBeltButtons()[index] }
-//
-//  getActiveBeltButton() { return this.getBeltElement().querySelector('button.active') }
-//  setActiveBeltButton(index) {
-//    this.getBeltButton(index).classList.add('active')
-//    this.setActiveBeltItem(index)
-//  }
-//  clearActiveBeltButton() { this.getActiveBeltButton().classList.remove('active') }
-//  changeActiveBeltButton(index) {
-//    this.clearActiveBeltButton()
-//    this.setActiveBeltButton(index)
-//  }
-//
-//  getActiveBeltButtonIndex() { return this._beltActiveItem }
-//
-//  setActiveBeltItem(index) { this._beltActiveItem = parseInt(index) }
-//
-//  getNextBeltButton() { return this.getActiveBeltButton().nextSibling }
-//  getPreviosBeltButton() { return this.getActiveBeltButton().previousSibling }
-//
-//  initBelt() {
-//
-//    for (let i = 0; i < this.getBeltSize(); i++) {
-//
-//      let active = i == 0
-//
-//      // add btn to dom
-//
-//      // create a new button element
-//      let btn = document.createElement("button");
-//      let btnClasses = ['btn', 'btn-outline-dark', 'btn-lg', 'text-secondary']
-//      if (active) { btnClasses.push('active') }
-//      btn.classList.add(...btnClasses)
-//      btn.setAttribute('type', 'button')
-//      btn.setAttribute('data-index', i)
-//      btn.setAttribute('title', `(${i+1})`)
-////      btn.innerHTML = '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">!</span>'
-//
-//      // add a notification badge within the button
-////      let span = document.createElement("span");
-////      let spanClasses = [
-////        'badge',
-////        'rounded-pill',
-////        'bg-danger',
-////        'position-absolute',
-////        'top-0',
-////        'start-100',
-////        'translate-middle'
-////      ]
-////      span.classList.add(...spanClasses)
-////      if (active) { span.innerHTML = '!' }
-//
-//      // add click listener to btn
-//      btn.addEventListener('click', function(e) {
-//
-//        btn = e.target
-//        while (btn && btn.tagName != 'BUTTON') { btn = btn.parentNode }
-//
-//        let index = btn.getAttribute('data-index')
-//        player.clearActiveBeltButton()
-//        player.setActiveBeltButton(index)
-//
-//        // Start the game if it's paused.
-//        if (d.isPaused()) { dPlayback.play() }
-//
-//      })
-//
-//      // add the btn to the belt element
-//      this.getBeltElement().appendChild(btn)
-////      btn.appendChild(span)
-//
-//    }
-//
-//  }
-//
-//  refreshBelt() {
-//    for (let i = 0; i < this.getBeltSize(); i++) {
-//      let block = this.getBelt()[i]
-//      this.getBeltButton(i).innerHTML = block ?
-//        block.type : '<i class="fas fa-circle-notch"></i>'
-//    }
-//  }
+  // UNLOCKED (entities)
+
+  hasUnlocked(entityType, bundle) { return this._unlocked[entityType].indexOf(bundle) !== -1 }
+  addToUnlocked(entityType, bundle) { this._unlocked[entityType].push(bundle) }
 
   // ACTIONS
 

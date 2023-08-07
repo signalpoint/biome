@@ -530,8 +530,7 @@ class Designer {
     let lastMapOpened = dStorage.load('LastMapOpened')
     if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
 
-    dMode.init()
-    dGame.init()
+    game.init()
 
     initDesignerWidgets()
 
@@ -650,7 +649,7 @@ class Designer {
 
     }
 
-    d.isPlaying() ? dGame.canvasMouseWheelListener(e) : dMode.canvasMouseWheelListener(e)
+    d.isPlaying() ? game.canvasMouseWheelListener(e) : dMode.canvasMouseWheelListener(e)
 
     return false
 
@@ -664,7 +663,7 @@ class Designer {
     c.globalAlpha = (100 - block.health) * .01
     c.fillStyle = 'black'
     c.fillRect(x * d.getBlockSize(), y * d.getBlockSize(), d.getBlockSize(), d.getBlockSize())
-    c.globalAlpha = 1.0;
+    c.globalAlpha = game.getGlobalAlpha()
 
   }
 

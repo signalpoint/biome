@@ -72,7 +72,12 @@ class DesignerBlocks extends EntityDict {
         craftable: 0,
         storedAt: [
           'LumberCamp'
-        ]
+        ],
+        unlocks: {
+          block: [
+            'OakTreePlank'
+          ]
+        }
       },
 
       // Sand

@@ -33,6 +33,12 @@ class Player {
       inventory: this.inventory
     })
 
+    this._obtained = {
+      block: [],
+      item: [],
+      building: []
+    }
+
     this._unlocked = {
       block: [],
       item: [],
@@ -325,9 +331,16 @@ class Player {
 
       // There weren't any existing slots with openings...
 
-      // If there is an empty slot available, use it.
+      // If there is an empty slot available...
       let emptySlot = inventory.findEmptySlot()
-      if (emptySlot !== null) { inventory.addToEmptySlot(emptySlot, block) }
+      if (emptySlot !== null) {
+
+        // Add block to empty slot...
+        inventory.addToEmptySlot(emptySlot, block)
+
+        this.handleObtainingEntity(block)
+
+      }
       else {
 
         // There weren't any empty slots available...
@@ -351,16 +364,76 @@ class Player {
 
   }
 
+  // OBTAINED (entities)
+
+  handleObtainingEntity(entity) {
+
+    let entityType = entity.entityType
+    let bundle = entity.type
+
+    // If the player has never "unlocked" this type of block before, "unlock" it for them.
+    if (!player.hasObtained(entityType, bundle)) {
+      player.obtain(entityType, bundle)
+    }
+
+  }
+
+  hasObtained(entityType, bundle) { return this._obtained[entityType].indexOf(bundle) !== -1 }
+  addToObtained(entityType, bundle) { this._obtained[entityType].push(bundle) }
+
+  obtain(entityType, bundle) {
+    console.log(`obtaining ${entityType} ${bundle}`)
+    this.addToObtained(entityType, bundle)
+    let def = d.getEntityDefinition(entityType, bundle)
+    console.log(def)
+    if (def.unlocks) {
+      for (let unlockedEntityType in def.unlocks) {
+        if (!def.unlocks.hasOwnProperty(unlockedEntityType)) { continue }
+        for (let i = 0; i < def.unlocks[unlockedEntityType].length; i++) {
+          let unlockedBundle = def.unlocks[unlockedEntityType][i]
+          if (!this.hasUnlocked(unlockedEntityType, unlockedBundle)) {
+            this.unlock(unlockedEntityType, unlockedBundle)
+          }
+        }
+      }
+    }
+  }
+
+  // UNLOCKED (entities)
+
+  hasUnlocked(entityType, bundle) { return this._unlocked[entityType].indexOf(bundle) !== -1 }
+  addToUnlocked(entityType, bundle) { this._unlocked[entityType].push(bundle) }
+
+  unlock(entityType, bundle) {
+
+    console.log(`unlocking ${entityType} ${bundle}`)
+
+    this.addToUnlocked(entityType, bundle)
+
+    // toast the user
+    d.toast('liveToast')
+//    let toastEl = document.getElementById('liveToast')
+//    let toast = new bootstrap.Toast(toastEl)
+//    toast.show()
+
+  }
+
+  // MOVEMENT
+
   isMoving() { return this.isMovingUp() || this.isMovingDown() || this.isMovingLeft() || this.isMovingRight() }
   isMovingUp() { return this.state.moving.up }
   isMovingDown() { return this.state.moving.down }
   isMovingLeft() { return this.state.moving.left }
   isMovingRight() { return this.state.moving.right }
 
+  // COLLISION
+
   hasTopCollision() { return this.state.collision.top }
   hasBottomCollision() { return this.state.collision.bottom }
   hasLeftCollision() { return this.state.collision.left }
   hasRightCollision() { return this.state.collision.right }
+
+  // BLOCK HELPERS
 
   getBlockDeltaFromTopLeftPosition() { return d.getBlockDelta(this.x, this.y) }
   getBlockDeltaFromTopRightPosition() { return d.getBlockDelta(this.x + this.width, this.y) }
@@ -472,11 +545,6 @@ class Player {
   addItemToBelt(item) {
     this.inventory.add(item)
   }
-
-  // UNLOCKED (entities)
-
-  hasUnlocked(entityType, bundle) { return this._unlocked[entityType].indexOf(bundle) !== -1 }
-  addToUnlocked(entityType, bundle) { this._unlocked[entityType].push(bundle) }
 
   // ACTIONS
 

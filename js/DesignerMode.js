@@ -8,12 +8,6 @@ class DesignerMode {
 
   }
 
-  init() {
-
-    // ...
-
-  }
-
   canvasMouseMoveListener(e) {
 
     if (mouse.left.pressed) { // dragging...

@@ -79,7 +79,7 @@ canvasMouseOffsetY = -2
 // Designer
 
 let d = null
-let dGame = null
+let game = null
 let dMenu = null
 let dPlayback = null
 let dMode = null
@@ -162,7 +162,7 @@ addEventListener('load', function() {
 
   dStorage = new DesignerStorage()
 
-  dGame = new DesignerGame()
+  game = new Game()
 
   dMenu = new DesignerMenu()
 
@@ -510,6 +510,10 @@ addEventListener('load', function() {
 
 function update() {
 
+  game.tick()
+
+  game.applySunshine()
+
   // player(s)...
   for (let i = 0; i < players.length; i++) {
 
@@ -569,7 +573,9 @@ function update() {
 
 function draw() {
 
-  c.clearRect(0, 0, canvas.width, canvas.height);
+  c.clearRect(0, 0, canvas.width, canvas.height)
+
+  c.globalAlpha = game.getGlobalAlpha()
 
   // blocks
 
@@ -675,11 +681,16 @@ function draw() {
 
 function animate() {
 
-  // update, draw, animate (if playing)
   update()
+
   draw()
+
+  // if playing, animate...
   if (d.isPlaying()) {
-    requestAnimationFrame(animate);
+
+    // @see DesignerPlayback
+    requestAnimationFrame(animate)
+
   }
 
 }

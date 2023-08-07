@@ -14,7 +14,9 @@ class Game {
 
     this._globalAlpha = 1.0
 
-    this._dayLength = 60 * 20 * 100 // 20 minutes
+//    this._dayLength = 60 * 20 * 1000 // 20 minutes
+    this._dayLength = 60 * 20 * 100 // 2 minutes
+//    this._dayLength = 60 * 20 * 10 // 20 seconds
 
   }
 
@@ -86,12 +88,73 @@ class Game {
   }
 
   getGlobalAlpha() { return this._globalAlpha }
-  setGlobalAlpha(alpha) {
-    console.log(alpha)
-    this._globalAlpha = alpha
-  }
+  setGlobalAlpha(alpha) { this._globalAlpha = alpha }
 
   getDayLength() { return this._dayLength }
+  am() { return !this.pm() }
+  pm() { return this.getGameTime() % this.getDayLength() < this.getDayLength() / 2 }
+
+  applySunshine() {
+
+//    console.log(this.pm() ? 'pm' : 'am')
+
+//    0.0 midnight
+//    0.1
+//    0.2
+//    0.3
+//    0.4
+//    0.5 dawn
+//    0.6
+//    0.7
+//    0.8
+//    0.9
+//    1.0 noon
+//    0.9
+//    0.8
+//    0.7
+//    0.6
+//    0.5 dusk
+//    0.4
+//    0.3
+//    0.2
+//    0.1
+
+//    0 noon => 1.0
+//    1
+//    2
+//    3
+//    4
+//    5 dusk => 0.5
+//    6
+//    7
+//    8
+//    9
+//    10 midnight => 0.0
+//    11
+//    12
+//    13
+//    14
+//    15 dawn => 0.5
+//    16
+//    17
+//    18
+//    19
+
+    // day / night...
+
+    let dayLength = game.getDayLength()
+    let gameTime = game.getGameTime()
+    game.setGlobalAlpha(
+
+      Math.abs(
+
+         1 - (gameTime % dayLength) / (dayLength / 2)
+
+      ).toFixed(2)
+
+    )
+
+  }
 
   /**
    * CANVAS + MOUSE

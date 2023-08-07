@@ -28,6 +28,8 @@ class DesignerPlayback {
 
     d.setPlayback('pause')
 
+    game.togglePause()
+
   }
 
   play() {
@@ -53,6 +55,8 @@ class DesignerPlayback {
     this.getPlayBtn().classList.add('active')
 
     d.setPlayback('play')
+
+    game.togglePause()
 
   }
 

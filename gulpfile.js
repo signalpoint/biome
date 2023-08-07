@@ -13,7 +13,7 @@ var src = [
     './js/DesignerWidget.js',
 
     './js/core/Game.js',
-    
+
     './js/DesignerMenu.js',
     './js/DesignerPlayback.js',
     './js/DesignerMode.js',

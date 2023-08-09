@@ -14,6 +14,7 @@ class Designer {
     this._screenHeight = null
 
     this._blockSize = null
+    this._chunkSize = null
     this._grid = false
 
     this._mapWidth = null
@@ -97,24 +98,163 @@ class Designer {
     this.buildingsIndex = {} // TODO deprecate
 
     this._toasts = {}
+    this._modals = {}
 
     this._mouseDownBlockDelta = null
     this._mouseUpBlockDelta = null
 
   }
 
-  addToast(id) { this.setToast(id, new bootstrap.Toast(document.getElementById(id))) }
+  // TOAST
+
+  addToast(id) {
+
+    // clone the toast template, set its id and add it to the DOM
+    let template = document.getElementById('toastTemplate')
+    let newToastEl = template.cloneNode(true);
+    newToastEl.setAttribute('id', id)
+    template.after(newToastEl)
+
+    // create bs5 toast and set it
+    this.setToast(id, new bootstrap.Toast(newToastEl))
+
+  }
   getToast(id) { return this._toasts[id] }
   setToast(id, toast) { this._toasts[id] = toast }
 
-  toast(id) {
+  toast({
+    id,
+    title,
+    body,
+    position = [
+      'bottom-0',
+      'end-0'
+    ],
+    delay = 5000,
+
+    // events
+    hide = null,
+    hidden = null,
+    show = null,
+    shown = null
+
+  }) {
+
     let toast = this.getToast(id)
     if (!toast) {
       this.addToast(id)
       toast = this.getToast(id)
     }
+
+    // Grab the toast template and its container.
+    let toastEl = document.getElementById(id)
+    let toastContainer = toastEl.parentNode
+
+    // Set any attributes.
+    toastEl.setAttribute('data-bs-delay', delay)
+
+    // Attach any event listeners and send along the element and toast.
+    if (hide) { toastEl.addEventListener('hide.bs.toast', () => { hide(toastEl, toast) }) }
+    if (hidden) { toastEl.addEventListener('hidden.bs.toast', () => { hidden(toastEl, toast) }) }
+    if (show) { toastEl.addEventListener('show.bs.toast', () => { show(toastEl, toast) }) }
+    if (shown) { toastEl.addEventListener('shown.bs.toast', () => { shown(toastEl, toast) }) }
+
+    // Remove position classes and add the new cones
+    toastContainer.classList.remove(...[
+      'top-0',
+      'bottom-0',
+      'start-0',
+      'end-0',
+      'top-50',
+      'bottom-50',
+      'start-50',
+      'end-50'
+    ])
+    toastContainer.classList.add(...position)
+
+    // Set the title and body, then show the toast.
+    toastEl.querySelector('.toast-header strong').innerHTML = title
+    toastEl.querySelector('.toast-body').innerHTML = body
     toast.show()
+
   }
+
+  // MODAL
+
+  addModal(id) {
+
+    // clone the modal template, set its id and add it to the DOM
+    let template = document.getElementById('modalTemplate')
+    let newModalEl = template.cloneNode(true);
+    newModalEl.setAttribute('id', id)
+    template.after(newModalEl)
+
+    // create bs5 modal and set it
+    this.setModal(id, new bootstrap.Modal(newModalEl))
+
+  }
+  getModal(id) { return this._modals[id] }
+  setModal(id, modal) { this._modals[id] = modal }
+
+  modal({
+    id,
+    title,
+    body,
+//    position = [
+//      'bottom-0',
+//      'end-0'
+//    ],
+//    delay = 5000,
+
+    // events
+    hide = null,
+    hidden = null,
+    hidePrevented = null,
+    show = null,
+    shown = null
+
+  }) {
+
+    let modal = this.getModal(id)
+    if (!modal) {
+      this.addModal(id)
+      modal = this.getModal(id)
+    }
+
+    // Grab the modal element.
+    let modalEl = document.getElementById(id)
+
+    // Set any attributes.
+//    modalEl.setAttribute('data-bs-delay', delay)
+
+    // Attach any event listeners and send along the element and modal.
+    if (hide) { modalEl.addEventListener('hide.bs.modal', () => { hide(modalEl, modal) }) }
+    if (hidden) { modalEl.addEventListener('hidden.bs.modal', () => { hidden(modalEl, modal) }) }
+    if (hidePrevented) { modalEl.addEventListener('hidePrevented.bs.modal', () => { hidePrevented(modalEl, modal) }) }
+    if (show) { modalEl.addEventListener('show.bs.modal', () => { show(modalEl, modal) }) }
+    if (shown) { modalEl.addEventListener('shown.bs.modal', () => { shown(modalEl, modal) }) }
+
+    // Remove position classes and add the new cones
+//    modalContainer.classList.remove(...[
+//      'top-0',
+//      'bottom-0',
+//      'start-0',
+//      'end-0',
+//      'top-50',
+//      'bottom-50',
+//      'start-50',
+//      'end-50'
+//    ])
+//    modalContainer.classList.add(...position)
+
+    // Set the title and body, then show the modal.
+    modalEl.querySelector('.modal-title').innerHTML = title
+    modalEl.querySelector('.modal-body').innerHTML = body
+    modal.show()
+
+  }
+
+  // SAVE
 
   save() {
 
@@ -219,8 +359,10 @@ class Designer {
     return this.getEntityDefinition(entityType, type).requires
   }
 
-  isCraftable(entityDict) {
-    return typeof entityDict.craftable !== 'undefined' ? entityDict.craftable : true // assumes entity is craftable
+  isCraftable(entityDefinition) {
+    return typeof entityDefinition.craftable !== 'undefined' ?
+      entityDefinition.craftable :
+      true // assumes entity is craftable
   }
 
   outputQty(entityType, type) {
@@ -433,6 +575,18 @@ class Designer {
   setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta }
   getMouseUpBlock() { return d.blocks[this._mouseUpBlockDelta] ? d.block(this._mouseUpBlockDelta) : null }
 
+  // chunks
+
+  setChunkSize(size) { this._chunkSize = size }
+  getChunkSize() { return this._chunkSize }
+
+  chunksPerRow() { return this.getMapWidth() / this.getChunkSize() }
+  chunksPerCol() { return this.getMapHeight() / this.getChunkSize() }
+
+  getChunkFromBlockDelta(delta) {
+    let chunkSize = 32
+  }
+
   // buildings
 
   getBuildingClass(type) { return dBuildings.getType(type).buildingClass }
@@ -527,18 +681,7 @@ class Designer {
 
   init() {
 
-    // start with an empty map...
-
-    for (let y = 0; y < this.getMapHeight(); y += this.getBlockSize()) {
-
-      for (let x = 0; x < this.getMapWidth(); x += this.getBlockSize()) {
-
-        this.blocks.push(0)
-        this.buildings.push(0)
-
-      }
-
-    }
+    dMode.generateWorld()
 
     // open the last map, if available...
 

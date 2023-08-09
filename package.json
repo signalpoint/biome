@@ -5,7 +5,7 @@
   "main": "designer.html",
   "repository": {
     "type": "git",
-    "url": "https://github.com/signalpoint/biome-machine"
+    "url": "https://github.com/signalpoint/biome"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

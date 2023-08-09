@@ -371,9 +371,11 @@ class Player {
     let entityType = entity.entityType
     let bundle = entity.type
 
-    // If the player has never "unlocked" this type of block before, "unlock" it for them.
+    // If the player has never obtained this type of block before...
     if (!player.hasObtained(entityType, bundle)) {
+
       player.obtain(entityType, bundle)
+
     }
 
   }
@@ -382,21 +384,70 @@ class Player {
   addToObtained(entityType, bundle) { this._obtained[entityType].push(bundle) }
 
   obtain(entityType, bundle) {
+
     console.log(`obtaining ${entityType} ${bundle}`)
     this.addToObtained(entityType, bundle)
-    let def = d.getEntityDefinition(entityType, bundle)
-    console.log(def)
-    if (def.unlocks) {
-      for (let unlockedEntityType in def.unlocks) {
-        if (!def.unlocks.hasOwnProperty(unlockedEntityType)) { continue }
-        for (let i = 0; i < def.unlocks[unlockedEntityType].length; i++) {
-          let unlockedBundle = def.unlocks[unlockedEntityType][i]
-          if (!this.hasUnlocked(unlockedEntityType, unlockedBundle)) {
-            this.unlock(unlockedEntityType, unlockedBundle)
+
+    // Iterate over entities that the player hasn't yet unlocked...
+    let entityTypes = [
+      'block',
+      'item',
+      'building'
+    ]
+    for (let i = 0; i < entityTypes.length; i++) {
+
+      let entityType = entityTypes[i]
+      let dict = d.getEntityDict(entityType)
+      let types = dict.getTypes()
+
+      for (let j = 0; j < types.length; j++) {
+
+        let bundle = types[j]
+
+        if (!this.hasUnlocked(entityType, bundle)) {
+
+          // The player hasn't unlocked this entity type and bundle before...
+
+//          console.log(`has not unlocked ${entityType} ${bundle}`)
+
+          let def = d.getEntityDefinition(entityType, bundle)
+
+          // Skip the uncraftables.
+          if (!d.isCraftable(def)) { continue }
+
+          // If the requirements for this have been obtained (at one point) by the player, unlock it...
+          let requirements = d.getEntityRequirements(entityType, bundle)
+          if (requirements) {
+
+            let hasMetRequirements = true
+
+            for (let requiredEntityType in requirements) {
+              if (!requirements.hasOwnProperty(requiredEntityType)) { continue }
+
+              for (let requiredBundle in requirements[requiredEntityType]) {
+                if (!requirements[requiredEntityType].hasOwnProperty(requiredBundle)) { continue }
+
+                if (!this.hasObtained(requiredEntityType, requiredBundle)) {
+                  hasMetRequirements = false
+                  break
+                }
+
+              } // requiredBundle
+
+              if (!hasMetRequirements) { break }
+
+            } // requiredEntityType
+
+            if (hasMetRequirements) { this.unlock(entityType, bundle) }
+
           }
+
         }
-      }
-    }
+
+      } // bundle
+
+    } // entityTypes
+
   }
 
   // UNLOCKED (entities)
@@ -406,15 +457,42 @@ class Player {
 
   unlock(entityType, bundle) {
 
-    console.log(`unlocking ${entityType} ${bundle}`)
+//    console.log(`unlocking ${entityType} ${bundle}`)
 
     this.addToUnlocked(entityType, bundle)
 
+    let def = d.getEntityDefinition(entityType, bundle)
+
+    // light up the tools button, if they're not already on it
+    if (playerMode.getMode() != 'tools') {
+      playerMode.turnOnButtonLight('tools')
+    }
+
     // toast the user
-    d.toast('liveToast')
-//    let toastEl = document.getElementById('liveToast')
-//    let toast = new bootstrap.Toast(toastEl)
-//    toast.show()
+    d.toast({
+      id: `${entityType}${bundle}`,
+      title: `New Item Unlocked`,
+      body:
+        `<button type="button" class="btn btn-link btn-lg">${def.label}</button>`,
+      position: [
+        'top-0',
+        'end-0'
+      ],
+      shown: (el, toast) => {
+
+        // btn click listener
+        let btn = el.querySelector('.btn-link')
+        btn.addEventListener('click', (e) => {
+
+          // switch to the Tools pane if it isn't already open
+          if (playerMode.getMode() != 'tools') {
+            playerMode.switchToPane('tools', true)
+          }
+
+        })
+
+      }
+    })
 
   }
 

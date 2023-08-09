@@ -135,6 +135,7 @@ let playerMoveLeftBtn = document.querySelector('#playerMoveLeftBtn')
 let playerMoveRightBtn = document.querySelector('#playerMoveRightBtn')
 
 let blockSizeInput = document.querySelector('#blockSize')
+let chunkSizeInput = document.querySelector('#blockSize')
 
 let mapWidthInput = document.querySelector('#mapWidth')
 let mapHeightInput = document.querySelector('#mapHeight')
@@ -225,6 +226,9 @@ addEventListener('load', function() {
 
   // set block size
   d.setBlockSize(parseInt(blockSizeInput.value))
+
+  // set chunk size
+  d.setChunkSize(parseInt(chunkSizeInput.value))
 
   // set grid
   d.setGrid(true)
@@ -323,7 +327,15 @@ addEventListener('load', function() {
   // block size
   blockSizeInput.addEventListener('change', function() {
     d.setBlockSize(parseInt(this.value))
-    refresh()
+    console.log('block size changed!')
+//    refresh()
+  })
+
+  // chunk size
+  chunkSizeInput.addEventListener('change', function() {
+    d.setChunkSize(parseInt(this.value))
+    console.log('chunk size changed!')
+//    refresh()
   })
 
   // map width

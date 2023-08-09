@@ -11,6 +11,25 @@ class DesignerMenu {
 
     switch (op) {
 
+      case 'file:new':
+
+        d.modal({
+          id: `fileNewModal`,
+          title: `New`,
+          body: `<button type="button" class="btn btn-link">Create New World</button>`,
+          shown: (el, modal) => {
+
+            el.querySelector('.btn-link').addEventListener('click', (e) => {
+
+              dMode.generateWorld()
+
+            })
+
+          }
+        })
+
+        break;
+
       case 'file:open':
 
         this.openModal('fileOpenModal')

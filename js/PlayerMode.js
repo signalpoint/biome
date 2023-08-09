@@ -74,7 +74,7 @@ class PlayerMode {
   getPane(op) { return document.querySelector('#playerModePanes .player-mode-pane[data-op="' + op + '"]') }
   getActivePane() { return document.querySelector('#playerModePanes .player-mode-pane.active') }
 
-  switchToPane(op) {
+  switchToPane(op, refresh = false) {
 
     // clear old active button and set new
     this.clearActiveButton()
@@ -109,7 +109,7 @@ class PlayerMode {
       // no render needed; html resides in designer.html
     }
     else if (op == 'tools') {
-      if (newPane.innerHTML == '') {
+      if (newPane.innerHTML == '' || refresh) {
         dBuild.render()
         dBuild.init()
       }

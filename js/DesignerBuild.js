@@ -119,7 +119,7 @@ class DesignerBuild {
     // close btn
     this.getCloseBtn().addEventListener('click', (e) => {
       self.refresh()
-      playerMode.switchToPane('belt')
+      playerMode.switchToPane('belt', true)
     })
 
 
@@ -151,7 +151,7 @@ class DesignerBuild {
       let type = types[i]
       let item = dict.getType(type)
 
-      if (!d.isCraftable(item)) { continue }
+      if (!d.isCraftable(item) || !player.hasUnlocked(entityType, type)) { continue }
 
       items.push(
 `<div class="card bg-dark text-light w-100 mb-1">
@@ -347,11 +347,12 @@ class DesignerBuild {
 
       let targetEntityType = self.getEntityType()
       let targetType = self.getType()
+      let entity = null
 
       // disable build btn
       self.disableEntityBuildBtn()
 
-      // remove required entities from belt...
+      // remove required entities from inventory...
 
       let requirements = d.getEntityRequirements(targetEntityType, targetType)
 
@@ -374,7 +375,7 @@ class DesignerBuild {
             let slot = player.inventory.findExistingSlot(entityType, type)
 
             // remove entity from inventory
-            let entity = player.inventory.pop(slot)
+            entity = player.inventory.pop(slot)
 
             // destroy from world
             d.destroy(entity)
@@ -386,11 +387,13 @@ class DesignerBuild {
       }
 
       // create the new entity(ies) and add it to the player inventory...
-
+      // hang onto a copy of the new entity so afterwards we can handle the player obtaining it
       let qty = d.outputQty(targetEntityType, targetType)
       for (let i = 0; i < qty; i++) {
-        player.inventory.add(d.create(targetEntityType, targetType))
+        entity = d.create(targetEntityType, targetType)
+        player.inventory.add(entity)
       }
+      player.handleObtainingEntity(entity)
 
       dInventory.refresh()
 

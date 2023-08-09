@@ -23,6 +23,7 @@ class DesignerStorage {
     return {
       name: 'BakedLake',
       blockSize: d.getBlockSize(),
+      chunkSize: d.getChunkSize(),
       mapWidth: d.getMapWidth(),
       mapHeight: d.getMapHeight(),
       entities: d._entities
@@ -49,6 +50,7 @@ class DesignerStorage {
         for (let id in map.entities[entityType]) {
           if (!map.entities[entityType].hasOwnProperty(id)) { continue }
 
+          // create the entity...
           let entity = map.entities[entityType][id]
           switch (entityType) {
             case 'block':

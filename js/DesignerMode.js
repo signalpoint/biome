@@ -155,4 +155,64 @@ class DesignerMode {
 
   }
 
+  generateWorld() {
+
+    let mapHeight = d.getMapHeight()
+    let mapWidth = d.getMapWidth()
+    let blockSize = d.getBlockSize()
+    let chunkSize = 32
+
+    // start with an empty map...
+
+    for (let y = 0; y < mapHeight; y += blockSize) {
+
+      for (let x = 0; x < mapWidth; x += blockSize) {
+
+        d.blocks.push(0)
+        d.buildings.push(0)
+
+      }
+
+    }
+
+    // now go through and place blocks on the map...
+
+    let delta = 0
+
+    for (let y = 0; y < mapHeight; y += blockSize) {
+
+      for (let x = 0; x < mapWidth; x += blockSize) {
+
+        d.blocks[delta] = d.create('block', 'Grass').id
+
+        delta++
+
+      }
+
+    }
+
+    // now go through and place chunks on the map...
+
+//    let delta = 0
+//    let chunkDeltaX = 0
+//    let chunkDeltaY = 0
+//    let chunkSize = d.getChunkSize()
+//
+//    for (let y = 0; y < mapHeight; y += blockSize) {
+//
+//      for (let x = 0; x < mapWidth; x += blockSize) {
+//
+//        d.blocks[delta] = d.create('block', 'Grass').id
+//
+//        delta++
+//        chunkDeltaX++
+//
+//      }
+//
+//      chunkDeltaY++
+//
+//    }
+
+  }
+
 }

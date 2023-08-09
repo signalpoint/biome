@@ -75,7 +75,7 @@ class DesignerBlocks extends EntityDict {
         ],
         unlocks: {
           block: [
-            'OakTreePlank'
+            'OakPlank'
           ]
         }
       },

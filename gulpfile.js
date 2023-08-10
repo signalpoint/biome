@@ -13,6 +13,7 @@ var src = [
     './js/DesignerWidget.js',
 
     './js/core/Game.js',
+    './js/core/Biome.js',
 
     './js/DesignerMenu.js',
     './js/DesignerPlayback.js',
@@ -72,7 +73,13 @@ var src = [
     './js/npcs/*.js',
 
     // players
-    './js/players/*.js'
+    './js/players/*.js',
+
+    // dictionaries
+    './js/dictionaries/*.js',
+
+    // biomes
+    './js/biomes/*.js'
 
 ];
 

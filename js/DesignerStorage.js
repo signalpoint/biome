@@ -56,7 +56,7 @@ class DesignerStorage {
             case 'block':
               let blockClass = d.getBlockClass(entity.type)
               let block = new blockClass(entity)
-              if (block.delta) {
+              if (block.delta != null) {
                 d.blocks[block.delta] = block.id
               }
               break;

@@ -169,7 +169,12 @@ class DesignerBuild {
       )
     }
 
-    this.getEntityListPane().innerHTML = items.join('')
+    this.getEntityListPane().innerHTML = items.length ?
+      items.join('') :
+      `<div class="alert alert-info">
+        <h5>Hmm...</h5>
+        Nothing to build with. Gather things to build stuff.
+      </div>`
 
   }
 
@@ -317,12 +322,12 @@ class DesignerBuild {
 
         `<span class="fs-4">
           ${definition.label}
-          ${definition.output && definition.output > 1 ? ` (x${definition.output})` : ''}
         </span>` +
 
         // build btn
         `<button class="btn btn-${requirementsMet ? 'primary' : 'secondary'} float-end ${requirementsMet ? '' : 'disabled'}" title="Build ${definition.label}">
           Build
+          ${definition.output && definition.output > 1 ? ` (x${definition.output})` : ''}
           <i class="fas fa-arrow-circle-right ms-2"></i>
         </button>` +
 

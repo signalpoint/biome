@@ -83,6 +83,7 @@ class Designer {
     //     that way the player can hold more than what is in the belt, and we can easily manage in/out entities
     // - the map could be shaded out at first, and as you explore, the blocks begin to draw/alpha themselves
     // - the concept of a roof would be neat, where it is transparent when you're under it, but opaque when outside of it
+    // - maybe after a while bedrock should turn into grass
 
     // x - Block extend Entity
     // x - Building extend Entity
@@ -458,6 +459,7 @@ class Designer {
   saveCurrentMap() {
     let name = 'BakedLake'
     this.saveMap(name, dStorage.exportMapJson())
+    dStorage.save('LastMapOpened', name)
   }
 
   // playback
@@ -681,12 +683,16 @@ class Designer {
 
   init() {
 
-    dMode.generateWorld()
-
     // open the last map, if available...
 
     let lastMapOpened = dStorage.load('LastMapOpened')
     if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
+    else {
+
+      dMode.generateWorld()
+      d.saveCurrentMap()
+
+    }
 
     game.init()
 

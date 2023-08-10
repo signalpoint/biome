@@ -135,7 +135,7 @@ let playerMoveLeftBtn = document.querySelector('#playerMoveLeftBtn')
 let playerMoveRightBtn = document.querySelector('#playerMoveRightBtn')
 
 let blockSizeInput = document.querySelector('#blockSize')
-let chunkSizeInput = document.querySelector('#blockSize')
+let chunkSizeInput = document.querySelector('#chunkSize')
 
 let mapWidthInput = document.querySelector('#mapWidth')
 let mapHeightInput = document.querySelector('#mapHeight')

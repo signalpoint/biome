@@ -185,7 +185,7 @@ class EntityCollection {
       for (let i = 0; i < existingSlots.length; i++) {
         existingSlot = existingSlots[i]
         if (this.getSlotQty(existingSlot) < this.getSlotMaxQty(existingSlot)) {
-          return i
+          return existingSlot
         }
       }
     }

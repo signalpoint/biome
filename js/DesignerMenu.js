@@ -21,7 +21,10 @@ class DesignerMenu {
 
             el.querySelector('.btn-link').addEventListener('click', (e) => {
 
+              dMode.clearWorld()
               dMode.generateWorld()
+              d.saveCurrentMap()
+              draw()
 
             })
 

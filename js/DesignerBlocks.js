@@ -32,6 +32,14 @@ class DesignerBlocks extends EntityDict {
         craftable: 0
       },
 
+      // Daisy
+      'Daisy': {
+        blockClass: Daisy,
+        label: 'Daisy',
+        description: '...',
+        craftable: 0
+      },
+
       // Grass
       'Grass': {
         blockClass: Grass,

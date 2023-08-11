@@ -88,6 +88,20 @@ class DesignerBlocks extends EntityDict {
         }
       },
 
+      // OakSapling
+      'OakSapling': {
+        blockClass: OakSapling,
+        label: 'Oak Sapling',
+        description: 'Grows into an Oak Tree.',
+        requires: {
+          block: {
+            'OakTreeWood': 1
+          }
+        },
+        output: 2,
+        growsInto: 'OakTreeWood'
+      },
+
       // Sand
       'Sand': {
         blockClass: Sand,

@@ -4,17 +4,19 @@ const BiomeDictionary = {
 
     'Field': {
       block: {
-        'Grass': .95,
+        'Grass': .93,
         'Daisy': .04,
-        'OakTreeWood': .01
+        'OakTreeWood': .02,
+        'Water': .01
       }
     },
 
     'Forest': {
       block: {
-        'Grass': .46,
+        'Grass': .45,
         'OakTreeWood': .48,
-        'Daisy': .06
+        'Daisy': .05,
+        'Water': .02
       }
     },
 

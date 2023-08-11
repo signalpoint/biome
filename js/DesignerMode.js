@@ -155,7 +155,32 @@ class DesignerMode {
 
   }
 
+  clearWorld() {
+
+    let mapWidth = d.getMapWidth()
+    let mapHeight = d.getMapHeight()
+    let blockSize = d.getBlockSize()
+
+    d.blocks = []
+    d.buildings = []
+
+    for (let y = 0; y < mapHeight; y += blockSize) {
+
+      for (let x = 0; x < mapWidth; x += blockSize) {
+
+        d.blocks.push(0)
+        d.buildings.push(0)
+
+      }
+
+    }
+
+  }
+
   generateWorld() {
+
+    // TODO
+    // - if the map is smaller than the device dimensions, things get weird
 
     let mapWidth = d.getMapWidth()
     let mapHeight = d.getMapHeight()
@@ -168,7 +193,7 @@ class DesignerMode {
     let chunksPerWidth = blocksPerRow / chunkSize
     let chunksPerHeight = blocksPerCol / chunkSize
 
-    console.log('map', `${mapWidth}x${mapHeight}`)
+    console.log('map', `${mapWidth}px x ${mapHeight}px (${blocksPerCol} blocks x ${blocksPerRow} blocks)`)
 //    console.log('blocksPerRow', blocksPerRow)
 //    console.log('blocksPerCol', blocksPerCol)
 //    console.log('blockSize', blockSize)
@@ -177,14 +202,6 @@ class DesignerMode {
 //    console.log('blocksPerChunk', blocksPerChunk)
 //    console.log('chunksPerWidth', chunksPerWidth)
 //    console.log('chunksPerHeight', chunksPerHeight)
-
-    let pool = [
-      'Sand',
-      'Grass',
-      'Water',
-      'Bedrock'
-    ]
-    let biomeTypes = BiomeDictionary.getTypes()
 
     // validate map dimensions
 
@@ -198,18 +215,11 @@ class DesignerMode {
 
     // start with an empty map...
 
-    for (let y = 0; y < mapHeight; y += blockSize) {
-
-      for (let x = 0; x < mapWidth; x += blockSize) {
-
-        d.blocks.push(0)
-        d.buildings.push(0)
-
-      }
-
-    }
+    this.clearWorld()
 
     // now go through and place chunks of blocks on the map...
+
+    let biomeTypes = BiomeDictionary.getTypes()
 
     let chunkX = null
     let chunkY = 0
@@ -223,38 +233,36 @@ class DesignerMode {
 
       for (let x = 0; x < chunksPerWidth; x++) {
 
-//        let debug = chunkY == 0 && chunkX < 2
         let randomBiomeType = biomeTypes[Math.floor(Math.random()*biomeTypes.length)]
-        let randomBlockType = pool[Math.floor(Math.random()*pool.length)]
 
 //        console.log('-chunk', chunkX, chunkY, randomBlockType)
 
         deltaY = 0
         deltaX = x
 
+        let deltasForChunk = []
+
         for (let i = 0; i < blocksPerChunk; i++) {
 
-//          let debugRow = !i || i % chunkSize == 0
-//          let debugRow = x == 0 && y == 0
-//          let debugRow = x == 1 && y == 0
-          let debugRow = false
-
-          if (i && i % chunkSize == 0) {
+          if (i && i % chunkSize == 0) { // new row
             deltaY++
             deltaX = x
-          } // new row
+          }
 
           let delta = (i % chunkSize) + (deltaY * blocksPerRow) + (y * blocksPerRow * chunkSize) + (x * chunkSize)
 
-          // debug
-//          if (debugRow) {
-//            console.log('--row', `${deltaY} @ ${delta}`)
-//          }
-
-          d.blocks[delta] = d.create('block', randomBlockType).id
+          deltasForChunk.push(delta)
 
           deltaX++
 
+        }
+
+        for (let i = 0; i < deltasForChunk.length; i++) {
+          let delta = deltasForChunk[i]
+          let randomBlockType = BiomeDictionary.getFlubber(randomBiomeType)
+          let block = d.create('block', randomBlockType)
+          d.blocks[delta] = block.id
+          block.delta = delta
         }
 
         // TODO track the deltas above, and send them off to the biome "builder"

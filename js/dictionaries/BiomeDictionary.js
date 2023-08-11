@@ -3,55 +3,26 @@ const BiomeDictionary = {
   _types: {
 
     'Field': {
-
       block: {
-
-        'Grass': {
-          chance: .97
-        },
-
-        'Daisy': {
-          chance: .03
-        }
-
+        'Grass': .95,
+        'Daisy': .04,
+        'OakTreeWood': .01
       }
-
     },
 
     'Forest': {
-
       block: {
-
-        'Grass': {
-          chance: .2
-        },
-
-        'OakTreeWood': {
-          chance: .8
-        }
-
+        'Grass': .46,
+        'OakTreeWood': .48,
+        'Daisy': .06
       }
-
     },
 
-    'Lake': {
-
+    'Swamp': {
       block: {
-
-        'Grass': {
-          chance: .02
-        },
-
-        'Sand': {
-          chance: .08
-        },
-
-        'Water': {
-          chance: .9
-        }
-
+        'Grass': .49,
+        'Water': .51
       }
-
     }
 
   },
@@ -64,7 +35,39 @@ const BiomeDictionary = {
     }
     return types
   },
+  getType(type) { return this._types[type] },
 
-  getType(type) { return this._types[type] }
+  getTypeBlocks(type) { return this._types[type].block },
+
+  getFlubber(type) {
+
+    // @credit thanks Chat GPT
+
+    // Step 1: Create an object with properties and values
+    let properties = this.getTypeBlocks(type);
+
+    // Step 2: Calculate cumulative probabilities
+    let cumulativeProbability = 0;
+    const cumulativeProbabilities = {};
+    for (const property in properties) {
+      cumulativeProbability += properties[property];
+      cumulativeProbabilities[property] = cumulativeProbability;
+    }
+
+    // Step 3: Generate a random number between 0 and 1
+    const randomValue = Math.random();
+
+    // Step 4: Determine the chosen property based on random number
+    let chosenProperty = null;
+    for (const property in cumulativeProbabilities) {
+      if (randomValue <= cumulativeProbabilities[property]) {
+        chosenProperty = property;
+        break;
+      }
+    }
+
+    return chosenProperty
+
+  }
 
 }

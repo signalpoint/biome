@@ -56,7 +56,21 @@ var src = [
     './js/actions/*.js',
 
     // blocks
-    './js/blocks/*.js',
+
+    './js/blocks/Bedrock.js',
+    './js/blocks/BlueberryBush.js',
+    './js/blocks/Border.js',
+    './js/blocks/Daisy.js',
+    './js/blocks/Grass.js',
+    './js/blocks/OakPlank.js',
+    './js/blocks/OakTreeLeaves.js',
+    './js/blocks/OakTreeWood.js',
+    './js/blocks/Sand.js',
+    './js/blocks/Stone.js',
+    './js/blocks/Water.js',
+
+    './js/blocks/Plant.js',
+    './js/blocks/OakSapling.js',
 
     // buildings
     './js/buildings/*.js',

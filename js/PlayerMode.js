@@ -425,12 +425,7 @@ class PlayerMode {
 
             if (leftClick) { // left click...
 
-              // If the block can be mined and the belt isn't full...
-              if (block.canBeMined() && !player.belt.isFull()) {
-
-                // @see player.mineBlock()
-
-              }
+              // @see player.mineBlock()
 
             }
 

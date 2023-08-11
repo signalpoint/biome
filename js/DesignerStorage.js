@@ -42,6 +42,8 @@ class DesignerStorage {
     // import entities...
     if (map.entities) {
 
+      dMode.clearWorld()
+
       // for each entity type...
       for (let entityType in map.entities) {
         if (!map.entities.hasOwnProperty(entityType)) { continue }

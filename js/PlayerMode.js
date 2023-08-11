@@ -450,10 +450,12 @@ class PlayerMode {
                     player.inventory.pop(i)
                     player.belt.refresh()
 
+                    entity.onplace()
+
                   }
                   else if (entity.isItem()) {
 
-                    console.log('trying to place an item...')
+                    console.log('TODO trying to place an item...')
 
                   }
 

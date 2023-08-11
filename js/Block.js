@@ -37,6 +37,9 @@ class Block extends Entity {
 
   }
 
+  // event handler when block is placed
+  onplace() { }
+
   draw(x, y) {
 
     c.beginPath()

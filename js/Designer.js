@@ -120,6 +120,9 @@ class Designer {
     if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
     else {
 
+      // No map has been opened...
+
+      // Generate a world for the user.
       dMode.generateWorld()
       d.saveCurrentMap()
 
@@ -510,6 +513,31 @@ class Designer {
 
   setScreenHeight(h) { this._screenHeight = h }
   getScreenHeight() { return this._screenHeight }
+
+  initScreenResolution() {
+
+    let screenWidth = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth
+
+    let screenHeight = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight
+
+    let headerHeight = document.getElementById('d-menu').clientHeight
+    let footerHeight = document.querySelector('footer').clientHeight
+    let canvasHeight = screenHeight - (headerHeight + footerHeight)
+
+//    console.log('headerHeight', headerHeight)
+//    console.log('footerHeight', footerHeight)
+//    console.log('canvasHeight', canvasHeight)
+//    console.log('screenWidth', screenWidth)
+//    console.log('screenHeight', screenHeight)
+
+    // set screen resolution
+    d.setScreenResolution(screenWidth, canvasHeight)
+
+  }
 
   setScreenResolution(w, h) {
     this._screenWidth = w

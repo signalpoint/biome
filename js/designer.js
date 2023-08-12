@@ -198,27 +198,7 @@ addEventListener('load', function() {
   // set the active pane for the mode
 //  dMode.setActivePane(selectModePane)
 
-  // set screen resolution
-
-  let screenWidth = window.innerWidth
-    || document.documentElement.clientWidth
-    || document.body.clientWidth
-
-  let screenHeight = window.innerHeight
-    || document.documentElement.clientHeight
-    || document.body.clientHeight
-
-  let headerHeight = document.getElementById('d-menu').clientHeight
-  let footerHeight = document.querySelector('footer').clientHeight
-  let canvasHeight = screenHeight - (headerHeight + footerHeight)
-
-//  console.log('screenWidth', screenWidth)
-//  console.log('screenHeight', screenHeight)
-//  console.log('headerHeight', headerHeight)
-//  console.log('footerHeight', footerHeight)
-//  console.log('canvasHeight', canvasHeight)
-
-  d.setScreenResolution(screenWidth, canvasHeight)
+  d.initScreenResolution()
 
 //  let resolution = screenResolutionMap[screenResolutionSelect.value]
 //  d.setScreenResolution(resolution.w, resolution.h)

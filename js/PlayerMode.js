@@ -433,24 +433,35 @@ class PlayerMode {
 
             else if (rightClick) { // right click...
 
-              // If on bedrock...
-              if (isBedrock) {
+              // If block can be placed upon...
+              if (d.blockCanBePlacedUpon(block)) {
 
-                // If they have an active belt entity...
+                // If they've selected something in their belt...
                 let i = player.belt.getActiveButtonIndex()
                 let entity = player.inventory.see(i)
                 if (entity) {
 
                   if (entity.isBlock()) {
 
-//                    console.log(`placing ${entity.type} block @ ${delta}`)
+                    if (entity.type == block.type) {
 
-                    // place the block from their active belt entity
-                    dMode.paintBlock(delta, entity)
-                    player.inventory.pop(i)
-                    player.belt.refresh()
+                      // They are trying to place the same type of block...
 
-                    entity.onplace()
+                    }
+                    else {
+
+                      // They are placing a different type of block...
+
+//                      console.log(`placing ${entity.type} block @ ${delta}`)
+
+                      // place the block from their active belt entity
+                      dMode.paintBlock(delta, entity)
+                      player.inventory.pop(i)
+                      player.belt.refresh()
+
+                      entity.onplace()
+
+                    }
 
                   }
                   else if (entity.isItem()) {
@@ -464,6 +475,11 @@ class PlayerMode {
 
                   // save the player
                   player.save()
+
+                }
+                else {
+
+                  // They haven't selected anything in their belt...
 
                 }
 

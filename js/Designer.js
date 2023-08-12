@@ -84,6 +84,10 @@ class Designer {
     // - the map could be shaded out at first, and as you explore, the blocks begin to draw/alpha themselves
     // - the concept of a roof would be neat, where it is transparent when you're under it, but opaque when outside of it
     // - maybe after a while bedrock should turn into grass
+    // - weather elements: clouds, rain, lightning, fog, wind, etc
+    // - LAYERS: allow layers of blocks? e.g. imagine tree leaves being drawn with some transparency on a layer above players
+    // -- this would be cool in the other direction as well, becase could have a layer(s) underground
+    // -- the leaves could then auto disappear after some time and drop items, etc - fun
 
     // x - Block extend Entity
     // x - Building extend Entity
@@ -576,6 +580,8 @@ class Designer {
   getMouseUpBlockDelta() { return this._mouseUpBlockDelta }
   setMouseUpBlockDelta(delta) { this._mouseUpBlockDelta = delta }
   getMouseUpBlock() { return d.blocks[this._mouseUpBlockDelta] ? d.block(this._mouseUpBlockDelta) : null }
+
+  blockCanBePlacedUpon(block) { return block.isBedrock() || block.type == 'Grass' }
 
   // chunks
 

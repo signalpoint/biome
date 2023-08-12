@@ -279,12 +279,12 @@ class DesignerBuild {
 //          console.log('requirementDefinition', requirementDefinition)
 //          console.log('qty', qty)
 
-          let playerQty = 0
-          let color = 'danger'
+          let color = 'danger' // assumes player has nonone
 
-          if (player.inventory.has(requirementEntityType, requirementType)) { // has some of the entity...
+          let playerHasSome = player.inventory.has(requirementEntityType, requirementType)
+          let playerQty = playerHasSome ? player.inventory.qty(requirementEntityType, requirementType) : 0
 
-            playerQty = player.inventory.qty(requirementEntityType, requirementType)
+          if (playerHasSome) { // has some of the entity...
 
             if (playerQty >= qty) { // has enough of the entity...
               color = 'success'
@@ -304,8 +304,8 @@ class DesignerBuild {
 
           requirements.push(
             `<li class="list-group-item list-group-item-${color}">
-              ${requirementDefinition.label}
-              <span class="badge bg-dark float-end">${'' + playerQty} / ${qty}</span>
+              ${requirementDefinition.label} (x${qty})
+              <span class="badge bg-light text-secondary float-end">${playerQty}</span>
             </li>`
           )
 
@@ -403,6 +403,8 @@ class DesignerBuild {
       dInventory.refresh()
 
       player.belt.refresh()
+
+      self.refreshEntityPane()
 
       d.save()
 

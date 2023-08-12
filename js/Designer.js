@@ -110,6 +110,27 @@ class Designer {
 
   }
 
+  // INIT
+
+  init() {
+
+    // open the last map, if available...
+
+    let lastMapOpened = dStorage.load('LastMapOpened')
+    if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
+    else {
+
+      dMode.generateWorld()
+      d.saveCurrentMap()
+
+    }
+
+    game.init()
+
+    initDesignerWidgets()
+
+  }
+
   // TOAST
 
   addToast(id) {
@@ -683,27 +704,6 @@ class Designer {
       }
     }
     return null
-  }
-
-  // INIT
-
-  init() {
-
-    // open the last map, if available...
-
-    let lastMapOpened = dStorage.load('LastMapOpened')
-    if (lastMapOpened) { dStorage.importMap(lastMapOpened) }
-    else {
-
-      dMode.generateWorld()
-      d.saveCurrentMap()
-
-    }
-
-    game.init()
-
-    initDesignerWidgets()
-
   }
 
   // CANVAS MOUSE EVENT LISTENERS

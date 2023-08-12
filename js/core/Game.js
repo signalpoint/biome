@@ -15,16 +15,60 @@ class Game {
     this._globalAlpha = 1.0
 
 //    this._dayLength = 60 * 20 * 1000 // 20 minutes
-    this._dayLength = 60 * 20 * 100 // 2 minutes
-//    this._dayLength = 60 * 20 * 10 // 20 seconds
+    this._dayLength = 60 * 2 * 1000 // 2 minutes
+//    this._dayLength = 60 * .2 * 1000 // 20 seconds
 
   }
 
   init() {
 
-    // init player belt
-    player.belt.init()
-    player.belt.refresh()
+  // PLAYER
+
+  player = new Player({
+    name: 'Tyler',
+    x: 576 + 8,
+    y: 256 + 4
+  })
+//  player.belt.add(new Axe({}))
+//  player.belt.setActiveItem(0)
+  player.load()
+  players.push(player)
+
+  // init player belt
+  player.belt.init()
+  player.belt.refresh()
+
+  // NPCs
+
+  // TODO
+  // - can't get rid of static id values here until we're dynamically saving/loading npcs
+
+//  let npcLoan = new Villager({
+//    id: 'Loan',
+//    name: 'Loan',
+//    x: player.x + 72,
+//    y: player.y - 28,
+//    color: 'yellow'
+//  })
+//  saveVillager(npcLoan)
+//
+//  let npcAvalina = new Villager({
+//    id: 'Avalina',
+//    name: 'Avalina',
+//    x: player.x + 16,
+//    y: player.y - 121,
+//    color: 'pink'
+//  })
+//  saveVillager(npcAvalina)
+//
+//  let npcMelvin = new Villager({
+//    id: 'Melvin',
+//    name: 'Melvin',
+//    x: player.x - 92,
+//    y: player.y - 92,
+//    color: 'red'
+//  })
+//  saveVillager(npcMelvin)
 
   }
 

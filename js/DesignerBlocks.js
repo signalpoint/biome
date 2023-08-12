@@ -48,6 +48,19 @@ class DesignerBlocks extends EntityDict {
         craftable: 0
       },
 
+      // OakFloor
+      'OakFloor': {
+        blockClass: OakFloor,
+        label: 'Oak Floor',
+        description: 'Great for busting out dance moves on.',
+        requires: {
+          block: {
+            'OakPlank': 1
+          }
+        },
+        output: 2
+      },
+
       // OakPlank
       'OakPlank': {
         blockClass: OakPlank,

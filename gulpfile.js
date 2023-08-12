@@ -63,6 +63,7 @@ var src = [
     './js/blocks/Daisy.js',
     './js/blocks/Grass.js',
     './js/blocks/OakPlank.js',
+      './js/blocks/OakFloor.js',
     './js/blocks/OakTreeLeaves.js',
     './js/blocks/OakTreeWood.js',
     './js/blocks/Sand.js',

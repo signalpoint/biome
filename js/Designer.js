@@ -88,6 +88,7 @@ class Designer {
     // - LAYERS: allow layers of blocks? e.g. imagine tree leaves being drawn with some transparency on a layer above players
     // -- this would be cool in the other direction as well, becase could have a layer(s) underground
     // -- the leaves could then auto disappear after some time and drop items, etc - fun
+    // - we should put our globals in the "d" namespace, e.g. d.keys, d.mouse, etc
 
     // x - Block extend Entity
     // x - Building extend Entity

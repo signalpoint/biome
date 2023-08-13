@@ -4,6 +4,17 @@ class DesignerPlayback {
 
   }
 
+  init() {
+
+    // designer playback buttons
+    for (var i = 0; i < playbackBtns.length; i++) {
+      playbackBtns[i].addEventListener('click', function() {
+        dPlayback.btnOnclickListener(this)
+      })
+    }
+
+  }
+
   btnOnclickListener(btn) {
 
     let playback = btn.getAttribute('data-playback')

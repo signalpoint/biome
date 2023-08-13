@@ -543,6 +543,10 @@ class Designer {
       d.setScreenResolution(resolution.w, resolution.h)
     })
 
+//  let resolution = screenResolutionMap[screenResolutionSelect.value]
+//  d.setScreenResolution(resolution.w, resolution.h)
+//  d.setScreenResolution(innerWidth, innerHeight) // full screen
+
   }
 
   setScreenResolution(w, h) {

@@ -193,10 +193,6 @@ addEventListener('load', function() {
 
   d.initScreenResolution()
 
-//  let resolution = screenResolutionMap[screenResolutionSelect.value]
-//  d.setScreenResolution(resolution.w, resolution.h)
-//  d.setScreenResolution(innerWidth, innerHeight) // full screen
-
   // set block size
   d.setBlockSize(parseInt(blockSizeInput.value))
 

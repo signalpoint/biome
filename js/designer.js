@@ -79,6 +79,7 @@ canvasMouseOffsetY = -2
 // Designer
 
 let d = null
+let dCanvas = null
 let game = null
 let dMenu = null
 let dPlayback = null
@@ -146,20 +147,12 @@ let canvasMouseCoordsBadge = document.querySelector('#canvasMouseCoords')
 
 addEventListener('load', function() {
 
-  // CANVAS
-
-  canvas = document.getElementById("biome")
-  c = canvas.getContext("2d")
-
-  // disable right click on canvas
-  canvas.oncontextmenu = function(e) {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
-  // DESIGNER
+  // INIT
 
   d = new Designer()
+
+  dCanvas = new DesignerCanvas()
+  dCanvas.init()
 
   dStorage = new DesignerStorage()
 
@@ -220,45 +213,17 @@ addEventListener('load', function() {
   blocksPerRowInput.value = d.blocksPerRow()
   blocksPerColInput.value = d.blocksPerCol()
 
+  // initialize some components...
+
+  dMenu.init()
+
+  dPlayback.init()
+
+  dCamera.init()
+
+  dPlayer.init()
+
   // EVENT LISTENERS
-
-  // designer menu buttons
-  for (var i = 0; i < designerMenuBtns.length; i++) {
-    designerMenuBtns[i].addEventListener('click', function(e) {
-      let op = this.getAttribute('data-op')
-      dMenu.onclick(e, op)
-      return false
-    })
-  }
-
-  // designer playback buttons
-  for (var i = 0; i < playbackBtns.length; i++) {
-    playbackBtns[i].addEventListener('click', function() {
-      dPlayback.btnOnclickListener(this)
-    })
-  }
-
-  // camera: movement
-  cameraMoveUpBtn.addEventListener('click', function() { dCamera.move('up') })
-  cameraMoveDownBtn.addEventListener('click', function() { dCamera.move('down') })
-  cameraMoveLeftBtn.addEventListener('click', function() { dCamera.move('left') })
-  cameraMoveRightBtn.addEventListener('click', function() { dCamera.move('right') })
-
-  // player: movement
-  playerMoveUpBtn.addEventListener('mousedown', function() { keys.up.pressed = true })
-  playerMoveUpBtn.addEventListener('mouseup', function() { keys.up.pressed = false })
-  playerMoveDownBtn.addEventListener('mousedown', function() { keys.down.pressed = true })
-  playerMoveDownBtn.addEventListener('mouseup', function() { keys.down.pressed = false })
-  playerMoveLeftBtn.addEventListener('mousedown', function() { keys.left.pressed = true })
-  playerMoveLeftBtn.addEventListener('mouseup', function() { keys.left.pressed = false })
-  playerMoveRightBtn.addEventListener('mousedown', function() { keys.right.pressed = true })
-  playerMoveRightBtn.addEventListener('mouseup', function() { keys.right.pressed = false })
-
-  // screen resolution
-  screenResolutionSelect.addEventListener('change', function() {
-    let resolution = screenResolutionMap[this.value]
-    d.setScreenResolution(resolution.w, resolution.h)
-  })
 
   // block size
   blockSizeInput.addEventListener('change', function() {
@@ -283,30 +248,6 @@ addEventListener('load', function() {
   mapHeightInput.addEventListener('change', function() {
     d.setMapHeight(parseInt(this.value))
   })
-
-  // canvas mousemove
-  canvas.addEventListener("mousemove", function(e) {
-    d.canvasMouseMoveListener(e)
-  })
-
-  // canvas mousedown
-  canvas.addEventListener('mousedown', function(e) {
-    d.canvasMouseDownListener(e)
-  })
-
-  // canvas mouseup
-  canvas.addEventListener("mouseup", function(e) {
-    d.canvasMouseUpListener(e)
-  })
-
-  // canvas wheel
-  canvas.addEventListener('wheel', function(e) {
-    d.canvasMouseWheelListener(e)
-  }, false)
-
-//  canvas.addEventListener("mouseover", canvasMouseOver);
-//
-//  canvas.addEventListener("mouseout", canvasMouseOut);
 
   // KEY DOWN
 

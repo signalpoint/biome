@@ -7,6 +7,19 @@ class DesignerMenu {
 
   }
 
+  init() {
+
+    // designer menu buttons
+    for (var i = 0; i < designerMenuBtns.length; i++) {
+      designerMenuBtns[i].addEventListener('click', function(e) {
+        let op = this.getAttribute('data-op')
+        dMenu.onclick(e, op)
+        return false
+      })
+    }
+
+  }
+
   onclick(e, op) {
 
     switch (op) {

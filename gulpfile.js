@@ -10,6 +10,9 @@ var src = [
     './js/StopWatch.js',
 
     './js/Designer.js',
+
+    './js/designer/DesignerCanvas.js',
+
     './js/DesignerWidget.js',
 
     './js/core/Game.js',

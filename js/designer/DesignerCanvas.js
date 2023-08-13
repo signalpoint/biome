@@ -42,8 +42,6 @@ class DesignerCanvas {
 
   }
 
-
-
   // CANVAS MOUSE EVENT LISTENERS
 
   // move

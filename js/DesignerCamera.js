@@ -7,6 +7,16 @@ class DesignerCamera {
 
   }
 
+  init() {
+
+    // camera: movement
+    cameraMoveUpBtn.addEventListener('click', function() { dCamera.move('up') })
+    cameraMoveDownBtn.addEventListener('click', function() { dCamera.move('down') })
+    cameraMoveLeftBtn.addEventListener('click', function() { dCamera.move('left') })
+    cameraMoveRightBtn.addEventListener('click', function() { dCamera.move('right') })
+
+  }
+
   x() { return this._x }
   y() { return this._y }
 

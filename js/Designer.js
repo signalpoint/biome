@@ -537,6 +537,12 @@ class Designer {
     // set screen resolution
     d.setScreenResolution(screenWidth, canvasHeight)
 
+    // screen resolution event listener
+    screenResolutionSelect.addEventListener('change', function() {
+      let resolution = screenResolutionMap[this.value]
+      d.setScreenResolution(resolution.w, resolution.h)
+    })
+
   }
 
   setScreenResolution(w, h) {

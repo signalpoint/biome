@@ -12,6 +12,8 @@ var src = [
     './js/Designer.js',
 
     './js/designer/DesignerCanvas.js',
+    './js/designer/DesignerMouse.js',
+    './js/designer/DesignerKeyboard.js',
 
     './js/DesignerWidget.js',
 

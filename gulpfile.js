@@ -5,11 +5,9 @@ var gulp = require('gulp'),
 
 var src = [
 
-    // CORE
+    './js/Designer.js',
 
     './js/StopWatch.js',
-
-    './js/Designer.js',
 
     './js/designer/DesignerCanvas.js',
     './js/designer/DesignerMouse.js',

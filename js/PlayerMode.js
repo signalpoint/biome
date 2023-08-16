@@ -124,6 +124,10 @@ class PlayerMode {
       this.renderPaintPane()
       this.initPaintPane()
     }
+    else if (op == 'select') {
+      this.renderSelectPane()
+      this.initSelectPane()
+    }
 
   }
 
@@ -238,8 +242,49 @@ class PlayerMode {
 
   }
 
+  // SELECT
+
+  renderSelectPane() {
+
+    let html = ''
+
+    // Show any selected blocks...
+    let selectedBlocks = d.getSelectedBlocks()
+    if (selectedBlocks.length) {
+      html += '<ul class="list-group">'
+      for (var i = 0; i < selectedBlocks.length; i++) {
+        let delta = selectedBlocks[i]
+        let block = d.block(delta)
+        let def = d.getEntityDefinition('block', block.type)
+        html +=
+          `<li class="list-group-item">
+            <div class="clearfix">
+              <div class="fs-5 float-start">${def.label}</div>
+              <span class="badge bg-primary rounded-pill float-end">#${block.delta}</span>
+            </div>
+            <div>id: ${block.id}</div>
+            <div>health: ${block.health}</div>
+            <div>coords: ${JSON.stringify(d.getBlockCoordsFromDelta(delta))}</div>
+            <div>pos: ${JSON.stringify(d.getBlockPosFromDelta(delta))}</div>
+          </li>`
+      }
+      html += '</ul>'
+    }
+
+    this.getPane('select').innerHTML = html
+
+  }
+  initSelectPane() {
+
+  }
+  refreshSelectPane() {
+    this.renderSelectPane()
+    this.initSelectPane()
+  }
+
   // CANVAS + MOUSE
 
+  // mouse move
   canvasMouseMoveListener(e) {
 
 //    let leftClick = mouse.left.pressed
@@ -274,6 +319,7 @@ class PlayerMode {
 
   }
 
+  // mouse down
   canvasMouseDownListener(e) {
 
     let leftClick = mouse.left.pressed
@@ -325,8 +371,52 @@ class PlayerMode {
 
     }
 
+    // SELECT
+
+    else if (mode == 'select') {
+
+      if (leftClick) {
+
+        // On existing blocks...
+        if (block) {
+
+          if (d.getSelectedBlocks().length) { // at least one block is selected...
+
+            let selectedDelta = d.getSelectedBlocks()[0]
+            if (d.block(selectedDelta).delta == delta) { // clicked on selected block...
+
+              dMode.openBlockModal(delta)
+
+            }
+            else { // clicked on a different block....
+
+              d.clearSelectedBlocks();
+              d.selectBlock(delta)
+
+            }
+
+          }
+          else { // no blocks are selected...
+
+            d.selectBlock(delta)
+
+          }
+
+          // TODO ctrl+ click implementation
+          // Toggle its selected state.
+  //          d.blockSelected(delta) ? d.deselectBlock(delta) : d.selectBlock(delta);
+
+          this.refreshSelectPane()
+
+        }
+
+      }
+
+    }
+
   }
 
+  // mouse down + hold
   canvasMouseDownHoldListener(e) {
 
     // NOTE, "this" isn't playerMode since this is running in an interval
@@ -368,6 +458,7 @@ class PlayerMode {
 
   }
 
+  // mouse up
   canvasMouseUpListener(e) {
 
     // TODO handle action cancel/clear
@@ -470,11 +561,7 @@ class PlayerMode {
 
                   }
 
-                  // save the map
-                  d.saveCurrentMap()
-
-                  // save the player
-                  player.save()
+                  d.save()
 
                 }
                 else {
@@ -567,6 +654,7 @@ class PlayerMode {
 
   }
 
+  // mouse wheel
   canvasMouseWheelListener(e) { }
 
 }

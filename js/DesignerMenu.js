@@ -63,13 +63,7 @@ class DesignerMenu {
           d.saveMaps(maps)
         }
 
-        // Save map to storage
-        d.saveCurrentMap()
-
-        console.log(name, dStorage.exportMapJson())
-
-        // Save player
-        player.save()
+        d.save()
 
         break;
 

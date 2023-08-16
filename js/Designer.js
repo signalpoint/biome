@@ -69,11 +69,6 @@ class Designer {
 
     // TODO
 
-    // x - take Npc.js's "npcs" var out of the global namespace and use entity index instead
-    // - the map does need to keep its d.blocks and d.buildings and friends/indexes though; maybe rename them a bit
-    // - imagine how much easier it'll be to import/export | save/load stuff when they are all entities too
-    // - replace d.blocks[123] holding a full block object to hold just the entity id instead
-    // - replace d.buildings[456] holding a full building object to hold just the entity id instead
     // - entity collection indexes may be able to be simplified to just hold ids instead of entities,
     //   and then pull from the new top level entity index
     // - enemies can be npcs too
@@ -89,11 +84,7 @@ class Designer {
     // -- this would be cool in the other direction as well, becase could have a layer(s) underground
     // -- the leaves could then auto disappear after some time and drop items, etc - fun
     // - we should put our globals in the "d" namespace, e.g. d.keys, d.mouse, etc
-
-    // x - Block extend Entity
-    // x - Building extend Entity
-    // x - Player extend entity
-    // x - the Entity layer should have its own index
+    // - character should be able to jump, and we should simulate 3d in the 2d environment; ala zelda
 
     this.blocks = [] // blocks on the map, keyed by delta, holds full block object
     this.blocksIndex = {} // TODO deprecate
@@ -402,6 +393,7 @@ class Designer {
 
   block(delta) { return this.getBlock(d.blocks[delta]) }
   building(delta) { return this.getBuilding(d.buildings[delta]) }
+  player(id) { return d.getEntity('player', id) }
 
   hasBlock(delta) { return !!d.blocks[delta] }
 

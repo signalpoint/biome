@@ -1,15 +1,25 @@
 let player = null
 let players = []
 
-class Player {
+class Player extends Entity {
 
   constructor({
+    id = null,
+    type,
     name,
+    health = 100,
     x,
     y
   }) {
 
+    super({
+      id,
+      entityType: 'player'
+    })
+
+    this.type = type
     this.name = name
+    this.health = health
 
     this.x = x
     this.y = y
@@ -68,6 +78,8 @@ class Player {
       }
     }
 
+    d.addEntityToIndex('player', this)
+
   }
 
   save() {
@@ -119,86 +131,84 @@ class Player {
 
 //    console.log('player velocity: ' + this.vX + ', ' + this.vY)
 
-    // determine if the player can move up, down, left and/or right...
-
-    let upwardDestination = this.y - Math.abs(this.vY)
-    let downwardDestination = this.y + this.height + Math.abs(this.vY)
-    let leftDestination = this.x - Math.abs(this.vX)
-    let rightDestination = this.x + this.width + Math.abs(this.vX)
-
-    let blockAboveTopLeftDelta = d.getBlockDelta(this.x, upwardDestination)
-    let blockAboveTopRightDelta = d.getBlockDelta(this.x + this.width, upwardDestination)
-    let blockBelowBottomLeftDelta = d.getBlockDelta(this.x, downwardDestination)
-    let blockBelowBottomRightDelta = d.getBlockDelta(this.x + this.width, downwardDestination)
-
-    let blockAboveTopLeft = d.hasBlock(blockAboveTopLeftDelta) ? d.block(blockAboveTopLeftDelta) : null
-    let blockAboveTopRight = d.hasBlock(blockAboveTopRightDelta) ? d.block(blockAboveTopRightDelta) : null
-    let blockBelowBottomLeft = d.hasBlock(blockBelowBottomLeftDelta) ? d.block(blockBelowBottomLeftDelta) : null
-    let blockBelowBottomRight = d.hasBlock(blockBelowBottomRightDelta) ? d.block(blockBelowBottomRightDelta) : null
-
-    let blockBeforeTopLeftDelta = d.getBlockDelta(leftDestination, this.y)
-    let blockAfterTopRightDelta = d.getBlockDelta(rightDestination, this.y)
-    let blockBeforeBottomLeftDelta = d.getBlockDelta(leftDestination, this.y + this.height)
-    let blockAfterBottomRightDelta = d.getBlockDelta(rightDestination, this.y + this.height)
-
-    let blockBeforeTopLeft = d.hasBlock(blockBeforeTopLeftDelta) ? d.block(blockBeforeTopLeftDelta) : null
-    let blockAfterTopRight = d.hasBlock(blockAfterTopRightDelta) ? d.block(blockAfterTopRightDelta) : null
-    let blockBeforeBottomLeft = d.hasBlock(blockBeforeBottomLeftDelta) ? d.block(blockBeforeBottomLeftDelta) : null
-    let blockAfterBottomRight = d.hasBlock(blockAfterBottomRightDelta) ? d.block(blockAfterBottomRightDelta) : null
-
-    let canMoveUp = blockAboveTopLeft && !blockAboveTopLeft.solid && blockAboveTopRight && !blockAboveTopRight.solid
-    let canMoveDown = blockBelowBottomLeft && !blockBelowBottomLeft.solid && blockBelowBottomRight && !blockBelowBottomRight.solid
-    let canMoveLeft = blockBeforeTopLeft && !blockBeforeTopLeft.solid && blockBeforeBottomLeft && !blockBeforeBottomLeft.solid
-    let canMoveRight = blockAfterTopRight && !blockAfterTopRight.solid && blockAfterBottomRight && !blockAfterBottomRight.solid
-
     // key press velocity changes for player and player movement states
 
-    // up
-    if (canMoveUp && keys.up.pressed && Math.abs(this.vY) < this.maxVelocityY) {
-      this.state.moving.up = true
-      this.vY -= 1
-    }
-    else if (this.vY < 0) { // friction
-      this.vY += 1
-      if (!this.vY) {
-        this.state.moving.up = false
+    // UP
+
+    if (this.canMoveUp()) {
+      if (keys.up.pressed && Math.abs(this.vY) < this.maxVelocityY) {
+        this.state.moving.up = true
+        this.vY -= 1
       }
+      else if (this.vY < 0) { // friction
+        this.vY += 1
+        if (!this.vY) {
+          this.state.moving.up = false
+        }
+      }
+    }
+    else if (keys.up.pressed || this.state.moving.up) {
+      this.vY = 0
+      this.state.moving.up = false
     }
 
-    // down
-    if (canMoveDown && keys.down.pressed && Math.abs(this.vY) < this.maxVelocityY) {
-      this.state.moving.down = true
-      this.vY += 1
-    }
-    else if (this.vY > 0) { // friction
-      this.vY -= 1
-      if (!this.vY) {
-        this.state.moving.down = false
+    // DOWN
+
+    if (this.canMoveDown()) {
+
+      if (keys.down.pressed && Math.abs(this.vY) < this.maxVelocityY) {
+        this.state.moving.down = true
+        this.vY += 1
       }
+      else if (this.vY > 0) { // friction
+        this.vY -= 1
+        if (!this.vY) {
+          this.state.moving.down = false
+        }
+      }
+
+    }
+    else if (keys.down.pressed || this.state.moving.down) {
+      this.vY = 0
+      this.state.moving.down = false
     }
 
-    // left
-    if (canMoveLeft && keys.left.pressed && Math.abs(this.vX) < this.maxVelocityX) {
-      this.state.moving.left = true
-      this.vX -= 1
-    }
-    else if (this.vX < 0) { // friction
-      this.vX += 1
-      if (!this.vX) {
-        this.state.moving.left = false
+    // LEFT
+
+    if (this.canMoveLeft()) {
+      if (keys.left.pressed && Math.abs(this.vX) < this.maxVelocityX) {
+        this.state.moving.left = true
+        this.vX -= 1
       }
+      else if (this.vX < 0) { // friction
+        this.vX += 1
+        if (!this.vX) {
+          this.state.moving.left = false
+        }
+      }
+    }
+    else if (keys.left.pressed || this.state.moving.left) {
+      this.vX = 0
+      this.state.moving.left = false
     }
 
-    // right
-    if (canMoveRight && keys.right.pressed && Math.abs(this.vX) < this.maxVelocityX) {
-      this.state.moving.right = true
-      this.vX += 1
-    }
-    else if (this.vX > 0) { // friction
-      this.vX -= 1
-      if (!this.vX) {
-        this.state.moving.right = false
+    // RIGHT
+
+    if (this.canMoveRight()) {
+      if (keys.right.pressed && Math.abs(this.vX) < this.maxVelocityX) {
+        this.state.moving.right = true
+        this.vX += 1
       }
+      else if (this.vX > 0) { // friction
+        this.vX -= 1
+        if (!this.vX) {
+          this.state.moving.right = false
+        }
+      }
+    }
+    else if (keys.right.pressed || this.state.moving.right) {
+      this.vX = 0
+      this.state.moving.right = false
     }
 
     // if the player is moving in 2 directions simultaniously, cut each velocity in half
@@ -217,8 +227,6 @@ class Player {
     // if player has velocity in either direction, change their position accordingly
     if (this.vX !== 0) { this.x += this.vX }
     if (this.vY !== 0) { this.y += this.vY }
-//    if (this.vX !== 0 && (canMoveLeft || canMoveRight)) { this.x += this.vX }
-//    if (this.vY !== 0 && (canMoveUp || canMoveDown)) { this.y += this.vY }
 
     dPlayer.refreshCoordinatesBadge()
     dPlayer.refreshVelocityBadge()
@@ -314,6 +322,164 @@ class Player {
       d.getBlockDelta(center.x + size, center.y + size)
 
     ]
+
+  }
+
+  getUpwardDestination() { return this.y - Math.abs(this.vY) - 1 }
+  getDownwardDestination() { return this.y + this.height + Math.abs(this.vY) + 1 }
+  getLeftDestination() { return this.x - Math.abs(this.vX) - 1 }
+  getRightDestination() { return this.x + this.width + Math.abs(this.vX) + 1 }
+
+  getBlockAboveTopLeftDelta() { return d.getBlockDelta(this.x, this.getUpwardDestination()) }
+  getBlockAboveTopRightDelta() { return d.getBlockDelta(this.x + this.width, this.getUpwardDestination()) }
+  getBlockBelowBottomLeftDelta() { return d.getBlockDelta(this.x, this.getDownwardDestination()) }
+  getBlockBelowBottomRightDelta() { return d.getBlockDelta(this.x + this.width, this.getDownwardDestination()) }
+
+  getBlockAboveTopLeft() {
+    let delta = this.getBlockAboveTopLeftDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockAboveTopRight() {
+    let delta = this.getBlockAboveTopRightDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockBelowBottomLeft() {
+    let delta = this.getBlockBelowBottomLeftDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockBelowBottomRight() {
+    let delta = this.getBlockBelowBottomRightDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+
+  getBlockBeforeTopLeftDelta() { return d.getBlockDelta(this.getLeftDestination(), this.y) }
+  getBlockAfterTopRightDelta() { return d.getBlockDelta(this.getRightDestination(), this.y) }
+  getBlockBeforeBottomLeftDelta() { return d.getBlockDelta(this.getLeftDestination(), this.y + this.height) }
+  getBlockAfterBottomRightDelta() { return d.getBlockDelta(this.getRightDestination(), this.y + this.height) }
+
+  getBlockBeforeTopLeft() {
+    let delta = this.getBlockBeforeTopLeftDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockAfterTopRight() {
+    let delta = this.getBlockAfterTopRightDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockBeforeBottomLeft() {
+    let delta = this.getBlockBeforeBottomLeftDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+  getBlockAfterBottomRight() {
+    let delta = this.getBlockAfterBottomRightDelta()
+    return d.hasBlock(delta) ? d.block(delta) : null
+  }
+
+  canMoveUp() {
+    let blockAboveTopLeft = this.getBlockAboveTopLeft()
+    let blockAboveTopRight = this.getBlockAboveTopRight()
+    return blockAboveTopLeft && !blockAboveTopLeft.solid && blockAboveTopRight && !blockAboveTopRight.solid
+  }
+  canMoveDown() {
+    let blockBelowBottomLeft = this.getBlockBelowBottomLeft()
+    let blockBelowBottomRight = this.getBlockBelowBottomRight()
+    return blockBelowBottomLeft && !blockBelowBottomLeft.solid && blockBelowBottomRight && !blockBelowBottomRight.solid
+  }
+  canMoveLeft() {
+    let blockBeforeTopLeft = this.getBlockBeforeTopLeft()
+    let blockBeforeBottomLeft = this.getBlockBeforeBottomLeft()
+    return blockBeforeTopLeft && !blockBeforeTopLeft.solid && blockBeforeBottomLeft && !blockBeforeBottomLeft.solid
+  }
+  canMoveRight() {
+    let blockAfterTopRight = this.getBlockAfterTopRight()
+    let blockAfterBottomRight = this.getBlockAfterBottomRight()
+    return blockAfterTopRight && !blockAfterTopRight.solid && blockAfterBottomRight && !blockAfterBottomRight.solid
+  }
+
+  movementInfo() {
+
+    let upwardDestination = this.getUpwardDestination()
+    let downwardDestination = this.getDownwardDestination()
+    let leftDestination = this.getLeftDestination()
+    let rightDestination = this.getRightDestination()
+
+    let blockAboveTopLeftDelta = this.getBlockAboveTopLeftDelta()
+    let blockAboveTopRightDelta = this.getBlockAboveTopRightDelta()
+    let blockBelowBottomLeftDelta = this.getBlockBelowBottomLeftDelta()
+    let blockBelowBottomRightDelta = this.getBlockBelowBottomRightDelta()
+
+    let blockAboveTopLeft = this.getBlockAboveTopLeft()
+    let blockAboveTopRight = this.getBlockAboveTopRight()
+    let blockBelowBottomLeft = this.getBlockBelowBottomLeft()
+    let blockBelowBottomRight = this.getBlockBelowBottomRight()
+
+    let blockBeforeTopLeftDelta = this.getBlockBeforeTopLeftDelta()
+    let blockAfterTopRightDelta = this.getBlockAfterTopRightDelta()
+    let blockBeforeBottomLeftDelta = this.getBlockBeforeBottomLeftDelta()
+    let blockAfterBottomRightDelta = this.getBlockAfterBottomRightDelta()
+
+    let blockBeforeTopLeft = this.getBlockBeforeTopLeft()
+    let blockAfterTopRight = this.getBlockAfterTopRight()
+    let blockBeforeBottomLeft = this.getBlockBeforeBottomLeft()
+    let blockAfterBottomRight = this.getBlockAfterBottomRight()
+
+    let canMoveUp = this.canMoveUp()
+    let canMoveDown = this.canMoveDown()
+    let canMoveLeft = this.canMoveLeft()
+    let canMoveRight = this.canMoveRight()
+
+    console.log('destinations')
+    console.log({
+      upwardDestination,
+      downwardDestination,
+      leftDestination,
+      rightDestination
+    })
+
+    console.log('block above/below delta')
+    console.log({
+      blockAboveTopLeftDelta,
+      blockAboveTopRightDelta,
+      blockBelowBottomLeftDelta,
+      blockBelowBottomRightDelta
+    })
+
+    console.log('block above/below')
+    console.log({
+      blockAboveTopLeft,
+      blockAboveTopRight,
+      blockBelowBottomLeft,
+      blockBelowBottomRight
+    })
+
+    console.log('block before/after delta')
+    console.log({
+      blockBeforeTopLeftDelta,
+      blockAfterTopRightDelta,
+      blockBeforeBottomLeftDelta,
+      blockAfterBottomRightDelta
+    })
+
+    console.log('block before/after')
+    console.log({
+      blockBeforeTopLeft,
+      blockAfterTopRight,
+      blockBeforeBottomLeft,
+      blockAfterBottomRight
+    })
+
+    console.log('movement')
+    console.log({
+      canMoveUp,
+      canMoveDown,
+      canMoveLeft,
+      canMoveRight
+    })
+
+    console.log('position')
+    console.log({
+      x: this.x,
+      y: this.y
+    })
 
   }
 

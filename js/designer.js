@@ -216,16 +216,19 @@ function update() {
   game.applySunshine()
 
   // player(s)...
+  let player = null
   for (let i = 0; i < players.length; i++) {
+
+    player = d.player(players[i])
 
     // begin: collision detection...
 
     // reset player colission states
-    players[i].resetCollisionStates()
+    player.resetCollisionStates()
 
     // player + block
 
-    let playerBlockDeltas = players[i].getBlockDeltasFromPosition()
+    let playerBlockDeltas = player.getBlockDeltasFromPosition()
     let id = null
     let block = null
     if (playerBlockDeltas.length) {
@@ -233,13 +236,13 @@ function update() {
         blockId = d.blocks[playerBlockDeltas[j]]
         if (!blockId) { continue }
         block = d.getBlock(blockId)
-        block.handleCollisionWithPlayer(players[i])
+        block.handleCollisionWithPlayer(player)
       }
     }
 
     // end: collision detection
 
-    players[i].update()
+    player.update()
 
   }
 
@@ -366,7 +369,7 @@ function draw() {
 
   // player(s)
   for (let i = 0; i < players.length; i++) {
-    players[i].draw()
+    d.player(players[i]).draw()
   }
 
   // npc(s)

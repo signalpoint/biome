@@ -44,7 +44,7 @@ class DesignerKeyboard {
 
   keydown({ keyCode }) {
 
-    console.log('keydown', keyCode)
+//    console.log('keydown', keyCode)
 
     switch (keyCode) {
 

@@ -4,5 +4,6 @@ bin/
 
 # MK
 
+mk/dist
 mk/node_modules
 mk/vendor

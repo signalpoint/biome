@@ -1,6 +1,7 @@
 import MkCanvas from './MkCanvas.js';
 import MkKeyboard from './MkKeyboard.js';
 import MkMouse from './MkMouse.js';
+import MkEntities from './MkEntities.js';
 import MkGravity from './MkGravity.js';
 
 // place
@@ -18,6 +19,7 @@ export default class Mk {
 
     self._options = options
 
+    self._mkEntities = null
     self._mkCanvas = null
     self._mkKeyboard = null
     self._mkMouse = null
@@ -32,47 +34,13 @@ export default class Mk {
     self.draw = options.draw
     self._animationFrame = null
 
-    // ENTITY INDEX
-
-    // entity ids...
-    // [
-    //   'abc123',
-    //   'def456',
-    //   'xyz789'
-    // ]
-//    this._entityIds = []
-    this._entityIds = {}
-
-    // entities...
-    // {
-    //   block: {
-    //     abc123: { type: 'Grass', ... }
-    //   },
-    //   item: {
-    //     def456: { type: 'WoodAxe', ... }
-    //   },
-    //   building: {
-    //     xyz789: { type: 'LumberCamp', ... }
-    //   },
-    //   ...
-    // }
-    this._entities = {}
-
-    // bundles...
-    // {
-    //   block: {
-    //     Grass: [ 'abc123' ]
-    //   },
-    //   item: {
-    //     WoodAxe: [ 'def456' ]
-    //   },
-    //   building: {
-    //     LumberCamp: [ 'xyz789' ]
-    //   },
-    // }
-    this._entityBundles = {}
-
     // TODO stop sending "self" to MkCanvas, MkKeyboard and MkMouse; mk is now available globally (via window.mk)
+
+    // ENTITIES
+    // - Instantiate the entities.
+    // - Set aside entities.
+    let mkEntities = new MkEntities()
+    self.setMkEntities(mkEntities)
 
     // CANVAS
     // - Instantiate the canvas.
@@ -125,6 +93,11 @@ export default class Mk {
 //  getOptions() { return this._options }
 //  getOption(name) { return this.getOptions()[name] }
 //  get(name) { return this.getOption(name) }
+
+  // MkEntities
+
+  getMkEntities() { return this._mkEntities }
+  setMkEntities(mkEntities) { this._mkEntities = mkEntities }
 
   // MkCanvas
 
@@ -190,59 +163,5 @@ export default class Mk {
   }
 
 //  d._animationFrame = requestAnimationFrame(animate)
-
-  // ENTITIES
-  // TODO move these to e.g. entity.js and then export/import them for usage here
-
-  // entity ids
-
-  hasEntityIdIndex(type) { return !!this._entityIds[type] }
-  initEntityIdIndex(type) { this._entityIds[type] = [] }
-  addEntityId(type, id) {
-//    if (!this.hasEntityIdIndex(type)) { this.initEntityIdIndex(type) }
-    this._entityIds[type].push(id)
-  }
-  removeEntityId(type, id) {
-    let i = this._entityIds[type].indexOf(id)
-    this._entityIds[type].splice(i, 1)
-  }
-  getRandomEntityId(type) {
-    let id = null
-    while (true) {
-      id = (Math.random() + 1).toString(36).substring(7);
-      if (id && (!this.hasEntityIdIndex(type) || !this._entityIds[type].includes(id))) { break }
-    }
-    return id
-  }
-
-  // entity index
-
-  hasEntityIndex(type) { return !!this._entities[type] }
-  initEntityIndex(type) { this._entities[type] = {} }
-  addEntityToIndex(type, entity) {
-    if (!this.hasEntityIndex(type)) { this.initEntityIndex(type) }
-    this._entities[type][entity.id] = entity
-    this._addEntityToBundleIndex(type, entity)
-  }
-  removeEntityFromIndex(entity) {
-    delete this._entities[entity.type][entity.id]
-    this._removeEntityFromBundleIndex(entity.type, entity)
-  }
-
-  getEntityFromIndex(type, id) { return this._entities[type][id] }
-
-  // entity bundle index
-
-  _addEntityToBundleIndex(type, entity) {
-    if (!this._entityBundles[type]) { this._entityBundles[type] = {} }
-    if (!this._entityBundles[type][entity.type]) { this._entityBundles[type][entity.type] = [] }
-    this._entityBundles[type][entity.type].push(entity.id)
-  }
-  _removeEntityFromBundleIndex(type, entity) {
-    let i = this._entityBundles[type][entity.type].indexOf(entity.id)
-    this._entityBundles[type][entity.type].splice(i, 1)
-  }
-
-  getEntityBundleIndexFromType(type) { return this._entityBundles[type] }
 
 }

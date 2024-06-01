@@ -16,6 +16,7 @@ module.exports = {
     mkKeyboard: './src/MkKeyboard.js',
     mkMouse: './src/MkMouse.js',
     mkTimer: './src/MkTimer.js',
+    mkEntities: './src/MkEntities.js',
     mkEntity: './src/MkEntity.js',
     mkGravity: './src/MkGravity.js',
     mkPlace: './src/MkPlace.js',

@@ -1,12 +1,13 @@
 {
-    "name": "tyler/public_html",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "MyApp\\": "src"
-        }
-    },
-    "require": {
-        "cboden/ratchet": "^0.4.4"
+  "name": "tyler/public_html",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "MyApp\\": "src",
+      "MaltKit\\": "src/server"
     }
+  },
+  "require": {
+    "cboden/ratchet": "^0.4.4"
+  }
 }

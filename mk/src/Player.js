@@ -131,11 +131,11 @@ export default class Player extends MkPlayer {
     }
 
     // JUMP
+
     if (!this.state.jumping) {
       if (keys.jump.pressed && this.canMoveUp() && Math.abs(this.vY) < this.vMaxY) {
         this.state.jumping = true
-        this.vY -= 25
-        console.log('whooosh')
+        this.vY -= 28
       }
     }
     else if (!this.inTheAir()) {

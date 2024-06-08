@@ -8,11 +8,13 @@ export default class MkEntity {
 
     let mkEntities = mk.getMkEntities()
 
+    // TODO "Implementations typically use a plain integer for this."
     this.id = !id ? mkEntities.getRandomEntityId(type) : id
+
     this.type = type
     this.bundle = bundle
 
-    // If there isn't an entity id index for type, initialize it.
+    // If there isn't an entity id index for this type, initialize it.
     if (!mkEntities.hasEntityIdIndex(type)) {
       mkEntities.initEntityIdIndex(type)
     }

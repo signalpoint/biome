@@ -3,6 +3,7 @@ import MkKeyboard from './MkKeyboard.js';
 import MkMouse from './MkMouse.js';
 import MkEntities from './MkEntities.js';
 import MkGravity from './MkGravity.js';
+import MkWebSocket from './MkWebSocket.js';
 
 // place
 //   place
@@ -23,7 +24,10 @@ export default class Mk {
     self._mkCanvas = null
     self._mkKeyboard = null
     self._mkMouse = null
+    self._mkGame = null
     self._mkGravity = null
+
+    self._mkWebSocket = null
 
 //    self._animate = null
 //    self._update = null
@@ -33,6 +37,9 @@ export default class Mk {
     self.update = options.update
     self.draw = options.draw
     self._animationFrame = null
+
+    // Place "mk" into the global scope.
+    window.mk = this
 
     // TODO stop sending "self" to MkCanvas, MkKeyboard and MkMouse; mk is now available globally (via window.mk)
 
@@ -46,9 +53,12 @@ export default class Mk {
     // - Instantiate the canvas.
     // - Set aside canvas.
     // - Initialize the screen resolution.
+    // - Place the canvas and context into the global scope.
     let mkCanvas = new MkCanvas(self, options.canvas)
     self.setMkCanvas(mkCanvas)
     mkCanvas.initScreenResolution()
+    window.canvas = mkCanvas.getCanvas()
+    window.c = mkCanvas.getContext()
 
     // KEYBOARD
     // - Instantiate the keyboard.
@@ -74,18 +84,19 @@ export default class Mk {
 
     mkCanvas.initMouse()
 
-    window.mk = this
-    window.canvas = mkCanvas.getCanvas()
-    window.c = mkCanvas.getContext()
+//    window.canvas = mkCanvas.getCanvas()
+//    window.c = mkCanvas.getContext()
 
-    // GRAVITY
+    // GRAVITY (optional)
+    // Instantiate and set aside the gravity.
     if (options.gravity) {
+      self.setGravity(new MkGravity(options.gravity))
+    }
 
-      // - Instantiate the gravity.
-      // - Set aside gravity.
-      let mkGravity = new MkGravity(options.gravity)
-      self.setGravity(mkGravity)
-
+    // WEB SOCKET (optional)
+    // - Instantiate and set aside the web socket.
+    if (options.webSocket) {
+      self.setWebSocket(new MkWebSocket(options.webSocket))
     }
 
   }
@@ -120,6 +131,11 @@ export default class Mk {
   getMouse() { return this._mkMouse }
   setMouse(mkMouse) { this._mkMouse = mkMouse }
 
+  // Game
+
+  getGame() { return this._mkGame }
+  setGame(mkGame) { this._mkGame = mkGame }
+
   // Gravity
 
   getGravity() { return this._mkGravity }
@@ -131,6 +147,11 @@ export default class Mk {
 
   getGravityX() { return this.getGravity().vX }
   getGravityY() { return this.getGravity().vY }
+
+  // WebSocket
+
+  getWebSocket() { return this._mkWebSocket }
+  setWebSocket(mkWebSocket) { this._mkWebSocket = mkWebSocket }
 
   // Animate
 

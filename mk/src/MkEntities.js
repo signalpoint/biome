@@ -1,16 +1,19 @@
-export default class mkEntities {
+export default class MkEntities {
 
   constructor() {
 
     // ENTITY INDEX
 
     // entity ids...
-    // [
-    //   'abc123',
-    //   'def456',
+    // block: [
+    //   'abc123'
+    // ],
+    // item: [
+    //   'def456'
+    // ],
+    // building: [
     //   'xyz789'
     // ]
-//    this._entityIds = []
     this._entityIds = {}
 
     // entities...
@@ -44,12 +47,11 @@ export default class mkEntities {
 
   }
 
-  // entity ids
+  // entity id index
 
   hasEntityIdIndex(type) { return !!this._entityIds[type] }
   initEntityIdIndex(type) { this._entityIds[type] = [] }
   addEntityId(type, id) {
-//    if (!this.hasEntityIdIndex(type)) { this.initEntityIdIndex(type) }
     this._entityIds[type].push(id)
   }
   removeEntityId(type, id) {
@@ -70,7 +72,7 @@ export default class mkEntities {
   hasEntityIndex(type) { return !!this._entities[type] }
   initEntityIndex(type) { this._entities[type] = {} }
   addEntityToIndex(type, entity) {
-    if (!this.hasEntityIndex(type)) { this.initEntityIndex(type) }
+    if (!this.hasEntityIndex(type)) { this.initEntityIndex(type) } // TODO why are we babysitting here? move to MkEntity()
     this._entities[type][entity.id] = entity
     this._addEntityToBundleIndex(type, entity)
   }
@@ -85,14 +87,30 @@ export default class mkEntities {
 
   _addEntityToBundleIndex(type, entity) {
     if (!this._entityBundles[type]) { this._entityBundles[type] = {} }
-    if (!this._entityBundles[type][entity.type]) { this._entityBundles[type][entity.type] = [] }
-    this._entityBundles[type][entity.type].push(entity.id)
+    if (!this._entityBundles[type][entity.bundle]) { this._entityBundles[type][entity.bundle] = [] }
+    this._entityBundles[type][entity.bundle].push(entity.id)
   }
   _removeEntityFromBundleIndex(type, entity) {
-    let i = this._entityBundles[type][entity.type].indexOf(entity.id)
-    this._entityBundles[type][entity.type].splice(i, 1)
+    let i = this._entityBundles[type][entity.bundle].indexOf(entity.id)
+    this._entityBundles[type][entity.bundle].splice(i, 1)
   }
 
   getEntityBundleIndexFromType(type) { return this._entityBundles[type] }
+
+  // import / export
+
+  importData(data) {
+    this._entityIds = data.ids
+    this._entities = data.entities
+    this._entityBundles = data.bundles
+  }
+
+  exportData() {
+    return {
+      ids: this._entityIds,
+      entities: this._entities,
+      bundles: this._entityBundles,
+    }
+  }
 
 }

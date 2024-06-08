@@ -7,7 +7,6 @@ module.exports = {
 
     // CORE
     index: './src/index.js',
-//    context: './src/context.js',
     keys: './src/keys.js',
     mouse: './src/mouse.js',
     utils: './src/utils.js',
@@ -15,10 +14,12 @@ module.exports = {
     mkCanvas: './src/MkCanvas.js',
     mkKeyboard: './src/MkKeyboard.js',
     mkMouse: './src/MkMouse.js',
+    mkGame: './src/MkGame.js',
     mkTimer: './src/MkTimer.js',
     mkEntities: './src/MkEntities.js',
     mkEntity: './src/MkEntity.js',
     mkGravity: './src/MkGravity.js',
+    mkWebSocket: './src/MkWebSocket.js',
     mkPlace: './src/MkPlace.js',
     mkPlayer: './src/MkPlayer.js',
 

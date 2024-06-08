@@ -2,6 +2,10 @@
 
 namespace MaltKit;
 
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+
 use MaltKit\MkServer;
 
 class Mk {
@@ -25,6 +29,19 @@ class Mk {
   }
 
   public function getServer() { return $this->server; }
+
+  public function runServer() {
+
+    // Run the server with Ratchet.
+    $server = IoServer::factory(
+      new HttpServer(
+        new WsServer($this->getServer())
+      ),
+      8080
+    );
+    $server->run();
+
+  }
 
   // SHMOP
 

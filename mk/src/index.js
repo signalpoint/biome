@@ -2,6 +2,7 @@ import {keys} from './keys.js';
 import {mouse} from './mouse.js';
 
 import Mk from './Mk.js';
+import MkGame from './MkGame.js';
 import Player from './Player.js';
 import MkPlace from './MkPlace.js';
 
@@ -9,6 +10,7 @@ import MkPlace from './MkPlace.js';
 
 let game = null
 let player = null
+let socket = null
 
 // CANVAS & CONTEXT
 
@@ -114,7 +116,91 @@ addEventListener('load', function() {
     gravity: {
       vY: 2,
       vMaxY: 5
-    }
+    },
+
+    webSocket: {
+
+      url: "ws://tylerfrankenstein.com:8080",
+
+      open: function(event) {
+
+        console.log("webSocket:open", event);
+
+        socket = this.getSocket()
+
+//        this.getGames()
+
+        this.getGame('metalMelvin') // @see "message" handler for "getGame" below
+
+        // get game list
+        // create a game
+        // join a game
+
+        // get room list
+        // create a room
+        // join a room
+
+      },
+
+      close: function(event) {
+        console.log("webSocket:close", event);
+      },
+
+      message: function(event) {
+
+        let data = JSON.parse(event.data)
+
+//        console.log("webSocket:message", data);
+
+        switch (data.op) {
+
+          case 'getGames':
+            console.log('getGames', data.games)
+            break;
+
+          case 'getGame':
+            console.log('getGame', data.game)
+            break;
+
+          case 'initGame':
+            console.log('initGame', data.game)
+            this.send({
+              op: 'initGame',
+              id: data.game.id,
+              entities: mk.getMkEntities().exportData()
+            });
+            break;
+
+          case 'initializedGame':
+            console.log('initializedGame', data.game)
+            game = new MkGame(data.game)
+            mk.setGame(game)
+            this.send({
+              op: 'addPlayer',
+              id: game.id
+            })
+            break;
+
+          case 'addPlayer':
+
+            console.log('addPlayer', data.player);
+
+            player = new Player(data.player);
+            console.log('player', player)
+
+            play();
+
+            break;
+
+        }
+
+      },
+
+      error: function(event) {
+        console.log('webSocket:error', event)
+      }
+
+    } // webSocket
 
   })
 
@@ -123,48 +209,45 @@ addEventListener('load', function() {
 //  canvas = mk.getCanvas()
 //  window.c = mk.getContext()
 
-  player = new Player({
-    name: 'tyler',
-    x: 420,
-    y: 420,
-    width: 32,
-    height: 64,
-    vMaxX: 15,
-    vMaxY: 15,
-    state: {
-      moving: { // category
-        up: false, // state
-        down: false, // state
-        left: false, // state
-        right: false // state
-      },
-      jumping: false
-      // etc...
-    }
-  })
-  console.log('player', player)
+//  player = new Player({
+//    name: 'tyler',
+//    x: 420,
+//    y: 420,
+//    width: 32,
+//    height: 64,
+//    vMaxX: 15,
+//    vMaxY: 15,
+//    state: {
+//      moving: { // category
+//        up: false, // state
+//        down: false, // state
+//        left: false, // state
+//        right: false // state
+//      },
+//      jumping: false
+//      // etc...
+//    }
+//  })
+//  console.log('player', player)
 
-  let place = new MkPlace({
-    bundle: 'house'
-  })
-  console.log('place', place)
+  // PLACE
+
+//  let place = new MkPlace({
+//    bundle: 'house'
+//  })
+//  console.log('place', place)
+
+  // PLAY
+
+//  play()
+
+});
+
+function play() {
 
   mk.play()
 
-//  // Create WebSocket connection.
-//  const socket = new WebSocket("ws://localhost:8080");
-//
-//  // Connection opened
-//  socket.addEventListener("open", (event) => {
-//    socket.send("Hello Server!");
-//  });
-//
-//  // Listen for messages
-//  socket.addEventListener("message", (event) => {
-//    console.log("Message from server ", event.data);
-//  });
-
-});
+}
 
 function animate() {
 

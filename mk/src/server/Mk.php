@@ -6,8 +6,6 @@ use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
-use MaltKit\MkServer;
-
 class Mk {
 
   protected $server;
@@ -19,16 +17,10 @@ class Mk {
     // games
     $this->games = [];
 
-    // server
-    $server = new MkServer();
-    $this->server = $server;
-
-    // server + mk
-    $server->setMk($this);
-
   }
 
   public function getServer() { return $this->server; }
+  public function setServer($server) { $this->server = $server; }
 
   public function runServer() {
 

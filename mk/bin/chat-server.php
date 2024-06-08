@@ -3,6 +3,8 @@
 use MaltKit\Mk;
 use MaltKit\MkGame;
 
+use MaltKit\Server;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 // Create the kit.
@@ -16,6 +18,13 @@ $metalMelvin = new MkGame([
 
 // Add the game to the kit.
 $mk->addGame($metalMelvin);
+
+// Create the server.
+$server = new Server();
+
+// Attach the server and kit eachother.
+$mk->setServer($server);
+$server->setMk($mk);
 
 // Run the server.
 $mk->runServer();

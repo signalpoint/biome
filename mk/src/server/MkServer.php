@@ -7,8 +7,6 @@ namespace MaltKit;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-use MaltKit\Player;
-
 class MkServer implements MessageComponentInterface {
 
   protected $mk;
@@ -21,103 +19,22 @@ class MkServer implements MessageComponentInterface {
   public function getMk() { return $this->mk; }
   public function setMk($mk) { $this->mk = $mk; }
 
-  public function getGames() { return $this->getMk()->getGames(); }
-  public function getGame($id) { return $this->getGames()[$id]; }
-
   public function onOpen(ConnectionInterface $conn) {
+
     // Store the new connection to send messages to later
     $this->clients->attach($conn);
 
-    echo "new connection:: ({$conn->resourceId})\n";
   }
 
   public function onMessage(ConnectionInterface $from, $msg) {
 
 //    $clientRecipientCount = count($this->clients) - 1;
 
-    echo $msg . "\n\n";
+//    echo $msg . "\n\n";
+
     $json = json_decode($msg);
 
     switch ($json->op) {
-
-      case 'getGames':
-        $from->send(json_encode([
-          'op' => $json->op,
-          'games' => $this->getMk()->getGames(),
-        ]));
-        break;
-
-      case 'getGame':
-        echo "games";
-//        echo count($this->getMkServer()->getGames());
-//        echo implode(',', array_keys($this->getMkServer()->getGames()));
-//        $game = $this->getMkServer()->getGame($json->id);
-//        echo $game->id;
-//        echo array_keys($this->getGames());
-        $game = $this->getGame($json->id);
-        if (!$game->isInitialized()) {
-          $from->send(json_encode([
-            'op' => 'initGame',
-            'game' => $game,
-          ]));
-        }
-        else {
-          $from->send(json_encode([
-            'op' => $json->op,
-            'game' => $game,
-          ]));
-        }
-        break;
-
-      case 'initGame':
-        $game = $this->getGame($json->id);
-        $game->data = $json->entities;
-        $game->initialized = TRUE;
-        $from->send(json_encode([
-          'op' => 'initializedGame',
-          'game' => $game,
-        ]));
-        break;
-
-      case 'addPlayer':
-
-        $game = $this->getGame($json->id);
-
-//        $player = new MkPlayer();
-//        echo "MkPlayer\n\n";
-//        echo print_r($player, TRUE) . "\n\n";
-
-        $player = new Player([
-          'foo' => 'farts',
-          'name' => 'tyler',
-          'x' => 420,
-          'y' => 420,
-          'width' => 32,
-          'height' => 64,
-          'vMaxX' => 15,
-          'vMaxY' => 15,
-          'state' => [
-            'moving' => [ // category
-              'up' => false, // state
-              'down' => false, // state
-              'left' => false, // state
-              'right' => false // state
-            ],
-            'jumping' => false
-            // etc...
-          ]
-        ]);
-        echo "Player\n\n";
-        echo print_r($player, TRUE) . "\n\n";
-
-        $game->addPlayer($player);
-
-        $from->send(json_encode([
-          'op' => $json->op,
-          'player' => $player,
-        ]));
-
-        break;
 
       case 'initEntityData':
 

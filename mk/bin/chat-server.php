@@ -5,7 +5,8 @@ use MaltKit\MkGame;
 
 use MaltKit\Server;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+//require dirname(__DIR__) . '/vendor/autoload.php'; // careful, this points to vendor in the biome folder
+require 'vendor/autoload.php';
 
 // Create the kit.
 $mk = new Mk();
@@ -22,7 +23,7 @@ $mk->addGame($metalMelvin);
 // Create the server.
 $server = new Server();
 
-// Attach the server and kit eachother.
+// Attach the server and kit to eachother.
 $mk->setServer($server);
 $server->setMk($mk);
 

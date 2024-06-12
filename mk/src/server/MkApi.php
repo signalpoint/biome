@@ -134,14 +134,11 @@ class MkApi {
 
   public function execute() {
 
-    $response = $this->GET();
+    // Get the response from the API's implementation of the request method and
+    // then set aside the response.
+    $requestMethod = $this->getRequestMethod();
+    $response = $this->{$requestMethod}();
     $this->setResponse($response);
-
-//    return implode(',', [
-//      $this->getVersion(),
-//      $this->getServiceName(),
-//      $this->getResourceName(),
-//    ]);
 
   }
 
